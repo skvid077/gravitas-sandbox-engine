@@ -1,12 +1,19 @@
-venv/
-env/
-.env/
 __pycache__/
 *.py[cod]
 *$py.class
+
+venv/
+.venv/
+env/
+ENV/
+
 .pytest_cache/
-.ruff_cache/
 .mypy_cache/
+.ruff_cache/
 .coverage
+htmlcov/
+
 .vscode/
 
+*.json
+!demo/test_system.json

@@ -1,0 +1,64 @@
+{
+    "name": "Custom",
+    "g_const": 1.0,
+    "dt": 0.016,
+    "softening": 0.1,
+    "bodies": [
+        {
+            "name": "Новая Планета",
+            "color": "#FFFFFF",
+            "mass": 100.0,
+            "radius": 20.0,
+            "position": [
+                -102.0,
+                28.0
+            ],
+            "velocity": [
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "name": "Новая Планета1",
+            "color": "#FFFFFF",
+            "mass": 100.0,
+            "radius": 20.0,
+            "position": [
+                -64.0,
+                43.0
+            ],
+            "velocity": [
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "name": "Новая Планета2",
+            "color": "#FFFFFF",
+            "mass": 100.0,
+            "radius": 20.0,
+            "position": [
+                -98.0,
+                70.0
+            ],
+            "velocity": [
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "name": "Новая Планета3",
+            "color": "#FFFFFF",
+            "mass": 100.0,
+            "radius": 20.0,
+            "position": [
+                -64.0,
+                3.0
+            ],
+            "velocity": [
+                0.0,
+                0.0
+            ]
+        }
+    ]
+}
