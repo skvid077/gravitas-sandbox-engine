@@ -1,11 +1,13 @@
 import sys
+import os
 import traceback
 from typing import Type
 
 from PyQt6.QtWidgets import QApplication
 
-from src.gui.start_screen import StartScreen
+sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
+from gui.start_screen import StartScreen
 
 def global_exception_handler(exc_type: Type[BaseException], exc_value: BaseException, exc_traceback: getattr) -> None:
     """

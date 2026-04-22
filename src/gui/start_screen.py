@@ -101,9 +101,9 @@ class StartScreen(QMainWindow):
         и запускает движок в случае успеха.
         """
         file_path, _ = QFileDialog.getOpenFileName(
-            self, 
-            "Выберите файл сценария", 
-            "", 
+            self,
+            "Выберите файл сценария",
+            "",
             "JSON Files (*.json)"
         )
 
