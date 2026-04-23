@@ -173,28 +173,49 @@ QPushButton:hover {{
 }}
 """
 
-STYLE_BTN_MENU_PLANET: str = f"""
-QPushButton {{ 
-    background-color: #2b2b36; 
-    color: white; 
-    border-radius: {BTN_MENU_RADIUS}px; 
-    font-weight: bold; 
-    border: 1px solid #444; 
-}}
-QPushButton:hover {{ 
-    background-color: #3f3f4e; 
-}}
+# Базовый стиль для обычных кнопок (Выход, Все планеты, Отмена и т.д.)
+STYLE_BTN_MENU = """
+    QPushButton {
+        background-color: rgba(45, 50, 65, 180);
+        color: #E0E0E0;
+        border: 1px solid rgba(120, 130, 160, 80);
+        border-radius: 8px;
+        padding: 8px 15px;
+        font-size: 14px;
+        font-weight: 500;
+        font-family: 'Segoe UI', Arial, sans-serif;
+    }
+    QPushButton:hover {
+        background-color: rgba(65, 75, 95, 220);
+        border: 1px solid rgba(150, 160, 200, 150);
+        color: #FFFFFF;
+    }
+    QPushButton:pressed {
+        background-color: rgba(30, 35, 45, 255);
+        border: 1px solid rgba(80, 90, 120, 200);
+        color: #AAAAAA;
+    }
 """
 
-STYLE_BTN_MENU_EXPORT: str = f"""
-QPushButton {{ 
-    background-color: #1b5e20; 
-    color: white; 
-    border-radius: {BTN_MENU_RADIUS}px; 
-    font-weight: bold; 
-    border: 1px solid #2e7d32; 
-}}
-QPushButton:hover {{ 
-    background-color: #2e7d32; 
-}}
+# Акцентный стиль для главных действий (Продолжить, Добавить, Сохранить)
+STYLE_BTN_MENU_CONTINUE = """
+    QPushButton {
+        background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #2b5876, stop:1 #4e4376);
+        color: #FFFFFF;
+        border: 1px solid rgba(255, 255, 255, 40);
+        border-radius: 8px;
+        padding: 8px 15px;
+        font-size: 14px;
+        font-weight: bold;
+        font-family: 'Segoe UI', Arial, sans-serif;
+    }
+    QPushButton:hover {
+        background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #3b6886, stop:1 #5e5386);
+        border: 1px solid rgba(255, 255, 255, 80);
+    }
+    QPushButton:pressed {
+        background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #1b4866, stop:1 #3e3366);
+        border: 1px solid rgba(255, 255, 255, 20);
+        color: #CCCCCC;
+    }
 """

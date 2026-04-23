@@ -1,17 +1,14 @@
 {
-    "name": "Custom",
-    "g_const": 1.0,
-    "dt": 0.016,
-    "softening": 0.1,
+    "name": "Save",
     "bodies": [
         {
-            "name": "Новая Планета",
-            "color": "#FFFFFF",
-            "mass": 100.0,
-            "radius": 20.0,
+            "name": "Центральная звезда",
+            "color": "#FFCC00",
+            "mass": 500000.0,
+            "radius": 80.0,
             "position": [
-                -102.0,
-                28.0
+                10.0,
+                -7.0
             ],
             "velocity": [
                 0.0,
@@ -19,41 +16,41 @@
             ]
         },
         {
-            "name": "Новая Планета1",
-            "color": "#FFFFFF",
-            "mass": 100.0,
-            "radius": 20.0,
+            "name": "Ледяной гигант",
+            "color": "#4A90E2",
+            "mass": 1000.0,
+            "radius": 30.0,
             "position": [
-                -64.0,
-                43.0
+                305.0,
+                -9.0
             ],
             "velocity": [
                 0.0,
-                0.0
+                12.5
             ]
         },
         {
-            "name": "Новая Планета2",
-            "color": "#FFFFFF",
+            "name": "Спутник",
+            "color": "#A0A0A0",
             "mass": 100.0,
-            "radius": 20.0,
+            "radius": 12.0,
             "position": [
-                -98.0,
-                70.0
+                510.0,
+                0.0
             ],
             "velocity": [
                 0.0,
-                0.0
+                18.0
             ]
         },
         {
-            "name": "Новая Планета3",
-            "color": "#FFFFFF",
-            "mass": 100.0,
+            "name": "Planet X",
+            "color": "#ff6464",
+            "mass": 1000.0,
             "radius": 20.0,
             "position": [
-                -64.0,
-                3.0
+                -174.0,
+                -5.0
             ],
             "velocity": [
                 0.0,

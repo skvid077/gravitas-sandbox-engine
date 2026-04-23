@@ -1,196 +1,135 @@
 import json
 from typing import Optional, Any, List, Dict
 
-from PyQt6.QtCore import QPointF
-from PyQt6.QtGui import QResizeEvent
+from PyQt6.QtCore import QEvent, QPointF, QTimer, Qt
+from PyQt6.QtGui import QKeyEvent, QMouseEvent, QResizeEvent
+from gui.pause_menu import PauseMenu
 from PyQt6.QtWidgets import (
     QApplication,
-    QFileDialog,
+    QLabel,
     QMainWindow,
-    QMessageBox,
-    QPushButton,
 )
+
+from config.models import PlanetItem
+from gui.add_planet import AddPlanetDialog
+from PyQt6.QtWidgets import QDialog
 
 from config.constants import *
 from config.schemas import BodyState, SimulationScenario
-from gui.planet_dialog import PlanetDialog
-from gui.planet_item import PlanetItem
-from gui.scene import SpaceScene
-from gui.views import InfiniteView
-
+from gui.space import SpaceScene, SpaceView
 
 class MainWindow(QMainWindow):
-    """
-    Главное окно приложения "Infinite Chunk Engine".
-    Оркестрирует сцену, камеру (InfiniteView) и элементы пользовательского интерфейса.
-    Управляет жизненным циклом сценария симуляции (создание, редактирование, экспорт).
-    """
-
     def __init__(self, scenario: Optional[SimulationScenario] = None) -> None:
-        """
-        Инициализирует главное окно и графический движок.
-
-        Args:
-            scenario (Optional[SimulationScenario]): Загруженный сценарий симуляции. 
-                Если None, создается пустой сценарий с именем "Custom".
-        """
         super().__init__()
+        self.setWindowTitle("Gravitas Sandbox")
+        self.resize(1024, 768)
         
-        # Инкапсулируем состояние и ссылки
-        self._scenario: SimulationScenario = scenario or SimulationScenario(name="Custom", bodies=[])
-        self._planet_items: List[PlanetItem] = []  # Хранит ссылки на графические объекты для просчета коллизий
-        
-        title: str = f"Infinite Chunk Engine - {self._scenario.name}"
-        self.setWindowTitle(title)
-
-        # Центрирование и размеры окна
-        screen = QApplication.primaryScreen().geometry()
-        self.setMinimumSize(MAIN_WINDOW_MIN_WIDTH, MAIN_WINDOW_MIN_HEIGHT)
-        self.resize(screen.width() // SCREEN_RATIO_DIVISOR, screen.height() // SCREEN_RATIO_DIVISOR)
-
-        # 1. Инициализация сцены и бесконечной камеры
-        self._scene: SpaceScene = SpaceScene(self)
-        self._scene.setSceneRect(-COUNT_CHUNKS, -COUNT_CHUNKS, 2 * COUNT_CHUNKS, 2 * COUNT_CHUNKS)
-        
-        self._view: InfiniteView = InfiniteView(self._scene)
-        self.setCentralWidget(self._view)
-        self._view.centerOn(VIEW_CENTER_X, VIEW_CENTER_Y)
-        
-        self._view.right_clicked.connect(self.open_planet_dialog_at_pos)
-
-        # Первичная отрисовка тел из загруженного JSON
-        if self._scenario.bodies:
-            self._spawn_scenario_bodies()
-
-        # 2. Инициализация UI-элементов поверх холста
-        self._init_ui_buttons()
-
-    def _init_ui_buttons(self) -> None:
-        """Создает и настраивает плавающие кнопки интерфейса (Меню, Добавить, Экспорт)."""
-        self._btn_toggle = QPushButton("🛠", self)
-        self._btn_toggle.setFixedSize(BTN_TOGGLE_SIZE, BTN_TOGGLE_SIZE)
-        self._btn_toggle.setStyleSheet(STYLE_BTN_TOGGLE_CLOSED)
-        self._btn_toggle.clicked.connect(self.toggle_menu)
-
-        self._btn_add_planet = QPushButton("🪐 Добавить планету", self)
-        self._btn_add_planet.setFixedSize(BTN_MENU_WIDTH, BTN_MENU_HEIGHT)
-        self._btn_add_planet.setStyleSheet(STYLE_BTN_MENU_PLANET)
-        self._btn_add_planet.clicked.connect(self.open_planet_dialog_center)
-        self._btn_add_planet.hide()
-
-        self._btn_export = QPushButton("💾 Сохранить JSON", self)
-        self._btn_export.setFixedSize(BTN_MENU_WIDTH, BTN_MENU_HEIGHT)
-        self._btn_export.setStyleSheet(STYLE_BTN_MENU_EXPORT)
-        self._btn_export.clicked.connect(self.export_to_json)
-        self._btn_export.hide()
-
-    def toggle_menu(self) -> None:
-        """Переключает состояние бокового меню (открыто/закрыто) с изменением стилей."""
-        if self._btn_add_planet.isVisible():
-            self._btn_add_planet.hide()
-            self._btn_export.hide()
-            self._btn_toggle.setText("🛠")
-            self._btn_toggle.setStyleSheet(STYLE_BTN_TOGGLE_CLOSED)
+        # Если сценарий передан, берем данные из него, иначе создаем пустые
+        if scenario:
+            self.planets_info = scenario.bodies
+            self.scenario_name = scenario.name
         else:
-            self._btn_add_planet.show()
-            self._btn_export.show()
-            self._btn_toggle.setText("✖")
-            self._btn_toggle.setStyleSheet(STYLE_BTN_TOGGLE_OPEN)
+            self.planets_info = []
+            self.scenario_name = "Новая симуляция"
+
+        self.scene = SpaceScene()
+        self.view = SpaceView(self.scene)
+        self.setCentralWidget(self.view)
+        
+        self._init_ui()
+        self._render_initial_planets()
+
+    def _init_ui(self) -> None:
+        # Передаем текущее название сценария в меню для корректного экспорта
+        self.menu = PauseMenu(self, self.planets_info, self.scenario_name)
+        
+        self.menu.planet_added.connect(self._on_planet_added)
+        self.menu.planet_removed.connect(self._on_planet_removed)
+        self.menu.planet_modified.connect(self._on_planet_modified)
+        
+        self._frame_count = 0
+        self.lbl_fps = QLabel("FPS: 0", self)
+        self.lbl_fps.setStyleSheet(FPS_LABEL_STYLE)
+        self.lbl_fps.move(20, 20)
+
+        self.fps_timer = QTimer(self)
+        self.fps_timer.timeout.connect(self._update_fps_display)
+        self.fps_timer.start(1000)
+
+        self.lbl_coords = QLabel("X: 0.0 | Y: 0.0", self)
+        self.lbl_coords.setStyleSheet(COORD_LABEL_STYLE)
+        self.lbl_coords.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+        self.lbl_coords.adjustSize()
+
+        self.view.viewport().installEventFilter(self)
+    
+    def _open_edit_dialog(self, item):
+        """Открывает диалог редактирования конкретной планеты."""
+        # Передаем тело планеты вторым аргументом
+        dialog = AddPlanetDialog(self.planets_info, self, edit_body=item.body_state)
+        
+        if dialog.exec() == QDialog.DialogCode.Accepted:
+            # Т.к. данные в item.body_state обновились в диалоге, просто перерисовываем
+            item.update_visuals()
+            # Если нужно обновить реестр, кидаем сигнал
+            idx = self.planets_info.index(item.body_state)
+            self.menu.planet_modified.emit(idx)
+
+    def _on_planet_added(self, new_planet):
+        """Отрисовка новой планеты на сцене с передачей коллбэка редактирования."""
+        if hasattr(self.scene, 'add_body'):
+            # ВАЖНО: передаем два аргумента
+            self.scene.add_body(new_planet, self._open_edit_dialog)
+
+    def _render_initial_planets(self):
+        """Отрисовка тел, загруженных из файла сценария."""
+        for planet in self.planets_info:
+            self._on_planet_added(planet)
+
+    def _on_planet_removed(self, index):
+        if hasattr(self.scene, 'remove_body_by_index'):
+            self.scene.remove_body_by_index(index)
+
+    def _on_planet_modified(self, index):
+        """Вызывается при изменении данных в Реестре."""
+        if hasattr(self.scene, 'update_body_by_index'):
+            # ВАЖНО: передаем обновленный объект состояния по индексу
+            new_state = self.planets_info[index]
+            self.scene.update_body_by_index(index, new_state)
+
+    def keyPressEvent(self, event: QKeyEvent) -> None:
+        if event.key() == Qt.Key.Key_Escape:
+            self.menu.toggle()
+        super().keyPressEvent(event)
 
     def resizeEvent(self, event: QResizeEvent) -> None:
-        """
-        Обрабатывает изменение размеров окна, динамически пересчитывая позиции плавающих кнопок.
-        """
         super().resizeEvent(event)
         
-        tx: int = self.width() - self._btn_toggle.width() - UI_MARGIN
-        self._btn_toggle.move(tx, UI_MARGIN)
-        
-        ax: int = self.width() - self._btn_add_planet.width() - UI_MARGIN
-        ay: int = UI_MARGIN + self._btn_toggle.height() + UI_SPACING
-        self._btn_add_planet.move(ax, ay)
-        
-        ex: int = self.width() - self._btn_export.width() - UI_MARGIN
-        ey: int = ay + self._btn_add_planet.height() + UI_SPACING
-        self._btn_export.move(ex, ey)
+        if hasattr(self, 'lbl_fps'):
+            self.lbl_fps.move(20, 20)
 
-    def export_to_json(self) -> None:
-        """
-        Сериализует текущий сценарий с помощью Pydantic и сохраняет его в JSON файл.
-        """
-        file_path, _ = QFileDialog.getSaveFileName(
-            self, "Сохранить сценарий", "", "JSON Files (*.json)"
-        )
-        
-        if file_path:
-            try:
-                # В Pydantic v2 model_dump() возвращает чистый словарь
-                data_dict: Dict[str, Any] = self._scenario.model_dump()
-                with open(file_path, "w", encoding="utf-8") as f:
-                    json.dump(data_dict, f, indent=JSON_INDENT, ensure_ascii=False)
-                QMessageBox.information(self, "Успех", f"Сценарий '{self._scenario.name}' успешно сохранен!")
-            except Exception as e:
-                QMessageBox.critical(self, "Ошибка экспорта", f"Не удалось сохранить файл:\n{e}")
+        if self.menu.isVisible():
+            self.menu.overlay.setGeometry(self.rect())
+            self.menu._update_position()
 
-    def _spawn_scenario_bodies(self) -> None:
-        """Итеративно спавнит все тела, присутствующие в Pydantic-модели сценария."""
-        for body in self._scenario.bodies:
-            self._spawn_single_body(body)
-
-    def open_planet_dialog_center(self) -> None:
-        """Открывает диалог добавления планеты точно по центру видимого экрана камеры."""
-        center_pos: QPointF = self._view.mapToScene(self._view.viewport().rect().center())
-        self._show_add_dialog(center_pos.x(), center_pos.y())
-
-    def open_planet_dialog_at_pos(self, pos: QPointF) -> None:
-        """Открывает диалог добавления планеты в заданных мировых координатах (по правому клику)."""
-        self._show_add_dialog(pos.x(), pos.y())
-
-    def _show_add_dialog(self, x: float, y: float) -> None:
-        """
-        Внутренний метод для вызова окна `PlanetDialog` в режиме создания нового тела.
-        """
-        dialog = PlanetDialog(self, default_x=x, default_y=y, all_bodies=self._scenario.bodies)
-        if dialog.exec(): 
-            new_body: Optional[BodyState] = dialog.final_body_state
-            if new_body:
-                self._scenario.bodies.append(new_body)
-                self._spawn_single_body(new_body)
-
-    def edit_planet_dialog(self, planet_item: PlanetItem) -> None:
-        """
-        Коллбек, вызываемый при двойном клике на планету на сцене. 
-        Открывает диалог в режиме редактирования.
-        
-        Args:
-            planet_item (PlanetItem): Объект графической сцены, запросивший редактирование.
-        """
-        dialog = PlanetDialog(
-            self, 
-            existing_body=planet_item.body_state, 
-            all_bodies=self._scenario.bodies
-        )
-        if dialog.exec():
-            new_state: Optional[BodyState] = dialog.final_body_state
-            if new_state:
-                # 1. Обновляем Pydantic состояние в глобальном сценарии
-                idx: int = self._scenario.bodies.index(planet_item.body_state)
-                self._scenario.bodies[idx] = new_state
+    def eventFilter(self, obj, event: QEvent):
+        if obj == self.view.viewport():
+            if event.type() == QEvent.Type.Paint:
+                self._frame_count += 1
+            elif event.type() == QEvent.Type.MouseMove:
+                mouse_event: QMouseEvent = event
+                scene_pos = self.view.mapToScene(mouse_event.pos())
+                self._update_coords_display(scene_pos.x(), scene_pos.y())
                 
-                # 2. Обновляем состояние самого графического элемента
-                # Благодаря декоратору @property.setter в PlanetItem, 
-                # перерисовка визуальной части вызовется автоматически.
-                planet_item.body_state = new_state
+                window_pos = self.mapFromGlobal(mouse_event.globalPosition().toPoint())
+                self.lbl_coords.move(window_pos.x() + 15, window_pos.y() + 15)
+        return super().eventFilter(obj, event)
 
-    def _spawn_single_body(self, body: BodyState) -> None:
-        """
-        Создает объект `PlanetItem`, передает ему необходимые зависимости 
-        и добавляет на QGraphicsScene.
-        """
-        planet = PlanetItem(
-            body_state=body, 
-            edit_callback=self.edit_planet_dialog, 
-            planet_list_ref=self._planet_items
-        )
-        self._planet_items.append(planet)
-        self._scene.addItem(planet)
+    def _update_coords_display(self, x: float, y: float) -> None:
+        self.lbl_coords.setText(f"X: {x:.1f} | Y: {y:.1f}")
+        self.lbl_coords.adjustSize()
+
+    def _update_fps_display(self):
+        self.lbl_fps.setText(f"FPS: {self._frame_count}")
+        self.lbl_fps.adjustSize()
+        self._frame_count = 0
