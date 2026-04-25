@@ -10,13 +10,16 @@ from PyQt6.QtWidgets import (
     QMainWindow,
 )
 
-from config.models import PlanetItem
+from gui.models import PlanetItem
 from gui.add_planet import AddPlanetDialog
 from PyQt6.QtWidgets import QDialog
 
 from config.constants import *
 from config.schemas import BodyState, SimulationScenario
 from gui.space import SpaceScene, SpaceView
+
+from config.constants import PHYSICS_TICK_RATE
+from core.engine import PhysicsEngine
 
 class MainWindow(QMainWindow):
     def __init__(self, scenario: Optional[SimulationScenario] = None) -> None:
@@ -35,6 +38,7 @@ class MainWindow(QMainWindow):
         self.scene = SpaceScene()
         self.view = SpaceView(self.scene)
         self.setCentralWidget(self.view)
+        self.is_running = False
         
         self._init_ui()
         self._render_initial_planets()
@@ -62,18 +66,46 @@ class MainWindow(QMainWindow):
         self.lbl_coords.adjustSize()
 
         self.view.viewport().installEventFilter(self)
+
+        self.physics_engine = PhysicsEngine()
+        
+        # Таймер симуляции
+        self.sim_timer = QTimer(self)
+        self.sim_timer.timeout.connect(self._physics_step)
+        self.sim_timer.start(PHYSICS_TICK_RATE)
+        self.lbl_status = QLabel("ПАУЗА (Нажмите Enter для запуска)", self)
+        self.lbl_status.setStyleSheet("color: orange; font-weight: bold; background: rgba(0,0,0,100); padding: 5px;")
+        self.lbl_status.move(20, 50)
+        self.lbl_status.adjustSize()
+    
+    def _physics_step(self):
+        """Главный цикл физики."""
+        # 3. Если симуляция не запущена или открыто меню — выходим
+        if not self.is_running or self.menu.isVisible():
+            return
+            
+        dt = PHYSICS_TICK_RATE / 1000.0
+        self.physics_engine.update(self.planets_info, dt)
+        
+        for i, state in enumerate(self.planets_info):
+            self.scene.update_body_by_index(i, state)
     
     def _open_edit_dialog(self, item):
-        """Открывает диалог редактирования конкретной планеты."""
-        # Передаем тело планеты вторым аргументом
+        """Открывает диалог и останавливает всё на время редактирования."""
+        # 5. Сохраняем состояние и останавливаем мир
+        was_running = self.is_running
+        self.is_running = False
+        self._update_ui_state()
+
         dialog = AddPlanetDialog(self.planets_info, self, edit_body=item.body_state)
-        
         if dialog.exec() == QDialog.DialogCode.Accepted:
-            # Т.к. данные в item.body_state обновились в диалоге, просто перерисовываем
             item.update_visuals()
-            # Если нужно обновить реестр, кидаем сигнал
             idx = self.planets_info.index(item.body_state)
             self.menu.planet_modified.emit(idx)
+            
+        # 6. Возвращаем состояние, которое было до открытия окна
+        self.is_running = was_running
+        self._update_ui_state()
 
     def _on_planet_added(self, new_planet):
         """Отрисовка новой планеты на сцене с передачей коллбэка редактирования."""
@@ -98,7 +130,14 @@ class MainWindow(QMainWindow):
             self.scene.update_body_by_index(index, new_state)
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
-        if event.key() == Qt.Key.Key_Escape:
+        # 4. Управление запуском/паузой через Enter
+        if event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
+            self.is_running = not self.is_running
+            self._update_ui_state()
+            
+        elif event.key() == Qt.Key.Key_Escape:
+            self.is_running = False # Авто-пауза при вызове меню
+            self._update_ui_state()
             self.menu.toggle()
         super().keyPressEvent(event)
 
@@ -133,3 +172,11 @@ class MainWindow(QMainWindow):
         self.lbl_fps.setText(f"FPS: {self._frame_count}")
         self.lbl_fps.adjustSize()
         self._frame_count = 0
+    
+    def _update_ui_state(self):
+        """Обновляет текст индикатора состояния."""
+        text = "СИМУЛЯЦИЯ ЗАПУЩЕНА" if self.is_running else "ПАУЗА (Нажмите Enter)"
+        color = "white" if self.is_running else "orange"
+        self.lbl_status.setText(text)
+        self.lbl_status.setStyleSheet(f"color: {color}; font-weight: bold; background: rgba(0,0,0,100); padding: 5px;")
+        self.lbl_status.adjustSize()

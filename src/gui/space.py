@@ -6,7 +6,7 @@ from PyQt6.QtWidgets import QGraphicsScene, QGraphicsView
 from PyQt6.QtGui import QPainter, QColor, QWheelEvent, QMouseEvent
 from PyQt6.QtCore import Qt, QRectF, QPointF
 
-from config.models import PlanetItem
+from gui.models import PlanetItem
 
 # Используем импорты без src. или с ними, в зависимости от твоей структуры проекта
 from src.config.constants import (

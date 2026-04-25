@@ -19,7 +19,7 @@ BACKGROUND_VALUE: int = -10
 # =========================================
 
 MIN_STARS_PER_CHUNK: int = 0
-MAX_STARS_PER_CHUNK: int = 100
+MAX_STARS_PER_CHUNK: int = 10
 SIZE_STAR_MIN: float = 2.0
 SIZE_STAR_MAX: float = 5.0
 OPACITY_MIN: float = 0.4
@@ -219,3 +219,9 @@ STYLE_BTN_MENU_CONTINUE = """
         color: #CCCCCC;
     }
 """
+
+
+# Физический движок
+GRAVITY_CONSTANT = 10.0  # G (подобрано для пиксельных координат, можно менять)
+PHYSICS_TICK_RATE = 16   # Задержка таймера в мс (~60 тиков в секунду)
+SOFTENING_CONSTANT = 2.0 # Смягчение, чтобы избежать деления на ноль при коллизиях
