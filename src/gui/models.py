@@ -1,5 +1,5 @@
 from typing import Callable, Any, List
-from PyQt6.QtWidgets import QGraphicsEllipseItem, QGraphicsTextItem
+from PyQt6.QtWidgets import QGraphicsEllipseItem, QGraphicsSceneMouseEvent, QGraphicsTextItem
 from PyQt6.QtGui import QBrush, QColor, QPen
 from PyQt6.QtCore import Qt, QPointF
 
@@ -46,6 +46,9 @@ class PlanetItem(QGraphicsEllipseItem):
 
     def update_visuals(self) -> None:
         """Синхронизирует графику с данными из BodyState."""
+        if self._body_state is None:
+            return
+            
         r = self._body_state.radius
         self.setRect(-r, -r, r * 2.0, r * 2.0)
         self.setPos(self._body_state.position[0], self._body_state.position[1])
@@ -78,7 +81,7 @@ class PlanetItem(QGraphicsEllipseItem):
                 -t_rect.height() * scale / 2.0
             )
 
-    def mouseDoubleClickEvent(self, event) -> None:
+    def mouseDoubleClickEvent(self, event: QGraphicsSceneMouseEvent) -> None:
         """Открывает окно редактирования."""
         if self._edit_callback:
             self._edit_callback(self)
@@ -88,7 +91,7 @@ class PlanetItem(QGraphicsEllipseItem):
         """
         Предотвращает наложение планет друг на друга при перетаскивании.
         """
-        if change == QGraphicsEllipseItem.GraphicsItemChange.ItemPositionChange:
+        if change == QGraphicsEllipseItem.GraphicsItemChange.ItemPositionChange and isinstance(value, QPointF):
             target_pos: QPointF = value
             tx, ty = target_pos.x(), target_pos.y()
             r_self = self._body_state.radius

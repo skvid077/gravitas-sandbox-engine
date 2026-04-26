@@ -4,15 +4,15 @@ from core.simulation import Simulation
 from core.engine import PhysicsEngine
 
 @pytest.fixture
-def empty_simulation():
+def empty_simulation() -> Simulation:
     return Simulation()
 
 @pytest.fixture
-def zero_gravity_engine():
+def zero_gravity_engine() -> PhysicsEngine:
     return PhysicsEngine(g_const=0.0)
 
 @pytest.fixture
-def standard_body():
+def standard_body() -> BodyState:
     return BodyState(
         name="Standard",
         mass=10.0,

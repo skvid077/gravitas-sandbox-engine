@@ -1,8 +1,9 @@
 import math
 import pytest
 from config.schemas import BodyState
+from core.engine import PhysicsEngine
 
-def test_inertia_no_gravity(zero_gravity_engine, standard_body):
+def test_inertia_no_gravity(zero_gravity_engine: PhysicsEngine, standard_body: BodyState) -> None:
     standard_body.velocity = (10.0, -5.0)
     
     zero_gravity_engine.update([standard_body], dt=1.0)
@@ -10,7 +11,7 @@ def test_inertia_no_gravity(zero_gravity_engine, standard_body):
     assert standard_body.position == (10.0, -5.0)
     assert standard_body.velocity == (10.0, -5.0)
 
-def test_gravity_pull_direction():
+def test_gravity_pull_direction() -> None:
     from core.engine import PhysicsEngine
     engine = PhysicsEngine(g_const=100.0)
     
@@ -26,7 +27,7 @@ def test_gravity_pull_direction():
     assert b1.velocity[1] == 0.0
     assert b2.velocity[1] == 0.0
 
-def test_momentum_conservation(zero_gravity_engine):
+def test_momentum_conservation(zero_gravity_engine: PhysicsEngine) -> None:
     zero_gravity_engine.restitution = 1.0  # Абсолютно упругий удар
     
     b1 = BodyState(name="A", mass=10.0, radius=10.0, position=(0.0, 0.0), velocity=(10.0, 0.0), color="#FFF")
@@ -41,10 +42,8 @@ def test_momentum_conservation(zero_gravity_engine):
     assert math.isclose(initial_p, final_p, abs_tol=1e-5)
     assert math.dist(b1.position, b2.position) >= (b1.radius + b2.radius)
 
-def test_singularity_protection():
-    from core.engine import PhysicsEngine
+def test_singularity_protection() -> None:
     engine = PhysicsEngine(g_const=100.0)
-    
     # Тела в одной точке
     b1 = BodyState(name="A", mass=100.0, radius=5.0, position=(0.0, 0.0), velocity=(0.0, 0.0), color="#FFF")
     b2 = BodyState(name="B", mass=100.0, radius=5.0, position=(0.0, 0.0), velocity=(0.0, 0.0), color="#FFF")
