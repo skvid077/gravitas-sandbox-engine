@@ -81,10 +81,12 @@ class PlanetItem(QGraphicsEllipseItem):
                 -t_rect.height() * scale / 2.0
             )
 
-    def mouseDoubleClickEvent(self, event: QGraphicsSceneMouseEvent) -> None:
+    def mouseDoubleClickEvent(self, event: QGraphicsSceneMouseEvent | None) -> None:
         """Открывает окно редактирования."""
-        if self._edit_callback:
-            self._edit_callback(self)
+        if event is None:
+            return
+
+        self._edit_callback(self)
         super().mouseDoubleClickEvent(event)
 
     def itemChange(self, change: QGraphicsEllipseItem.GraphicsItemChange, value: Any) -> Any:

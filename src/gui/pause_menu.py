@@ -35,8 +35,10 @@ class DimmerOverlay(QWidget):
         self.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents, False)
         self.hide()
 
-    def paintEvent(self, event: QPaintEvent) -> None:
+    def paintEvent(self, event: Optional[QPaintEvent]) -> None:
         """Отрисовывает полупрозрачный слой."""
+        if event is None:
+            return
         painter = QPainter(self)
         painter.fillRect(self.rect(), DIMMER_COLOR)
 

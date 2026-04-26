@@ -53,8 +53,10 @@ class PlanetPreviewWidget(QWidget):
         self.radius = radius
         self.update()
 
-    def paintEvent(self, event: QPaintEvent) -> None:
+    def paintEvent(self, event: Optional[QPaintEvent]) -> None:
         """Отрисовывает планету с использованием логарифмического масштаба."""
+        if event is None:
+            return
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
 

@@ -99,7 +99,9 @@ class MainWindow(QMainWindow):
         self.lbl_coords.setStyleSheet(COORD_LABEL_STYLE)
         self.lbl_coords.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
         self.lbl_coords.adjustSize()
-        self.view.viewport().installEventFilter(self)
+        viewport = self.view.viewport()
+        if viewport is not None:
+            viewport.installEventFilter(self)
 
         self.lbl_status = QLabel(STATUS_TEXT_PAUSED, self)
         self.lbl_status.setStyleSheet(STATUS_STYLE_PAUSED)
@@ -191,8 +193,12 @@ class MainWindow(QMainWindow):
 
     # --- Системные события (Events) ---
     
-    def keyPressEvent(self, event: QKeyEvent) -> None:
+    def keyPressEvent(self, event: Optional[QKeyEvent]) -> None:
         """Обрабатывает горячие клавиши (Enter - Пауза, Escape - Меню)."""
+        if event is None:
+            super().keyPressEvent(event)
+            return
+
         if event.key() in (Qt.Key.Key_Return, Qt.Key.Key_Enter):
             self.is_running = not self.is_running
             self._update_ui_state()
@@ -202,8 +208,11 @@ class MainWindow(QMainWindow):
             self.menu.toggle()
         super().keyPressEvent(event)
 
-    def resizeEvent(self, event: QResizeEvent) -> None:
+    def resizeEvent(self, event: Optional[QResizeEvent]) -> None:
         """Синхронизирует позицию UI элементов при изменении размера окна."""
+        if event is None:
+            return
+
         super().resizeEvent(event)
         self.lbl_fps.move(20, 20)
         
@@ -211,12 +220,12 @@ class MainWindow(QMainWindow):
             self.menu.overlay.setGeometry(self.rect())
             self.menu._update_position()
 
-    def eventFilter(self, obj: QObject, event: QEvent) -> bool:
+    def eventFilter(self, obj: Optional[QObject], event: Optional[QEvent]) -> bool:
         """
         Перехватывает события графической сцены для подсчета FPS 
         и отображения координат курсора.
         """
-        if obj == self.view.viewport():
+        if obj == self.view.viewport() and event is not None:
             if event.type() == QEvent.Type.Paint:
                 self._frame_count += 1
             elif event.type() == QEvent.Type.MouseMove and isinstance(event, QMouseEvent):

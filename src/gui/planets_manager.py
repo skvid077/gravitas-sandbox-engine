@@ -65,12 +65,12 @@ class PlanetPreviewWidget(QWidget):
         self.real_radius = radius
         self.update()
 
-    def paintEvent(self, event: QPaintEvent) -> None:
+    def paintEvent(self, event: Optional[QPaintEvent]) -> None:
         """
         Отрисовывает круг планеты в логарифмическом масштабе.
         
         Args:
-            event (QPaintEvent): Событие отрисовки PyQt.
+            event (Optional[QPaintEvent]): Событие отрисовки PyQt.
         """
         # ЗАЩИТА: Если радиус некорректный, не рисуем ничего, чтобы math.log10 не упал
         if self.real_radius <= 0:

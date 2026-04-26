@@ -9,7 +9,7 @@ from PyQt6.QtCore import Qt, QRectF, QPointF, pyqtSignal, QObject
 from config.schemas import BodyState
 from gui.models import PlanetItem
 
-from src.config.constants import (
+from config.constants import (
     CHUNK_SIZE,
     HASH_SEED_X,
     HASH_SEED_Y,
@@ -52,22 +52,30 @@ class SpaceScene(QGraphicsScene):
         # Строгий список графических элементов планет
         self._planet_items: List[PlanetItem] = []
 
-    def drawBackground(self, painter: QPainter, rect: QRectF) -> None:
+    def drawBackground(self, painter: QPainter | None, rect: QRectF) -> None:
         """
         Отрисовывает звездный фон. Использует систему чанков для оптимизации:
         звезды генерируются только в пределах видимой области (viewport).
 
         Args:
-            painter (QPainter): Инструмент отрисовки PyQt.
+            painter (QPainter | None): Инструмент отрисовки PyQt.
             rect (QRectF): Область, требующая перерисовки.
         """
+        if painter is None:
+            return
+
         painter.fillRect(rect, QColor(SPACE_COLOR))
         
-        if not self.views():
+        views = self.views()
+        if not views:
             return
         
-        view = self.views()[0]
-        visible_rect = view.mapToScene(view.viewport().rect()).boundingRect()
+        view = views[0]
+        viewport = view.viewport()
+        if viewport is None:
+            return
+
+        visible_rect = view.mapToScene(viewport.rect()).boundingRect()
 
         # Отключаем звезды при сильном отдалении для экономии FPS
         if visible_rect.width() > STARS_LOD_THRESHOLD:
@@ -188,28 +196,35 @@ class SpaceView(QGraphicsView):
         self.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.setTransformationAnchor(QGraphicsView.ViewportAnchor.AnchorUnderMouse)
 
-    def mousePressEvent(self, event: QMouseEvent) -> None:
+    def mousePressEvent(self, event: QMouseEvent | None) -> None:
         """
         Обрабатывает нажатие кнопок мыши. Включает режим перетаскивания карты
         только если пользователь кликнул по пустому космосу.
         """
+        if event is None:
+            super().mousePressEvent(event)
+            return
+
         if event.button() == Qt.MouseButton.LeftButton:
             item = self.itemAt(event.pos())
-            if not item: # Если кликнули не по планете
+            if not item:  # Если кликнули не по планете
                 self.setDragMode(QGraphicsView.DragMode.ScrollHandDrag)
         super().mousePressEvent(event)
 
-    def mouseReleaseEvent(self, event: QMouseEvent) -> None:
+    def mouseReleaseEvent(self, event: QMouseEvent | None) -> None:
         """Обрабатывает отпускание кнопки мыши, выключая режим перетаскивания."""
         super().mouseReleaseEvent(event)
         self.setDragMode(QGraphicsView.DragMode.NoDrag)
         self.setCursor(Qt.CursorShape.ArrowCursor)
 
-    def wheelEvent(self, event: QWheelEvent) -> None:
+    def wheelEvent(self, event: QWheelEvent | None) -> None:
         """
         Обрабатывает прокрутку колесика мыши для плавного зума.
         Защищает от отдаления или приближения за пределы лимитов.
         """
+        if event is None:
+            return
+
         zoom_out_factor: float = 1 / ZOOM_IN_FACTOR
         
         old_scale: float = self.transform().m11()
