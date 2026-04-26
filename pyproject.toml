@@ -1,0 +1,19 @@
+[tool.mypy]
+python_version = "3.12"
+
+files = ["src", "main.py"]
+
+namespace_packages = false
+
+ignore_missing_imports = true
+
+strict = true
+disallow_untyped_defs = true
+warn_return_any = true
+warn_unused_configs = true
+
+plugins = ["pydantic.mypy"]
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
