@@ -4,7 +4,7 @@ from typing import Dict, List, Tuple
 
 from PyQt6.QtWidgets import QGraphicsScene, QGraphicsView
 from PyQt6.QtGui import QPainter, QColor, QWheelEvent, QMouseEvent
-from PyQt6.QtCore import Qt, QRectF, QPointF
+from PyQt6.QtCore import Qt, QRectF, QPointF, pyqtSignal
 
 from gui.models import PlanetItem
 
@@ -87,6 +87,7 @@ class SpaceScene(QGraphicsScene):
             self._planet_items[index].body_state = new_state
 
 class SpaceView(QGraphicsView):
+    right_click_empty = pyqtSignal(float, float)
     def __init__(self, scene: SpaceScene, parent=None):
         super().__init__(scene, parent)
         self.setRenderHint(QPainter.RenderHint.Antialiasing)
