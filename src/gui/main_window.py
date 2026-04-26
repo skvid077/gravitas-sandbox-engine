@@ -1,3 +1,4 @@
+import random
 from typing import Optional
 
 from PyQt6.QtCore import QEvent, QTimer, Qt
@@ -7,6 +8,7 @@ from PyQt6.QtWidgets import QMainWindow, QLabel, QDialog
 from gui.pause_menu import PauseMenu
 from gui.add_planet import AddPlanetDialog
 from gui.space import SpaceScene, SpaceView
+from gui.control_panel import ControlPanel
 
 from config.constants import *
 from config.schemas import SimulationScenario
@@ -16,7 +18,7 @@ class MainWindow(QMainWindow):
     def __init__(self, scenario: Optional[SimulationScenario] = None) -> None:
         super().__init__()
         self.setWindowTitle("Gravitas Sandbox")
-        self.resize(1024, 768)
+        self.resize(1200, 800)
         
         initial_bodies = scenario.bodies if scenario else []
         self.simulation = Simulation(initial_bodies)
@@ -28,13 +30,22 @@ class MainWindow(QMainWindow):
         
         self.is_running = False
         self._frame_count = 0
+        self.time_scale = 1.0  # Множитель времени
         
         self._init_ui()
         self._render_initial_planets()
 
     def _init_ui(self) -> None:
-        self.menu = PauseMenu(self, self.simulation.bodies, self.scenario_name)
+        # --- Подключение боковой панели ---
+        self.panel = ControlPanel(self)
+        self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.panel)
         
+        self.panel.gravity_changed.connect(self._set_gravity)
+        self.panel.time_scale_changed.connect(self._set_time_scale)
+        self.panel.clear_scene_requested.connect(self._clear_scene)
+
+        # --- Остальной UI ---
+        self.menu = PauseMenu(self, self.simulation.bodies, self.scenario_name)
         self.menu.planet_added.connect(self._on_planet_added)
         self.menu.planet_removed.connect(self._on_planet_removed)
         self.menu.planet_modified.connect(self._on_planet_modified)
@@ -62,20 +73,41 @@ class MainWindow(QMainWindow):
         self.sim_timer.timeout.connect(self._physics_step)
         self.sim_timer.start(PHYSICS_TICK_RATE)
 
-        # Единственное подключение для мыши
         self.view.right_click_empty.connect(self._add_planet_on_click)
 
+    # --- Методы управления с панели ---
+    def _set_gravity(self, new_g: float) -> None:
+        self.simulation.physics_engine.G = new_g
+
+    def _set_time_scale(self, scale: float) -> None:
+        self.time_scale = scale
+
+    def _clear_scene(self) -> None:
+        # 1. Жестко стираем всю графику планет со сцены
+        if hasattr(self.scene, 'clear_planets'):
+            self.scene.clear_planets()
+            
+        # 2. Очищаем массивы физического ядра
+        self.simulation.bodies.clear()
+        
+        # 3. Обновляем список в боковом меню паузы
+        if hasattr(self.menu, 'update_planets_list'):
+            self.menu.update_planets_list()
+
+    # --- Главный цикл физики ---
     def _physics_step(self) -> None:
         if not self.is_running or self.menu.isVisible() or not self.simulation.bodies:
             return
-
-        dt = PHYSICS_TICK_RATE / 1000.0
+            
+        # Применяем множитель времени
+        dt = (PHYSICS_TICK_RATE / 1000.0) * self.time_scale
         self.simulation.step(dt)
-
+        
         for i, state in enumerate(self.simulation.bodies):
             if hasattr(self.scene, 'update_body_by_index'):
                 self.scene.update_body_by_index(i, state)
 
+    # --- Остальные методы (без изменений) ---
     def _add_planet_on_click(self, x: float, y: float) -> None:
         new_body = self.simulation.add_default_body(x, y)
         self._on_planet_added(new_body)

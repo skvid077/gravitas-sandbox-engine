@@ -8,7 +8,6 @@ from PyQt6.QtCore import Qt, QRectF, QPointF, pyqtSignal
 
 from gui.models import PlanetItem
 
-# Используем импорты без src. или с ними, в зависимости от твоей структуры проекта
 from src.config.constants import (
     CHUNK_SIZE, HASH_SEED_X, HASH_SEED_Y, SPACE_COLOR, 
     MIN_STARS_PER_CHUNK, MAX_STARS_PER_CHUNK, SIZE_STAR_MIN, SIZE_STAR_MAX,
@@ -55,6 +54,26 @@ class SpaceScene(QGraphicsScene):
         for cx in range(start_cx, end_cx + 1):
             for cy in range(start_cy, end_cy + 1):
                 self._draw_chunk(painter, cx, cy)
+    
+    def remove_body_by_index(self, index: int) -> None:
+        """Удаляет графический объект планеты со сцены."""
+        if hasattr(self, 'planet_items') and 0 <= index < len(self.planet_items):
+            item = self.planet_items.pop(index)
+            self.removeItem(item)
+    
+    def clear_planets(self) -> None:
+        """Гарантированно удаляет все графические объекты планет со сцены.""" # Убедись, что импорт есть
+        
+        # Удаляем сами элементы с экрана
+        for item in self.items():
+            if isinstance(item, PlanetItem):
+                self.removeItem(item)
+                
+        # Если у тебя есть внутренние списки, очищаем их на всякий случай
+        if hasattr(self, '_planet_items'):
+            self._planet_items.clear()
+        elif hasattr(self, 'planet_items'):
+            self.planet_items.clear()
 
     def _draw_chunk(self, painter: QPainter, cx: int, cy: int):
         key = (cx, cy)

@@ -4,7 +4,7 @@ from config.schemas import BodyState
 from config.constants import GRAVITY_CONSTANT, SOFTENING_CONSTANT
 
 class PhysicsEngine:
-    def __init__(self, g_const: float = GRAVITY_CONSTANT):
+    def __init__(self, g_const: float = GRAVITY_CONSTANT) -> None:
         self.G = g_const
         # Коэффициент упругости отскока (0.8 - заметный отскок, 0.2 - глухой удар)
         self.restitution = 0.8
@@ -30,7 +30,7 @@ class PhysicsEngine:
     def _apply_gravity_and_integrate(self, bodies: List[BodyState], dt: float) -> None:
         """Расчет гравитации и перемещение тел (Полунеявный метод Эйлера)."""
         n = len(bodies)
-        accelerations = [[0.0, 0.0] for _ in range(n)]
+        accelerations: List[List[float]] = [[0.0, 0.0] for _ in range(n)]
         
         for i in range(n):
             for j in range(i + 1, n):
@@ -79,7 +79,7 @@ class PhysicsEngine:
 
                 if dist_sq < min_dist*min_dist:
                     dist = math.sqrt(dist_sq)
-                    if dist == 0:
+                    if dist == 0.0:
                         dist = 0.001
                         dx, dy = 0.001, 0.0
 
