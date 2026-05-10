@@ -3,3 +3,5 @@ numpy==1.26.4
 pydantic==2.7.1
 pytest==8.2.0
 mypy==1.10.0
+sphinx==7.3.7
+sphinx-rtd-theme==2.0.0
