@@ -1,7 +1,7 @@
 """Константы физического движка и математических расчетов."""
 
 # Параметры движка
-GRAVITY_CONSTANT: float = 10.0
+GRAVITY_CONSTANT: float = 9.81
 PHYSICS_TICK_RATE: int = 16   # мс (~60 FPS)
 SOFTENING_CONSTANT: float = 2.0
 DEFAULT_SUB_STEPS: int = 128
@@ -16,3 +16,6 @@ MIN_COORD: float = -1e9
 MAX_COORD: float = 1e9
 MIN_VEL: float = -10000.0
 MAX_VEL: float = 10000.0
+
+BH_THETA: float = 0.5  # Порог точности (0.0 - точный O(N^2), 1.0 - быстро, но грубо)
+BH_SOFTENING: float = 1e-4  # Сглаживание сингулярности при близких пролетах

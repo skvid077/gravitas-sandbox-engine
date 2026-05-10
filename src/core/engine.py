@@ -1,173 +1,163 @@
-import math
-from typing import List
-from config.schemas import BodyState
+import numpy as np
+import numpy.typing as npt
+from typing import List, Dict, Tuple, Set
+
 from config.constants import (
     GRAVITY_CONSTANT,
-    SOFTENING_CONSTANT,
-    DEFAULT_RESTITUTION,
-    DEFAULT_SUB_STEPS
+    BH_THETA,
+    SOFTENING_CONSTANT
 )
+from core.quadtree import BoundingBox, QuadTreeNode, calculate_bh_acceleration
 
 
 class PhysicsEngine:
     """
-    Физическое ядро симуляции.
+    Высокопроизводительное физическое ядро симуляции.
     
-    Реализует:
-    1. Расчет гравитационного взаимодействия N тел.
-    2. Интегрирование скоростей и позиций (Semi-Implicit Euler).
-    3. Разрешение упругих столкновений с позиционной коррекцией.
+    Оптимизации:
+    1. Гравитация: Алгоритм Барнса-Хата (O(N log N)).
+    2. Коллизии: Пространственное хеширование (O(N)).
+    3. Вычисления: Векторизация через NumPy (матричные операции).
     """
 
     def __init__(self, g_const: float = GRAVITY_CONSTANT) -> None:
-        """
-        Инициализирует движок.
-
-        Args:
-            g_const (float): Гравитационная постоянная.
-        """
         self.G = g_const
-        self.restitution = DEFAULT_RESTITUTION
-        self.sub_steps = DEFAULT_SUB_STEPS
 
-    def update(self, bodies: List[BodyState], dt: float) -> None:
+    def update(self, bodies: list, dt: float) -> None:
         """
-        Продвигает физическое состояние всех тел на шаг dt.
-        Использует суб-шаги для предотвращения 'пролетания' тел друг сквозь друга.
-
-        Args:
-            bodies (List[BodyState]): Список тел для симуляции.
-            dt (float): Общий шаг времени.
+        Главный цикл обновления физики.
         """
-        n = len(bodies)
-        if n == 0:
-            return
-            
-        if n < 2:
-            # Если тело одно, просто двигаем его по инерции
-            body = bodies[0]
-            body.position = (
-                body.position[0] + body.velocity[0] * dt,
-                body.position[1] + body.velocity[1] * dt
-            )
+        if not bodies:
             return
 
-        # Делим временной шаг на части для точности вычислений
-        sub_dt = dt / self.sub_steps
+        if len(bodies) < 2:
+            self._apply_velocity(bodies, dt)
+            return
 
-        for _ in range(self.sub_steps):
-            self._apply_gravity_and_integrate(bodies, sub_dt)
-            self._resolve_collisions(bodies)
-
-    def _apply_gravity_and_integrate(self, bodies: List[BodyState], dt: float) -> None:
-        """
-        Вычисляет силы гравитации между всеми парами тел и обновляет их скорости и координаты.
-        Применяет SOFTENING_CONSTANT для избежания бесконечных сил при сближении.
-
-        Args:
-            bodies (List[BodyState]): Список тел.
-            dt (float): Шаг времени суб-итерации.
-        """
-        n = len(bodies)
-        # Инициализируем массив ускорений для каждого тела [ax, ay]
-        accelerations: List[List[float]] = [[0.0, 0.0] for _ in range(n)]
+        # 1. Подготовка данных: выгружаем позиции в матрицу для поиска границ и построения дерева
+        positions_matrix = np.array([b.position for b in bodies], dtype=np.float64)
         
-        # 1. Расчет ускорений (O(N^2))
-        for i in range(n):
-            for j in range(i + 1, n):
-                b1 = bodies[i]
-                b2 = bodies[j]
-                
-                dx = b2.position[0] - b1.position[0]
-                dy = b2.position[1] - b1.position[1]
-                
-                # Квадрат расстояния с учетом смягчения (softening)
-                dist_sq = dx*dx + dy*dy + SOFTENING_CONSTANT**2
-                dist = math.sqrt(dist_sq)
-                
-                # Величина силы: F = G * (m1 * m2) / r^2 -> Ускорение: a = G * m_other / r^2
-                force_mag = self.G / dist_sq
-                ax = force_mag * (dx / dist)
-                ay = force_mag * (dy / dist)
-                
-                # Вектор ускорения направлен к другому телу
-                accelerations[i][0] += ax * b2.mass
-                accelerations[i][1] += ay * b2.mass
-                accelerations[j][0] -= ax * b1.mass
-                accelerations[j][1] -= ay * b1.mass
+        # 2. Построение QuadTree
+        min_coords = np.min(positions_matrix, axis=0)
+        max_coords = np.max(positions_matrix, axis=0)
+        
+        size = np.max(max_coords - min_coords) + 1.0
+        root_boundary = BoundingBox(
+            x=float(min_coords[0] - 0.5),
+            y=float(min_coords[1] - 0.5),
+            width=float(size),
+            height=float(size)
+        )
+        root_node = QuadTreeNode(root_boundary)
 
-        # 2. Интегрирование (Semi-Implicit Euler)
         for i, body in enumerate(bodies):
-            # Сначала обновляем скорость (V_new = V_old + a * dt)
-            vx = body.velocity[0] + accelerations[i][0] * dt
-            vy = body.velocity[1] + accelerations[i][1] * dt
-            body.velocity = (vx, vy)
-            
-            # Затем обновляем позицию (P_new = P_old + V_new * dt)
-            body.position = (
-                body.position[0] + vx * dt,
-                body.position[1] + vy * dt
+            root_node.insert(positions_matrix[i], body.mass)
+
+        # 3. Расчет ускорений и обновление скоростей
+        # Используем пред-вычисленную матрицу позиций, чтобы не создавать массивы в цикле
+        for i, body in enumerate(bodies):
+            acceleration = calculate_bh_acceleration(
+                node=root_node,
+                target_pos=positions_matrix[i],
+                G=self.G,
+                theta=BH_THETA,
+                softening=SOFTENING_CONSTANT
             )
+            
+            # Обновляем скорость в модели (Pydantic принимает list)
+            vel_arr = np.array(body.velocity, dtype=np.float64)
+            vel_arr += acceleration * dt
+            body.velocity = vel_arr.tolist()
 
-    def _resolve_collisions(self, bodies: List[BodyState]) -> None:
+        # 4. Обновление позиций (Векторизовано)
+        self._apply_velocity(bodies, dt)
+
+        # 5. Обработка столкновений (O(N))
+        self._handle_collisions(bodies)
+
+    def _apply_velocity(self, bodies: list, dt: float) -> None:
+        """Обновление позиций через матричные операции NumPy."""
+        if not bodies:
+            return
+
+        pos_mat = np.array([b.position for b in bodies], dtype=np.float64)
+        vel_mat = np.array([b.velocity for b in bodies], dtype=np.float64)
+        
+        # Матричное сложение на уровне C
+        pos_mat += vel_mat * dt
+        
+        # Запись результатов обратно в модели
+        for i, body in enumerate(bodies):
+            body.position = pos_mat[i].tolist()
+
+    def _handle_collisions(self, bodies: list) -> None:
         """
-        Проверяет пересечения тел и разрешает их через мгновенную коррекцию 
-        позиций (расталкивание) и импульсный отскок.
-
-        Args:
-            bodies (List[BodyState]): Список тел.
+        Разрешение неупругих столкновений (слияний) за O(N).
+        Использует пространственное хеширование (Uniform Grid).
         """
-        n = len(bodies)
-        for i in range(n):
-            for j in range(i + 1, n):
-                b1 = bodies[i]
-                b2 = bodies[j]
+        if len(bodies) < 2:
+            return
 
-                dx = b2.position[0] - b1.position[0]
-                dy = b2.position[1] - b1.position[1]
-                dist_sq = dx*dx + dy*dy
-                min_dist = b1.radius + b2.radius
+        # Определяем размер ячейки сетки на основе самого крупного объекта
+        max_r = max(b.radius for b in bodies)
+        cell_size = max_r * 2.1
+        if cell_size < 1.0: cell_size = 1.0
 
-                if dist_sq < min_dist*min_dist:
-                    dist = math.sqrt(dist_sq)
-                    if dist == 0.0:
-                        # Предотвращение деления на 0 при полном совпадении координат
-                        dist = 0.001
-                        dx, dy = 0.001, 0.0
+        # Broad-phase: распределение по ячейкам
+        grid: Dict[Tuple[int, int], List[any]] = {}
+        for body in bodies:
+            cell = (int(body.position[0] // cell_size), int(body.position[1] // cell_size))
+            if cell not in grid:
+                grid[cell] = []
+            grid[cell].append(body)
 
-                    nx = dx / dist
-                    ny = dy / dist
+        to_remove_ids: Set[int] = set()
 
-                    # --- 1. Позиционная коррекция (выталкивание тел друг из друга) ---
-                    overlap = min_dist - dist
-                    total_mass = b1.mass + b2.mass
-                    
-                    # Тяжелое тело двигается меньше, легкое - больше
-                    ratio1 = b2.mass / total_mass
-                    ratio2 = b1.mass / total_mass
+        # Narrow-phase: проверка пересечений с соседями
+        for body_a in bodies:
+            b_a_id = id(body_a)
+            if b_a_id in to_remove_ids:
+                continue
 
-                    b1.position = (b1.position[0] - nx * overlap * ratio1, 
-                                   b1.position[1] - ny * overlap * ratio1)
-                    b2.position = (b2.position[0] + nx * overlap * ratio2, 
-                                   b2.position[1] + ny * overlap * ratio2)
+            cx, cy = int(body_a.position[0] // cell_size), int(body_a.position[1] // cell_size)
 
-                    # --- 2. Коррекция скоростей (импульсный отскок) ---
-                    dvx = b2.velocity[0] - b1.velocity[0]
-                    dvy = b2.velocity[1] - b1.velocity[1]
-                    
-                    # Проекция относительной скорости на нормаль столкновения
-                    v_along_normal = dvx * nx + dvy * ny
-
-                    # Если тела уже разлетаются, импульс не применяем
-                    if v_along_normal >= 0:
+            for dx in range(-1, 2):
+                for dy in range(-1, 2):
+                    cell = (cx + dx, cy + dy)
+                    if cell not in grid:
                         continue
 
-                    # Расчет величины импульса J
-                    j_impulse = -(1 + self.restitution) * v_along_normal
-                    j_impulse /= (1 / b1.mass + 1 / b2.mass)
+                    for body_b in grid[cell]:
+                        b_b_id = id(body_b)
+                        if body_a is body_b or b_b_id in to_remove_ids:
+                            continue
 
-                    # Применяем импульс к скоростям
-                    b1.velocity = (b1.velocity[0] - (j_impulse / b1.mass) * nx,
-                                   b1.velocity[1] - (j_impulse / b1.mass) * ny)
-                    b2.velocity = (b2.velocity[0] + (j_impulse / b2.mass) * nx,
-                                   b2.velocity[1] + (j_impulse / b2.mass) * ny)
+                        pos_a = np.array(body_a.position, dtype=np.float64)
+                        pos_b = np.array(body_b.position, dtype=np.float64)
+                        
+                        dist_sq = np.sum((pos_a - pos_b)**2)
+                        min_dist = body_a.radius + body_b.radius
+
+                        if dist_sq < min_dist**2:
+                            # Физика слияния (Закон сохранения массы и импульса)
+                            m_a, m_b = body_a.mass, body_b.mass
+                            total_m = m_a + m_b
+                            
+                            vel_a = np.array(body_a.velocity, dtype=np.float64)
+                            vel_b = np.array(body_b.velocity, dtype=np.float64)
+                            
+                            # Новые параметры для body_a
+                            new_vel = (m_a * vel_a + m_b * vel_b) / total_m
+                            new_pos = (m_a * pos_a + m_b * pos_b) / total_m
+                            new_radius = np.sqrt(body_a.radius**2 + body_b.radius**2)
+
+                            body_a.position = new_pos.tolist()
+                            body_a.velocity = new_vel.tolist()
+                            body_a.mass = float(total_m)
+                            body_a.radius = float(new_radius)
+
+                            to_remove_ids.add(b_b_id)
+
+        # Удаляем "съеденные" объекты из основного списка
+        if to_remove_ids:
+            bodies[:] = [b for b in bodies if id(b) not in to_remove_ids]
