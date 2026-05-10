@@ -18,7 +18,7 @@ from core.engine import PhysicsEngine
 from config.schemas import BodyState
 
 # 2. Настройка логгирования
-log_file = BENCHMARK_DIR / "benchmark.log"
+log_file = BENCHMARK_DIR / "benchmark_20planet.log"
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s [%(levelname)s]: %(message)s',
@@ -86,11 +86,11 @@ def run_benchmark(num_bodies: int = 100, steps: int = 50) -> None:
 
 if __name__ == "__main__":
     # Параметры теста
-    B_COUNT = 1000
+    B_COUNT = 20
     S_COUNT = 500
 
     profiler = cProfile.Profile()
-    
+
     try:
         profiler.enable()
         run_benchmark(num_bodies=B_COUNT, steps=S_COUNT)
@@ -99,7 +99,7 @@ if __name__ == "__main__":
         logger.error(f"Error: {e}", exc_info=True)
     finally:
         # Сохранение профиля для snakeviz
-        prof_file = BENCHMARK_DIR / "physics.prof"
+        prof_file = BENCHMARK_DIR / "physics_20planet.prof"
         profiler.dump_stats(str(prof_file))
         
         # Запись ТОП-10 функций прямо в лог
