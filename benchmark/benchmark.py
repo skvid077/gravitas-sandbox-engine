@@ -30,9 +30,9 @@ def generate_bodies(n: int) -> list[BodyState]:
     return bodies
 
 def run_benchmark() -> None:
-    num_bodies = 100
-    steps = 50
-    dt = 0.016  
+    num_bodies = 1000
+    steps = 500
+    dt = 0.016
 
     print("Инициализация...")
     engine = PhysicsEngine(g_const=100.0)
