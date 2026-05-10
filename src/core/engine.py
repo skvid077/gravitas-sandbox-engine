@@ -1,5 +1,6 @@
 import numpy as np
 from typing import List, Dict, Tuple, Set
+from config.schemas import BodyState
 
 from config.constants import (
     GRAVITY_CONSTANT,
@@ -26,7 +27,7 @@ class PhysicsEngine:
     def __init__(self, g_const: float = GRAVITY_CONSTANT) -> None:
         self.G = g_const
 
-    def update(self, bodies: list, dt: float) -> None:
+    def update(self, bodies: list[BodyState], dt: float) -> None:
         """
         Главный цикл обновления физики.
         """
@@ -78,7 +79,7 @@ class PhysicsEngine:
         # 5. Обработка столкновений (O(N))
         self._handle_collisions(bodies)
 
-    def _apply_velocity(self, bodies: list, dt: float) -> None:
+    def _apply_velocity(self, bodies: list[BodyState], dt: float) -> None:
         """Обновление позиций через матричные операции NumPy."""
         if not bodies:
             return
@@ -93,7 +94,7 @@ class PhysicsEngine:
         for i, body in enumerate(bodies):
             body.position = pos_mat[i].tolist()
 
-    def _handle_collisions(self, bodies: list) -> None:
+    def _handle_collisions(self, bodies: list[BodyState]) -> None:
         """
         Разрешение неупругих столкновений (слияний) за O(N).
         Использует пространственное хеширование (Uniform Grid).
@@ -108,7 +109,7 @@ class PhysicsEngine:
             cell_size = MIN_CELL_SIZE
 
         # Broad-phase: распределение по ячейкам
-        grid: Dict[Tuple[int, int], List[any]] = {}
+        grid: Dict[Tuple[int, int], List[BodyState]] = {}
         for body in bodies:
             cell = (int(body.position[0] // cell_size), int(body.position[1] // cell_size))
             if cell not in grid:

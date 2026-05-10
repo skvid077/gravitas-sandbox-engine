@@ -16,10 +16,9 @@ def test_body_state_valid_creation() -> None:
 
 def test_body_state_missing_fields() -> None:
     with pytest.raises(ValidationError):
-        BodyState(name="Invalid")  # Отсутствуют обязательные поля
+        BodyState(name="Invalid")
 
 def test_body_state_type_coercion() -> None:
-    # Pydantic должен автоматически конвертировать int в float
     body = BodyState(
         name="Coerced",
         mass=10, 

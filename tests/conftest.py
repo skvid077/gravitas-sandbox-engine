@@ -17,7 +17,7 @@ def standard_body() -> BodyState:
         name="Standard",
         mass=10.0,
         radius=5.0,
-        position=(0.0, 0.0),
-        velocity=(0.0, 0.0),
+        position=[0.0, 0.0],
+        velocity=[0.0, 0.0],
         color="#FFFFFF"
     )

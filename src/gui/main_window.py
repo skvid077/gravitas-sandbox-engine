@@ -154,7 +154,9 @@ class MainWindow(QMainWindow):
                 self.simulation.bodies.append(body)
                 self._on_planet_added(body)
                 
-            self.view.viewport().update()
+            viewport = self.view.viewport()
+            if viewport is not None:
+                viewport.update()
 
     def _on_timeline_end(self) -> None:
         """

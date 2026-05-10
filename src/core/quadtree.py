@@ -1,6 +1,14 @@
 import numpy as np
 import numpy.typing as npt
 from typing import Optional, List, Tuple
+from config.constants import (
+    SPACE_DIMENSIONS,
+    SUBDIVISION_FACTOR,
+    DEFAULT_BH_THETA,
+    DEFAULT_SOFTENING,
+    MIN_DIST_EPSILON
+)
+
 
 class BoundingBox:
     __slots__ = ('x', 'y', 'width', 'height')
@@ -12,18 +20,19 @@ class BoundingBox:
         self.height = height
 
     def contains(self, pos: npt.NDArray[np.float64]) -> bool:
-        return (self.x <= pos[0] < self.x + self.width and 
+        return bool(self.x <= pos[0] < self.x + self.width and 
                 self.y <= pos[1] < self.y + self.height)
 
     def subdivide(self) -> Tuple['BoundingBox', 'BoundingBox', 'BoundingBox', 'BoundingBox']:
-        hw = self.width / 2.0
-        hh = self.height / 2.0
+        hw = self.width / SUBDIVISION_FACTOR
+        hh = self.height / SUBDIVISION_FACTOR
         return (
             BoundingBox(self.x, self.y, hw, hh),
             BoundingBox(self.x + hw, self.y, hw, hh),
             BoundingBox(self.x, self.y + hh, hw, hh),
             BoundingBox(self.x + hw, self.y + hh, hw, hh)
         )
+
 
 class QuadTreeNode:
     __slots__ = ('boundary', 'body_pos', 'body_mass', 'total_mass', 
@@ -34,7 +43,7 @@ class QuadTreeNode:
         self.body_pos: Optional[npt.NDArray[np.float64]] = None
         self.body_mass: float = 0.0
         self.total_mass: float = 0.0
-        self.center_of_mass: npt.NDArray[np.float64] = np.zeros(2, dtype=np.float64)
+        self.center_of_mass: npt.NDArray[np.float64] = np.zeros(SPACE_DIMENSIONS, dtype=np.float64)
         self.children: Optional[List['QuadTreeNode']] = None
         self.is_leaf: bool = True
 
@@ -43,6 +52,7 @@ class QuadTreeNode:
             return False
 
         new_total_mass = self.total_mass + mass
+        # Обновление центра масс
         self.center_of_mass = (self.center_of_mass * self.total_mass + pos * mass) / new_total_mass
         self.total_mass = new_total_mass
 
@@ -78,23 +88,24 @@ class QuadTreeNode:
                 return True
         return False
 
+
 def calculate_bh_acceleration(
     node: QuadTreeNode, 
     target_pos: npt.NDArray[np.float64], 
     G: float, 
-    theta: float = 0.5,
-    softening: float = 1e-4
+    theta: float = DEFAULT_BH_THETA,
+    softening: float = DEFAULT_SOFTENING
 ) -> npt.NDArray[np.float64]:
-    acc = np.zeros(2, dtype=np.float64)
+    acc: npt.NDArray[np.float64] = np.zeros(SPACE_DIMENSIONS, dtype=np.float64)
     
-    if node.total_mass == 0:
+    if node.total_mass == 0.0:
         return acc
 
     r_vec = node.center_of_mass - target_pos
     dist_sq = float(np.sum(r_vec**2))
-    dist = np.sqrt(dist_sq)
+    dist = float(np.sqrt(dist_sq))
 
-    if dist < 1e-10:
+    if dist < MIN_DIST_EPSILON:
         return acc
 
     if node.is_leaf or (node.boundary.width / dist < theta):

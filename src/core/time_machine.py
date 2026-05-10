@@ -1,6 +1,7 @@
 from collections import deque
 from typing import List, Dict, Any, Optional
 
+from config.schemas import BodyState
 from config.constants import (
     DEFAULT_MAX_SECONDS_FOR_TIME_MACHINE,
     DEFAULT_FPS_FOR_TIME_MACHINE
@@ -9,12 +10,12 @@ from config.constants import (
 class TimeMachine:
     def __init__(self, max_seconds: int = DEFAULT_MAX_SECONDS_FOR_TIME_MACHINE, fps: int = DEFAULT_FPS_FOR_TIME_MACHINE) -> None:
         # Прошлое: кольцевой буфер (ограничен по памяти)
-        self.past = deque(maxlen=max_seconds * fps)
+        self.past: deque[List[Dict[str, Any]]] = deque(maxlen=max_seconds * fps)
         # Будущее: стек отмотанных кадров
-        self.future = []
-        self.is_paused = False
+        self.future: List[List[Dict[str, Any]]] = []
+        self.is_paused: bool = False
 
-    def save_snapshot(self, bodies: list) -> None:
+    def save_snapshot(self, bodies: list[BodyState]) -> None:
         """Сохраняет слепок при нормальном ходе времени."""
         if self.is_paused:
             return
