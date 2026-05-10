@@ -12,6 +12,7 @@ from gui.control_panel import ControlPanel
 
 from config.schemas import SimulationScenario, BodyState
 from core.simulation import Simulation
+from core.time_machine import TimeMachine
 from config.constants import (
     MAIN_WINDOW_TITLE,
     MAIN_WINDOW_WIDTH,
@@ -36,11 +37,9 @@ class MainWindow(QMainWindow):
 
     def __init__(self, scenario: Optional[SimulationScenario] = None) -> None:
         """
-        Инициализирует главное окно и запускает графический интерфейс.
-
-        Args:
-            scenario (Optional[SimulationScenario], optional): Сценарий симуляции для загрузки. 
-                Если None, создается пустая песочница. По умолчанию None.
+        Инициализация главного окна. 
+        Поднимаем движок, настраиваем сцену и подвязываем к ней UI.
+        Если передан сценарий, сразу грузим из него планеты.
         """
         super().__init__()
         self.setWindowTitle(MAIN_WINDOW_TITLE)
@@ -58,7 +57,10 @@ class MainWindow(QMainWindow):
         self._frame_count: int = 0
         self.time_scale: float = 1.0
         
-        # Строгая декларация атрибутов для mypy
+        # Машина времени (запоминаем последние 30 секунд при 60 FPS)
+        self.time_machine = TimeMachine(max_seconds=30, fps=int(1000 / PHYSICS_TICK_RATE))
+        
+        # Строгая декларация атрибутов
         self.panel: ControlPanel
         self.menu: PauseMenu
         self.lbl_fps: QLabel
@@ -71,7 +73,10 @@ class MainWindow(QMainWindow):
         self._render_initial_planets()
 
     def _init_ui(self) -> None:
-        """Инициализирует все дочерние виджеты, таймеры и подключает сигналы."""
+        """
+        Собирает весь интерфейс: боковую панель управления, 
+        меню паузы и плавающие виджеты (FPS, координаты курсора, статус симуляции).
+        """
         # --- Подключение боковой панели ---
         self.panel = ControlPanel(self)
         self.addDockWidget(Qt.DockWidgetArea.RightDockWidgetArea, self.panel)
@@ -79,6 +84,11 @@ class MainWindow(QMainWindow):
         self.panel.gravity_changed.connect(self._set_gravity)
         self.panel.time_scale_changed.connect(self._set_time_scale)
         self.panel.clear_scene_requested.connect(self._clear_scene)
+
+        # --- Подключение машины времени к слайдеру ---
+        self.panel.timeline_pressed.connect(self._on_timeline_start)
+        self.panel.timeline_changed.connect(self._on_timeline_scrub)
+        self.panel.timeline_released.connect(self._on_timeline_end)
 
         # --- Меню паузы ---
         self.menu = PauseMenu(self, self.simulation.bodies, self.scenario_name)
@@ -115,18 +125,56 @@ class MainWindow(QMainWindow):
 
         self.view.right_click_empty.connect(self._add_planet_on_click)
 
+    # --- Методы управления машиной времени ---
+
+    def _on_timeline_start(self) -> None:
+        """
+        Пользователь схватился за ползунок истории.
+        Жестко ставим симуляцию и запись времени на паузу.
+        """
+        self.time_machine.pause()
+        self.is_running = False
+        self._update_ui_state()
+
+    def _on_timeline_scrub(self, frame_index: int) -> None:
+        """
+        Перематываем время на конкретный кадр с ползунка.
+        Сносим текущие тела и полностью восстанавливаем сцену из слепка.
+        """
+        snapshot = self.time_machine.jump_to(frame_index)
+        
+        if snapshot is not None:
+            # Полностью очищаем сцену
+            self.scene.clear_planets()
+            self.simulation.bodies.clear()
+            
+            # Восстанавливаем состояние из слепка
+            for body_dict in snapshot:
+                body = BodyState(**body_dict)
+                self.simulation.bodies.append(body)
+                self._on_planet_added(body)
+                
+            self.view.viewport().update()
+
+    def _on_timeline_end(self) -> None:
+        """
+        Пользователь отпустил ползунок перемотки.
+        Отпускаем машину времени, но саму физику оставляем на паузе, чтобы дать осмотреться.
+        """
+        self.time_machine.resume()
+
     # --- Методы управления с панели ---
     
     def _set_gravity(self, new_g: float) -> None:
-        """Обновляет гравитационную постоянную в физическом движке."""
+        """Прокидывает новое значение гравитации с ползунка в движок."""
         self.simulation.physics_engine.G = new_g
 
     def _set_time_scale(self, scale: float) -> None:
-        """Обновляет множитель времени симуляции."""
+        """Меняет множитель скорости времени для симуляции."""
         self.time_scale = scale
 
     def _clear_scene(self) -> None:
-        """Полностью очищает сцену и физическое ядро от планет."""
+        """Полностью зачищает космос. Удаляет и физические модели, и графику."""
         self.scene.clear_planets()
         self.simulation.bodies.clear()
 
@@ -134,31 +182,42 @@ class MainWindow(QMainWindow):
     
     def _physics_step(self) -> None:
         """
-        Выполняет один шаг физической симуляции и синхронизирует графику.
-        Блокируется, если симуляция на паузе или открыто меню.
+        Сердце симуляции. Дергается по таймеру каждый кадр.
+        Сохраняет историю, считает новую физику и двигает UI.
         """
         if not self.is_running or self.menu.isVisible() or not self.simulation.bodies:
             return
             
+        # 1. Сохраняем слепок ДО шага физики
+        if not self.time_machine.is_paused:
+            self.time_machine.save_snapshot(self.simulation.bodies)
+            
+        # 2. Делаем физический шаг
         dt = (PHYSICS_TICK_RATE / 1000.0) * self.time_scale
         self.simulation.step(dt)
         
+        # 3. Двигаем ползунок панели управления вместе со временем
+        if not self.time_machine.is_paused:
+            self.panel.update_timeline_range(
+                self.time_machine.get_total_frames(),
+                self.time_machine.get_current_frame_index()
+            )
+        
+        # 4. Обновляем координаты на сцене
         for i, state in enumerate(self.simulation.bodies):
             self.scene.update_body_by_index(i, state)
 
     # --- Взаимодействие со сценой и диалогами ---
     
     def _add_planet_on_click(self, x: float, y: float) -> None:
-        """Создает планету по умолчанию в координатах клика мыши."""
+        """Спавнит новую дефолтную планету по клику мыши на пустом месте."""
         new_body = self.simulation.add_default_body(x, y)
         self._on_planet_added(new_body)
 
     def _open_edit_dialog(self, item: PlanetItem) -> None:
         """
-        Ставит симуляцию на паузу и открывает диалог редактирования выбранной планеты.
-        
-        Args:
-            item (PlanetItem): Графический объект планеты, по которому кликнули.
+        Открывает окно редактирования параметров планеты.
+        На время работы с диалогом ставим мир на паузу.
         """
         was_running = self.is_running
         self.is_running = False
@@ -174,27 +233,30 @@ class MainWindow(QMainWindow):
         self._update_ui_state()
 
     def _on_planet_added(self, new_planet: BodyState) -> None:
-        """Добавляет графический объект планеты на сцену."""
+        """Слот добавления. Отрисовывает планету и вешает на нее возможность редактирования."""
         self.scene.add_body(new_planet, self._open_edit_dialog)
 
     def _render_initial_planets(self) -> None:
-        """Отрисовывает все планеты при первой загрузке сценария."""
+        """Отрисовывает все планеты, которые были загружены из стартового JSON."""
         for planet in self.simulation.bodies:
             self._on_planet_added(planet)
 
     def _on_planet_removed(self, index: int) -> None:
-        """Удаляет графический объект планеты со сцены."""
+        """Сносит конкретную планету со сцены по её индексу."""
         self.scene.remove_body_by_index(index)
 
     def _on_planet_modified(self, index: int) -> None:
-        """Обновляет графическое состояние планеты после редактирования в меню."""
+        """Применяет обновленные параметры (цвет, размер) к визуалы планеты."""
         new_state = self.simulation.bodies[index]
         self.scene.update_body_by_index(index, new_state)
 
     # --- Системные события (Events) ---
     
     def keyPressEvent(self, event: Optional[QKeyEvent]) -> None:
-        """Обрабатывает горячие клавиши (Enter - Пауза, Escape - Меню)."""
+        """
+        Обработка горячих клавиш. 
+        Enter — старт/пауза. Escape — меню.
+        """
         if event is None:
             super().keyPressEvent(event)
             return
@@ -209,7 +271,10 @@ class MainWindow(QMainWindow):
         super().keyPressEvent(event)
 
     def resizeEvent(self, event: Optional[QResizeEvent]) -> None:
-        """Синхронизирует позицию UI элементов при изменении размера окна."""
+        """
+        Дергается при изменении размеров окна.
+        Следит за тем, чтобы плавающие элементы (типа оверлея паузы) перерисовывались по размеру окна.
+        """
         if event is None:
             return
 
@@ -222,8 +287,9 @@ class MainWindow(QMainWindow):
 
     def eventFilter(self, obj: Optional[QObject], event: Optional[QEvent]) -> bool:
         """
-        Перехватывает события графической сцены для подсчета FPS 
-        и отображения координат курсора.
+        Низкоуровневый перехватчик событий. 
+        Нужен для подсчета фактических отрисованных кадров (FPS) 
+        и для отслеживания мыши, чтобы показывать координаты возле курсора.
         """
         if obj == self.view.viewport() and event is not None:
             if event.type() == QEvent.Type.Paint:
@@ -240,13 +306,13 @@ class MainWindow(QMainWindow):
         return super().eventFilter(obj, event)
 
     def _update_fps_display(self) -> None:
-        """Обновляет счетчик кадров в секунду."""
+        """Раз в секунду обновляет плашку с FPS и сбрасывает счетчик."""
         self.lbl_fps.setText(f"FPS: {self._frame_count}")
         self.lbl_fps.adjustSize()
         self._frame_count = 0
 
     def _update_ui_state(self) -> None:
-        """Переключает визуальное состояние индикатора Пауза/Симуляция."""
+        """Переключает цвета и текст на плашке статуса (Пауза / Симуляция)."""
         text = STATUS_TEXT_RUNNING if self.is_running else STATUS_TEXT_PAUSED
         style = STATUS_STYLE_RUNNING if self.is_running else STATUS_STYLE_PAUSED
         

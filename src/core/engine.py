@@ -1,14 +1,17 @@
 import numpy as np
-import numpy.typing as npt
 from typing import List, Dict, Tuple, Set
 
 from config.constants import (
     GRAVITY_CONSTANT,
     BH_THETA,
-    SOFTENING_CONSTANT
+    SOFTENING_CONSTANT,
+    MIN_BODIES_FOR_PHYSICS,
+    BOUNDING_BOX_PADDING,
+    BOUNDING_BOX_SIZE_OFFSET,
+    CELL_SIZE_MULTIPLIER,
+    MIN_CELL_SIZE
 )
 from core.quadtree import BoundingBox, QuadTreeNode, calculate_bh_acceleration
-
 
 class PhysicsEngine:
     """
@@ -30,7 +33,7 @@ class PhysicsEngine:
         if not bodies:
             return
 
-        if len(bodies) < 2:
+        if len(bodies) < MIN_BODIES_FOR_PHYSICS:
             self._apply_velocity(bodies, dt)
             return
 
@@ -41,10 +44,10 @@ class PhysicsEngine:
         min_coords = np.min(positions_matrix, axis=0)
         max_coords = np.max(positions_matrix, axis=0)
         
-        size = np.max(max_coords - min_coords) + 1.0
+        size = np.max(max_coords - min_coords) + BOUNDING_BOX_SIZE_OFFSET
         root_boundary = BoundingBox(
-            x=float(min_coords[0] - 0.5),
-            y=float(min_coords[1] - 0.5),
+            x=float(min_coords[0] - BOUNDING_BOX_PADDING),
+            y=float(min_coords[1] - BOUNDING_BOX_PADDING),
             width=float(size),
             height=float(size)
         )
@@ -95,13 +98,14 @@ class PhysicsEngine:
         Разрешение неупругих столкновений (слияний) за O(N).
         Использует пространственное хеширование (Uniform Grid).
         """
-        if len(bodies) < 2:
+        if len(bodies) < MIN_BODIES_FOR_PHYSICS:
             return
 
         # Определяем размер ячейки сетки на основе самого крупного объекта
         max_r = max(b.radius for b in bodies)
-        cell_size = max_r * 2.1
-        if cell_size < 1.0: cell_size = 1.0
+        cell_size = max_r * CELL_SIZE_MULTIPLIER
+        if cell_size < MIN_CELL_SIZE:
+            cell_size = MIN_CELL_SIZE
 
         # Broad-phase: распределение по ячейкам
         grid: Dict[Tuple[int, int], List[any]] = {}

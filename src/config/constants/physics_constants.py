@@ -19,3 +19,12 @@ MAX_VEL: float = 10000.0
 
 BH_THETA: float = 0.5  # Порог точности (0.0 - точный O(N^2), 1.0 - быстро, но грубо)
 BH_SOFTENING: float = 1e-4  # Сглаживание сингулярности при близких пролетах
+
+DEFAULT_MAX_SECONDS_FOR_TIME_MACHINE: int = 30
+DEFAULT_FPS_FOR_TIME_MACHINE: int = 60
+
+MIN_BODIES_FOR_PHYSICS = 2
+BOUNDING_BOX_PADDING = 0.5
+BOUNDING_BOX_SIZE_OFFSET = 1.0
+CELL_SIZE_MULTIPLIER = 2.1
+MIN_CELL_SIZE = 1.0

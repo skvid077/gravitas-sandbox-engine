@@ -102,7 +102,7 @@ if __name__ == "__main__":
         prof_file = BENCHMARK_DIR / "physics_20planet.prof"
         profiler.dump_stats(str(prof_file))
         
-        # Запись ТОП-10 функций прямо в лог
+        # Запись ТОП-10 функций
         s = io.StringIO()
         ps = pstats.Stats(profiler, stream=s).sort_stats('cumtime')
         ps.print_stats(10)
