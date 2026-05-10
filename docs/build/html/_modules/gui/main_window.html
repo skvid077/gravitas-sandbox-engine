@@ -1,0 +1,437 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gui.main_window &mdash; документация Gravitas Sandbox Engine 1.0</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=9ca2116e"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/translations.js?v=cd1d70c9"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Gravitas Sandbox Engine
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Gravitas Sandbox Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Код модуля</a></li>
+      <li class="breadcrumb-item active">gui.main_window</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Исходный код gui.main_window</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">QEvent</span><span class="p">,</span> <span class="n">QTimer</span><span class="p">,</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QObject</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QKeyEvent</span><span class="p">,</span> <span class="n">QMouseEvent</span><span class="p">,</span> <span class="n">QResizeEvent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QMainWindow</span><span class="p">,</span> <span class="n">QLabel</span><span class="p">,</span> <span class="n">QDialog</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">gui.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlanetItem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gui.pause_menu</span><span class="w"> </span><span class="kn">import</span> <span class="n">PauseMenu</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gui.add_planet</span><span class="w"> </span><span class="kn">import</span> <span class="n">AddPlanetDialog</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gui.space</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpaceScene</span><span class="p">,</span> <span class="n">SpaceView</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gui.control_panel</span><span class="w"> </span><span class="kn">import</span> <span class="n">ControlPanel</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">config.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimulationScenario</span><span class="p">,</span> <span class="n">BodyState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.simulation</span><span class="w"> </span><span class="kn">import</span> <span class="n">Simulation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.time_machine</span><span class="w"> </span><span class="kn">import</span> <span class="n">TimeMachine</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">config.constants</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">MAIN_WINDOW_TITLE</span><span class="p">,</span>
+    <span class="n">MAIN_WINDOW_WIDTH</span><span class="p">,</span>
+    <span class="n">MAIN_WINDOW_HEIGHT</span><span class="p">,</span>
+    <span class="n">DEFAULT_SCENARIO_NAME</span><span class="p">,</span>
+    <span class="n">STATUS_TEXT_PAUSED</span><span class="p">,</span>
+    <span class="n">STATUS_TEXT_RUNNING</span><span class="p">,</span>
+    <span class="n">STATUS_STYLE_PAUSED</span><span class="p">,</span>
+    <span class="n">STATUS_STYLE_RUNNING</span><span class="p">,</span>
+    <span class="n">PHYSICS_TICK_RATE</span><span class="p">,</span>
+    <span class="n">FPS_LABEL_STYLE</span><span class="p">,</span>
+    <span class="n">COORD_LABEL_STYLE</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="MainWindow">
+<a class="viewcode-back" href="../../api.html#gui.main_window.MainWindow">[документация]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MainWindow</span><span class="p">(</span><span class="n">QMainWindow</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Главное окно приложения.</span>
+<span class="sd">    Связывает воедино физический движок (Simulation), графическую сцену (SpaceScene)</span>
+<span class="sd">    и элементы пользовательского интерфейса (Панель управления, Меню паузы).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scenario</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SimulationScenario</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Инициализация главного окна. </span>
+<span class="sd">        Поднимаем движок, настраиваем сцену и подвязываем к ней UI.</span>
+<span class="sd">        Если передан сценарий, сразу грузим из него планеты.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="n">MAIN_WINDOW_TITLE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">MAIN_WINDOW_WIDTH</span><span class="p">,</span> <span class="n">MAIN_WINDOW_HEIGHT</span><span class="p">)</span>
+        
+        <span class="n">initial_bodies</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">bodies</span> <span class="k">if</span> <span class="n">scenario</span> <span class="k">else</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">simulation</span> <span class="o">=</span> <span class="n">Simulation</span><span class="p">(</span><span class="n">initial_bodies</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scenario_name</span> <span class="o">=</span> <span class="n">scenario</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">scenario</span> <span class="k">else</span> <span class="n">DEFAULT_SCENARIO_NAME</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">scene</span> <span class="o">=</span> <span class="n">SpaceScene</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">SpaceView</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setCentralWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_frame_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
+        
+        <span class="c1"># Машина времени (запоминаем последние 30 секунд при 60 FPS)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_machine</span> <span class="o">=</span> <span class="n">TimeMachine</span><span class="p">(</span><span class="n">max_seconds</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mi">1000</span> <span class="o">/</span> <span class="n">PHYSICS_TICK_RATE</span><span class="p">))</span>
+        
+        <span class="c1"># Строгая декларация атрибутов</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">panel</span><span class="p">:</span> <span class="n">ControlPanel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="p">:</span> <span class="n">PauseMenu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_fps</span><span class="p">:</span> <span class="n">QLabel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fps_timer</span><span class="p">:</span> <span class="n">QTimer</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_coords</span><span class="p">:</span> <span class="n">QLabel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_status</span><span class="p">:</span> <span class="n">QLabel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sim_timer</span><span class="p">:</span> <span class="n">QTimer</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_ui</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_render_initial_planets</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_ui</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Собирает весь интерфейс: боковую панель управления, </span>
+<span class="sd">        меню паузы и плавающие виджеты (FPS, координаты курсора, статус симуляции).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># --- Подключение боковой панели ---</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">panel</span> <span class="o">=</span> <span class="n">ControlPanel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">addDockWidget</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">DockWidgetArea</span><span class="o">.</span><span class="n">RightDockWidgetArea</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">panel</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">panel</span><span class="o">.</span><span class="n">gravity_changed</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_set_gravity</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">panel</span><span class="o">.</span><span class="n">time_scale_changed</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_set_time_scale</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">panel</span><span class="o">.</span><span class="n">clear_scene_requested</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_clear_scene</span><span class="p">)</span>
+
+        <span class="c1"># --- Подключение машины времени к слайдеру ---</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">panel</span><span class="o">.</span><span class="n">timeline_pressed</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_timeline_start</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">panel</span><span class="o">.</span><span class="n">timeline_changed</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_timeline_scrub</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">panel</span><span class="o">.</span><span class="n">timeline_released</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_timeline_end</span><span class="p">)</span>
+
+        <span class="c1"># --- Меню паузы ---</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menu</span> <span class="o">=</span> <span class="n">PauseMenu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">bodies</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scenario_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">planet_added</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_planet_added</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">planet_removed</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_planet_removed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">planet_modified</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_planet_modified</span><span class="p">)</span>
+        
+        <span class="c1"># --- UI Элементы поверх сцены ---</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_fps</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;FPS: 0&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_fps</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">FPS_LABEL_STYLE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_fps</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fps_timer</span> <span class="o">=</span> <span class="n">QTimer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fps_timer</span><span class="o">.</span><span class="n">timeout</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_update_fps_display</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fps_timer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_coords</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="s2">&quot;X: 0.0 | Y: 0.0&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_coords</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">COORD_LABEL_STYLE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_coords</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">WidgetAttribute</span><span class="o">.</span><span class="n">WA_TransparentForMouseEvents</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_coords</span><span class="o">.</span><span class="n">adjustSize</span><span class="p">()</span>
+        <span class="n">viewport</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">viewport</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">viewport</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">viewport</span><span class="o">.</span><span class="n">installEventFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_status</span> <span class="o">=</span> <span class="n">QLabel</span><span class="p">(</span><span class="n">STATUS_TEXT_PAUSED</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_status</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">STATUS_STYLE_PAUSED</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_status</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_status</span><span class="o">.</span><span class="n">adjustSize</span><span class="p">()</span>
+
+        <span class="c1"># --- Физический таймер ---</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sim_timer</span> <span class="o">=</span> <span class="n">QTimer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sim_timer</span><span class="o">.</span><span class="n">timeout</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_physics_step</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sim_timer</span><span class="o">.</span><span class="n">start</span><span class="p">(</span><span class="n">PHYSICS_TICK_RATE</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">right_click_empty</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_add_planet_on_click</span><span class="p">)</span>
+
+    <span class="c1"># --- Методы управления машиной времени ---</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_timeline_start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Пользователь схватился за ползунок истории.</span>
+<span class="sd">        Жестко ставим симуляцию и запись времени на паузу.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_machine</span><span class="o">.</span><span class="n">pause</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_ui_state</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_timeline_scrub</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">frame_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Перематываем время на конкретный кадр с ползунка.</span>
+<span class="sd">        Сносим текущие тела и полностью восстанавливаем сцену из слепка.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">snapshot</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_machine</span><span class="o">.</span><span class="n">jump_to</span><span class="p">(</span><span class="n">frame_index</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">snapshot</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Полностью очищаем сцену</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">clear_planets</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+            
+            <span class="c1"># Восстанавливаем состояние из слепка</span>
+            <span class="k">for</span> <span class="n">body_dict</span> <span class="ow">in</span> <span class="n">snapshot</span><span class="p">:</span>
+                <span class="n">body</span> <span class="o">=</span> <span class="n">BodyState</span><span class="p">(</span><span class="o">**</span><span class="n">body_dict</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_on_planet_added</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+                
+            <span class="n">viewport</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">viewport</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">viewport</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">viewport</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_timeline_end</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Пользователь отпустил ползунок перемотки.</span>
+<span class="sd">        Отпускаем машину времени, но саму физику оставляем на паузе, чтобы дать осмотреться.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_machine</span><span class="o">.</span><span class="n">resume</span><span class="p">()</span>
+
+    <span class="c1"># --- Методы управления с панели ---</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_gravity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_g</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Прокидывает новое значение гравитации с ползунка в движок.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">physics_engine</span><span class="o">.</span><span class="n">G</span> <span class="o">=</span> <span class="n">new_g</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_set_time_scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Меняет множитель скорости времени для симуляции.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_scale</span> <span class="o">=</span> <span class="n">scale</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_clear_scene</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Полностью зачищает космос. Удаляет и физические модели, и графику.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">clear_planets</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+    <span class="c1"># --- Главный цикл физики ---</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_physics_step</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Сердце симуляции. Дергается по таймеру каждый кадр.</span>
+<span class="sd">        Сохраняет историю, считает новую физику и двигает UI.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">isVisible</span><span class="p">()</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">bodies</span><span class="p">:</span>
+            <span class="k">return</span>
+            
+        <span class="c1"># 1. Сохраняем слепок ДО шага физики</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_machine</span><span class="o">.</span><span class="n">is_paused</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">time_machine</span><span class="o">.</span><span class="n">save_snapshot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">bodies</span><span class="p">)</span>
+            
+        <span class="c1"># 2. Делаем физический шаг</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="p">(</span><span class="n">PHYSICS_TICK_RATE</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_scale</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+        
+        <span class="c1"># 3. Двигаем ползунок панели управления вместе со временем</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_machine</span><span class="o">.</span><span class="n">is_paused</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">panel</span><span class="o">.</span><span class="n">update_timeline_range</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">time_machine</span><span class="o">.</span><span class="n">get_total_frames</span><span class="p">(),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">time_machine</span><span class="o">.</span><span class="n">get_current_frame_index</span><span class="p">()</span>
+            <span class="p">)</span>
+        
+        <span class="c1"># 4. Обновляем координаты на сцене</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">state</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">bodies</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">update_body_by_index</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+
+    <span class="c1"># --- Взаимодействие со сценой и диалогами ---</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_planet_on_click</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Спавнит новую дефолтную планету по клику мыши на пустом месте.&quot;&quot;&quot;</span>
+        <span class="n">new_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">add_default_body</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_on_planet_added</span><span class="p">(</span><span class="n">new_body</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_open_edit_dialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">PlanetItem</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Открывает окно редактирования параметров планеты.</span>
+<span class="sd">        На время работы с диалогом ставим мир на паузу.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">was_running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_ui_state</span><span class="p">()</span>
+
+        <span class="n">dialog</span> <span class="o">=</span> <span class="n">AddPlanetDialog</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">bodies</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">edit_body</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">body_state</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dialog</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span> <span class="o">==</span> <span class="n">QDialog</span><span class="o">.</span><span class="n">DialogCode</span><span class="o">.</span><span class="n">Accepted</span><span class="p">:</span>
+            <span class="n">item</span><span class="o">.</span><span class="n">update_visuals</span><span class="p">()</span>
+            <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">body_state</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">planet_modified</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span> <span class="o">=</span> <span class="n">was_running</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_ui_state</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_planet_added</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_planet</span><span class="p">:</span> <span class="n">BodyState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Слот добавления. Отрисовывает планету и вешает на нее возможность редактирования.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add_body</span><span class="p">(</span><span class="n">new_planet</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_open_edit_dialog</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_render_initial_planets</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Отрисовывает все планеты, которые были загружены из стартового JSON.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">planet</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">bodies</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_on_planet_added</span><span class="p">(</span><span class="n">planet</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_planet_removed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Сносит конкретную планету со сцены по её индексу.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">remove_body_by_index</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_planet_modified</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Применяет обновленные параметры (цвет, размер) к визуалы планеты.&quot;&quot;&quot;</span>
+        <span class="n">new_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">simulation</span><span class="o">.</span><span class="n">bodies</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">update_body_by_index</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="n">new_state</span><span class="p">)</span>
+
+    <span class="c1"># --- Системные события (Events) ---</span>
+    
+<div class="viewcode-block" id="MainWindow.keyPressEvent">
+<a class="viewcode-back" href="../../api.html#gui.main_window.MainWindow.keyPressEvent">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">keyPressEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QKeyEvent</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Обработка горячих клавиш. </span>
+<span class="sd">        Enter — старт/пауза. Escape — меню.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">event</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">keyPressEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span><span class="p">()</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">Key</span><span class="o">.</span><span class="n">Key_Return</span><span class="p">,</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Key</span><span class="o">.</span><span class="n">Key_Enter</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span> <span class="o">=</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_ui_state</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span><span class="p">()</span> <span class="o">==</span> <span class="n">Qt</span><span class="o">.</span><span class="n">Key</span><span class="o">.</span><span class="n">Key_Escape</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_ui_state</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">toggle</span><span class="p">()</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">keyPressEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.resizeEvent">
+<a class="viewcode-back" href="../../api.html#gui.main_window.MainWindow.resizeEvent">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resizeEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QResizeEvent</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Дергается при изменении размеров окна.</span>
+<span class="sd">        Следит за тем, чтобы плавающие элементы (типа оверлея паузы) перерисовывались по размеру окна.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">event</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">resizeEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_fps</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">isVisible</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">overlay</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">menu</span><span class="o">.</span><span class="n">_update_position</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MainWindow.eventFilter">
+<a class="viewcode-back" href="../../api.html#gui.main_window.MainWindow.eventFilter">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">eventFilter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QObject</span><span class="p">],</span> <span class="n">event</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QEvent</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Низкоуровневый перехватчик событий. </span>
+<span class="sd">        Нужен для подсчета фактических отрисованных кадров (FPS) </span>
+<span class="sd">        и для отслеживания мыши, чтобы показывать координаты возле курсора.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">obj</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">viewport</span><span class="p">()</span> <span class="ow">and</span> <span class="n">event</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="n">QEvent</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">Paint</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_frame_count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="n">QEvent</span><span class="o">.</span><span class="n">Type</span><span class="o">.</span><span class="n">MouseMove</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">QMouseEvent</span><span class="p">):</span>
+                <span class="n">mouse_event</span><span class="p">:</span> <span class="n">QMouseEvent</span> <span class="o">=</span> <span class="n">event</span>
+                <span class="n">scene_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">mapToScene</span><span class="p">(</span><span class="n">mouse_event</span><span class="o">.</span><span class="n">pos</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lbl_coords</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;X: </span><span class="si">{</span><span class="n">scene_pos</span><span class="o">.</span><span class="n">x</span><span class="p">()</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> | Y: </span><span class="si">{</span><span class="n">scene_pos</span><span class="o">.</span><span class="n">y</span><span class="p">()</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lbl_coords</span><span class="o">.</span><span class="n">adjustSize</span><span class="p">()</span>
+                
+                <span class="n">window_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mapFromGlobal</span><span class="p">(</span><span class="n">mouse_event</span><span class="o">.</span><span class="n">globalPosition</span><span class="p">()</span><span class="o">.</span><span class="n">toPoint</span><span class="p">())</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lbl_coords</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">window_pos</span><span class="o">.</span><span class="n">x</span><span class="p">()</span> <span class="o">+</span> <span class="mi">15</span><span class="p">,</span> <span class="n">window_pos</span><span class="o">.</span><span class="n">y</span><span class="p">()</span> <span class="o">+</span> <span class="mi">15</span><span class="p">)</span>
+                
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">eventFilter</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_fps_display</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Раз в секунду обновляет плашку с FPS и сбрасывает счетчик.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_fps</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FPS: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_frame_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_fps</span><span class="o">.</span><span class="n">adjustSize</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_frame_count</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_ui_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Переключает цвета и текст на плашке статуса (Пауза / Симуляция).&quot;&quot;&quot;</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="n">STATUS_TEXT_RUNNING</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span> <span class="k">else</span> <span class="n">STATUS_TEXT_PAUSED</span>
+        <span class="n">style</span> <span class="o">=</span> <span class="n">STATUS_STYLE_RUNNING</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_running</span> <span class="k">else</span> <span class="n">STATUS_STYLE_PAUSED</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_status</span><span class="o">.</span><span class="n">setText</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_status</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_status</span><span class="o">.</span><span class="n">adjustSize</span><span class="p">()</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Авторские права 2026, Miron. </p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

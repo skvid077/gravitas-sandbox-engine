@@ -1,0 +1,361 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gui.pause_menu &mdash; документация Gravitas Sandbox Engine 1.0</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=9ca2116e"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/translations.js?v=cd1d70c9"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Gravitas Sandbox Engine
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Содержание:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">src</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Gravitas Sandbox Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Код модуля</a></li>
+      <li class="breadcrumb-item active">gui.pause_menu</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Исходный код gui.pause_menu</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">QFrame</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QApplication</span><span class="p">,</span> 
+    <span class="n">QWidget</span><span class="p">,</span> <span class="n">QFileDialog</span><span class="p">,</span> <span class="n">QMessageBox</span><span class="p">,</span> <span class="n">QDialog</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">QPaintEvent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyqtSignal</span><span class="p">,</span> <span class="n">Qt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">config.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">BodyState</span><span class="p">,</span> <span class="n">SimulationScenario</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.load_json</span><span class="w"> </span><span class="kn">import</span> <span class="n">save_scenario_to_file</span><span class="p">,</span> <span class="n">ScenarioSaveError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gui.add_planet</span><span class="w"> </span><span class="kn">import</span> <span class="n">AddPlanetDialog</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gui.planets_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlanetsManagerDialog</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">config.constants</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">STYLE_BTN_MENU</span><span class="p">,</span>
+    <span class="n">STYLE_BTN_MENU_CONTINUE</span><span class="p">,</span>
+    <span class="n">BTN_MENU_HEIGHT</span><span class="p">,</span>
+    <span class="n">MENU_WIDTH</span><span class="p">,</span>
+    <span class="n">DIMMER_COLOR</span><span class="p">,</span>
+    <span class="n">TEXT_BTN_RESUME</span><span class="p">,</span>
+    <span class="n">TEXT_BTN_REGISTRY</span><span class="p">,</span>
+    <span class="n">TEXT_BTN_ADD</span><span class="p">,</span>
+    <span class="n">TEXT_BTN_EXPORT</span><span class="p">,</span>
+    <span class="n">TEXT_BTN_EXIT</span><span class="p">,</span>
+    <span class="n">MENU_STYLE_SHEET</span>
+<span class="p">)</span>
+
+<div class="viewcode-block" id="DimmerOverlay">
+<a class="viewcode-back" href="../../gui.html#gui.pause_menu.DimmerOverlay">[документация]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DimmerOverlay</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Полупрозрачный виджет, который затемняет задний фон (всю сцену)</span>
+<span class="sd">    при открытии меню паузы для создания эффекта фокуса.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="DimmerOverlay.__init__">
+<a class="viewcode-back" href="../../gui.html#gui.pause_menu.DimmerOverlay.__init__">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QWidget</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setAttribute</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">WidgetAttribute</span><span class="o">.</span><span class="n">WA_TransparentForMouseEvents</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hide</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="DimmerOverlay.paintEvent">
+<a class="viewcode-back" href="../../gui.html#gui.pause_menu.DimmerOverlay.paintEvent">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">paintEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QPaintEvent</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Отрисовывает полупрозрачный слой.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">event</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">painter</span> <span class="o">=</span> <span class="n">QPainter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">fillRect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rect</span><span class="p">(),</span> <span class="n">DIMMER_COLOR</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PauseMenu">
+<a class="viewcode-back" href="../../gui.html#gui.pause_menu.PauseMenu">[документация]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PauseMenu</span><span class="p">(</span><span class="n">QFrame</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Всплывающее меню паузы.</span>
+<span class="sd">    Обеспечивает доступ к реестру планет, добавлению новых тел,</span>
+<span class="sd">    экспорту текущего состояния в JSON и выходу из приложения.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">resume_requested</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">()</span>
+    <span class="n">planet_added</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>  <span class="c1"># Передает BodyState</span>
+    <span class="n">planet_removed</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">planet_modified</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PauseMenu.__init__">
+<a class="viewcode-back" href="../../gui.html#gui.pause_menu.PauseMenu.__init__">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">planets_info</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BodyState</span><span class="p">],</span> <span class="n">scenario_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Инициализирует меню паузы.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            parent (QWidget): Родительское окно (MainWindow), необходимо для расчета позиционирования.</span>
+<span class="sd">            planets_info (List[BodyState]): Ссылка на массив объектов симуляции.</span>
+<span class="sd">            scenario_name (str): Имя текущего запущенного сценария.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span> <span class="o">=</span> <span class="n">planets_info</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scenario_name</span> <span class="o">=</span> <span class="n">scenario_name</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">overlay</span> <span class="o">=</span> <span class="n">DimmerOverlay</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">setFixedWidth</span><span class="p">(</span><span class="n">MENU_WIDTH</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hide</span><span class="p">()</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="s2">&quot;PauseMenuPanel&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">MENU_STYLE_SHEET</span><span class="p">)</span>
+        
+        <span class="c1"># Кнопки инициализируются в _init_ui</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_resume</span><span class="p">:</span> <span class="n">QPushButton</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_show_all</span><span class="p">:</span> <span class="n">QPushButton</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_add</span><span class="p">:</span> <span class="n">QPushButton</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_export</span><span class="p">:</span> <span class="n">QPushButton</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_exit</span><span class="p">:</span> <span class="n">QPushButton</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_ui</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PauseMenu._init_ui">
+<a class="viewcode-back" href="../../gui.html#gui.pause_menu.PauseMenu._init_ui">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_ui</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Настраивает компоновку, кнопки и подключает сигналы.&quot;&quot;&quot;</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">setSpacing</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span> 
+        <span class="n">layout</span><span class="o">.</span><span class="n">setContentsMargins</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_resume</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="n">TEXT_BTN_RESUME</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_show_all</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="n">TEXT_BTN_REGISTRY</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_add</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="n">TEXT_BTN_ADD</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_export</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="n">TEXT_BTN_EXPORT</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_exit</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="n">TEXT_BTN_EXIT</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_resume</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">STYLE_BTN_MENU_CONTINUE</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">btn</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">btn_show_all</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">btn_add</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">btn_export</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">btn_exit</span><span class="p">]:</span>
+            <span class="n">btn</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">STYLE_BTN_MENU</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">btn</span> <span class="ow">in</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">btn_resume</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">btn_show_all</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">btn_add</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">btn_export</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">btn_exit</span><span class="p">]:</span>
+            <span class="n">btn</span><span class="o">.</span><span class="n">setFixedHeight</span><span class="p">(</span><span class="n">BTN_MENU_HEIGHT</span><span class="p">)</span>
+            <span class="n">btn</span><span class="o">.</span><span class="n">setCursor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">CursorShape</span><span class="o">.</span><span class="n">PointingHandCursor</span><span class="p">)</span>
+            <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">btn</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_resume</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">resume_callback</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_show_all</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">show_all_callback</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_add</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_planet_callback</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_export</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">export_json_callback</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_exit</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exit_callback</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">adjustSize</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PauseMenu.toggle">
+<a class="viewcode-back" href="../../gui.html#gui.pause_menu.PauseMenu.toggle">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">toggle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Переключает видимость меню паузы.</span>
+<span class="sd">        Если меню открывается, автоматически центрирует его и активирует затемнение фона.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parent_widget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">parent_widget</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">isVisible</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hide</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">overlay</span><span class="o">.</span><span class="n">hide</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">resume_requested</span><span class="o">.</span><span class="n">emit</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">overlay</span><span class="o">.</span><span class="n">setGeometry</span><span class="p">(</span><span class="n">parent_widget</span><span class="o">.</span><span class="n">rect</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">overlay</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_position</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">overlay</span><span class="o">.</span><span class="n">raise_</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">raise_</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PauseMenu._update_position">
+<a class="viewcode-back" href="../../gui.html#gui.pause_menu.PauseMenu._update_position">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_position</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Центрирует меню относительно родительского окна.&quot;&quot;&quot;</span>
+        <span class="n">parent_widget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">parent_widget</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">parent_widget</span><span class="o">.</span><span class="n">width</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span><span class="p">())</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">parent_widget</span><span class="o">.</span><span class="n">height</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span><span class="p">())</span> <span class="o">//</span> <span class="mi">2</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PauseMenu.resume_callback">
+<a class="viewcode-back" href="../../gui.html#gui.pause_menu.PauseMenu.resume_callback">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resume_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Слот обработки нажатия &#39;Продолжить&#39;.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">toggle</span><span class="p">()</span> </div>
+
+
+<div class="viewcode-block" id="PauseMenu.show_all_callback">
+<a class="viewcode-back" href="../../gui.html#gui.pause_menu.PauseMenu.show_all_callback">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show_all_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Скрывает меню и открывает диалог реестра планет.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hide</span><span class="p">()</span>
+        <span class="n">dialog</span> <span class="o">=</span> <span class="n">PlanetsManagerDialog</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span><span class="p">())</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">planet_removed</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_planet_removed_from_manager</span><span class="p">)</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">planet_modified</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">planet_modified</span><span class="o">.</span><span class="n">emit</span><span class="p">)</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span>
+        
+        <span class="c1"># Показываем меню обратно после закрытия реестра</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PauseMenu._on_planet_removed_from_manager">
+<a class="viewcode-back" href="../../gui.html#gui.pause_menu.PauseMenu._on_planet_removed_from_manager">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_planet_removed_from_manager</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Обрабатывает удаление планеты через реестр.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            index (int): Индекс удаленной планеты.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">planet_removed</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">index</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PauseMenu.add_planet_callback">
+<a class="viewcode-back" href="../../gui.html#gui.pause_menu.PauseMenu.add_planet_callback">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_planet_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Скрывает меню и открывает диалог добавления новой планеты.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hide</span><span class="p">()</span>
+        <span class="n">dialog</span> <span class="o">=</span> <span class="n">AddPlanetDialog</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parentWidget</span><span class="p">())</span>
+        
+        <span class="k">if</span> <span class="n">dialog</span><span class="o">.</span><span class="n">exec</span><span class="p">()</span> <span class="o">==</span> <span class="n">QDialog</span><span class="o">.</span><span class="n">DialogCode</span><span class="o">.</span><span class="n">Accepted</span><span class="p">:</span>
+            <span class="n">new_planet</span> <span class="o">=</span> <span class="n">dialog</span><span class="o">.</span><span class="n">get_planet_data</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_planet</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">planet_added</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">new_planet</span><span class="p">)</span>
+                    
+        <span class="bp">self</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">overlay</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PauseMenu.export_json_callback">
+<a class="viewcode-back" href="../../gui.html#gui.pause_menu.PauseMenu.export_json_callback">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">export_json_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Открывает диалог сохранения файла, сериализует текущее </span>
+<span class="sd">        состояние планет и сохраняет его в формате JSON.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">file_path</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">QFileDialog</span><span class="o">.</span><span class="n">getSaveFileName</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Сохранить симуляцию&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;JSON Files (*.json)&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">file_path</span><span class="p">:</span> 
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">file_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.json&#39;</span><span class="p">):</span> 
+            <span class="n">file_path</span> <span class="o">+=</span> <span class="s1">&#39;.json&#39;</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Создаем объект сценария для валидации перед сохранением</span>
+            <span class="n">scenario</span> <span class="o">=</span> <span class="n">SimulationScenario</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scenario_name</span><span class="p">,</span> 
+                <span class="n">bodies</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span>
+            <span class="p">)</span>
+            <span class="n">save_scenario_to_file</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">file_path</span><span class="p">)</span>
+            <span class="n">QMessageBox</span><span class="o">.</span><span class="n">information</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Успех&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Файл успешно сохранен:</span><span class="se">\n</span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+        <span class="k">except</span> <span class="n">ScenarioSaveError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">QMessageBox</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Ошибка сохранения&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">QMessageBox</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Ошибка сценария&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Нельзя сохранить: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">QMessageBox</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Критическая ошибка&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Не удалось сохранить файл:</span><span class="se">\n</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PauseMenu.exit_callback">
+<a class="viewcode-back" href="../../gui.html#gui.pause_menu.PauseMenu.exit_callback">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exit_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checked</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Завершает работу всего приложения.&quot;&quot;&quot;</span>
+        <span class="n">QApplication</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Авторские права 2026, Miron. </p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

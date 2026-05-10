@@ -1,0 +1,438 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gui.planets_manager &mdash; документация Gravitas Sandbox Engine 1.0</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=9ca2116e"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/translations.js?v=cd1d70c9"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Gravitas Sandbox Engine
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Содержание:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">src</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Gravitas Sandbox Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Код модуля</a></li>
+      <li class="breadcrumb-item active">gui.planets_manager</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Исходный код gui.planets_manager</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValidationError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">QDialog</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QTableWidget</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">,</span>
+    <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QHeaderView</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QColorDialog</span><span class="p">,</span> <span class="n">QMessageBox</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">pyqtSignal</span><span class="p">,</span> <span class="n">QPointF</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">QBrush</span><span class="p">,</span> <span class="n">QPen</span><span class="p">,</span> <span class="n">QPaintEvent</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">config.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">BodyState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.planets_validator</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_collision</span><span class="p">,</span> <span class="n">check_name_uniqueness</span><span class="p">,</span> <span class="n">validate_body_params</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">config.constants</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PREVIEW_LOG_FACTOR</span><span class="p">,</span>
+    <span class="n">PREVIEW_MIN_RADIUS</span><span class="p">,</span>
+    <span class="n">MANAGER_STYLE_SHEET</span><span class="p">,</span>
+    <span class="n">TABLE_HEADERS</span><span class="p">,</span>
+    <span class="n">COL_PREVIEW</span><span class="p">,</span>
+    <span class="n">COL_COLOR</span><span class="p">,</span>
+    <span class="n">COL_NAME</span><span class="p">,</span>
+    <span class="n">COL_MASS</span><span class="p">,</span>
+    <span class="n">COL_RADIUS</span><span class="p">,</span>
+    <span class="n">COL_X</span><span class="p">,</span>
+    <span class="n">COL_Y</span><span class="p">,</span>
+    <span class="n">COL_VX</span><span class="p">,</span>
+    <span class="n">COL_VY</span><span class="p">,</span>
+    <span class="n">COL_DELETE</span><span class="p">,</span>
+    <span class="n">MANAGER_WINDOW_TITLE</span><span class="p">,</span>
+    <span class="n">MANAGER_MIN_WIDTH</span><span class="p">,</span>
+    <span class="n">MANAGER_MIN_HEIGHT</span><span class="p">,</span>
+    <span class="n">PREVIEW_WIDGET_SIZE</span><span class="p">,</span>
+    <span class="n">PREVIEW_MAX_RADIUS</span>
+<span class="p">)</span>
+
+<div class="viewcode-block" id="PlanetPreviewWidget">
+<a class="viewcode-back" href="../../gui.html#gui.planets_manager.PlanetPreviewWidget">[документация]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlanetPreviewWidget</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Виджет для отрисовки графического превью планеты внутри ячейки таблицы.</span>
+<span class="sd">    Использует логарифмический масштаб для безопасного отображения огромных радиусов.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PlanetPreviewWidget.__init__">
+<a class="viewcode-back" href="../../gui.html#gui.planets_manager.PlanetPreviewWidget.__init__">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color_hex</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">real_radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QWidget</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Инициализирует виджет превью.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            color_hex (str): Цвет планеты в HEX формате (например, &#39;#FFFFFF&#39;).</span>
+<span class="sd">            real_radius (float): Физический радиус планеты.</span>
+<span class="sd">            parent (Optional[QWidget], optional): Родительский виджет. По умолчанию None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">(</span><span class="n">color_hex</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">real_radius</span> <span class="o">=</span> <span class="n">real_radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="n">PREVIEW_WIDGET_SIZE</span><span class="p">,</span> <span class="n">PREVIEW_WIDGET_SIZE</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PlanetPreviewWidget.update_params">
+<a class="viewcode-back" href="../../gui.html#gui.planets_manager.PlanetPreviewWidget.update_params">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color_hex</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Обновляет параметры отображения и вызывает перерисовку виджета.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            color_hex (str): Новый цвет.</span>
+<span class="sd">            radius (float): Новый физический радиус.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">(</span><span class="n">color_hex</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">real_radius</span> <span class="o">=</span> <span class="n">radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PlanetPreviewWidget.paintEvent">
+<a class="viewcode-back" href="../../gui.html#gui.planets_manager.PlanetPreviewWidget.paintEvent">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">paintEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QPaintEvent</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Отрисовывает круг планеты в логарифмическом масштабе.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            event (Optional[QPaintEvent]): Событие отрисовки PyQt.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># ЗАЩИТА: Если радиус некорректный, не рисуем ничего, чтобы math.log10 не упал</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_radius</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="n">painter</span> <span class="o">=</span> <span class="n">QPainter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">setRenderHint</span><span class="p">(</span><span class="n">QPainter</span><span class="o">.</span><span class="n">RenderHint</span><span class="o">.</span><span class="n">Antialiasing</span><span class="p">)</span>
+
+        <span class="c1"># Логарифмический масштаб: даже очень большие радиусы не выйдут за PREVIEW_MAX_RADIUS</span>
+        <span class="n">visual_r</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+            <span class="n">PREVIEW_MAX_RADIUS</span><span class="p">,</span> 
+            <span class="nb">max</span><span class="p">(</span><span class="n">PREVIEW_MIN_RADIUS</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real_radius</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">PREVIEW_LOG_FACTOR</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">painter</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">QBrush</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">))</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">QPen</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">GlobalColor</span><span class="o">.</span><span class="n">white</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">drawEllipse</span><span class="p">(</span><span class="n">QPointF</span><span class="p">(</span><span class="n">PREVIEW_WIDGET_SIZE</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">PREVIEW_WIDGET_SIZE</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span> <span class="n">visual_r</span><span class="p">,</span> <span class="n">visual_r</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PlanetsManagerDialog">
+<a class="viewcode-back" href="../../gui.html#gui.planets_manager.PlanetsManagerDialog">[документация]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlanetsManagerDialog</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Диалоговое окно для детального управления всеми объектами симуляции.</span>
+<span class="sd">    Представляет данные в виде редактируемой таблицы с валидацией изменений &quot;на лету&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">planet_removed</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">planet_modified</span> <span class="o">=</span> <span class="n">pyqtSignal</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PlanetsManagerDialog.__init__">
+<a class="viewcode-back" href="../../gui.html#gui.planets_manager.PlanetsManagerDialog.__init__">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">planets_info</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BodyState</span><span class="p">],</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QWidget</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Инициализирует менеджер планет.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            planets_info (List[BodyState]): Ссылка на массив объектов симуляции.</span>
+<span class="sd">            parent (Optional[QWidget], optional): Родительское окно. По умолчанию None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span> <span class="o">=</span> <span class="n">planets_info</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="n">MANAGER_WINDOW_TITLE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setMinimumSize</span><span class="p">(</span><span class="n">MANAGER_MIN_WIDTH</span><span class="p">,</span> <span class="n">MANAGER_MIN_HEIGHT</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">MANAGER_STYLE_SHEET</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">:</span> <span class="n">QTableWidget</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_ui</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PlanetsManagerDialog._init_ui">
+<a class="viewcode-back" href="../../gui.html#gui.planets_manager.PlanetsManagerDialog._init_ui">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_ui</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Создает элементы интерфейса: таблицу и кнопку закрытия.&quot;&quot;&quot;</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span> <span class="o">=</span> <span class="n">QTableWidget</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">TABLE_HEADERS</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setHorizontalHeaderLabels</span><span class="p">(</span><span class="n">TABLE_HEADERS</span><span class="p">)</span>
+        
+        <span class="n">header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">horizontalHeader</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">header</span><span class="p">:</span>
+            <span class="n">header</span><span class="o">.</span><span class="n">setSectionResizeMode</span><span class="p">(</span><span class="n">QHeaderView</span><span class="o">.</span><span class="n">ResizeMode</span><span class="o">.</span><span class="n">Stretch</span><span class="p">)</span>
+            
+        <span class="n">v_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">verticalHeader</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">v_header</span><span class="p">:</span>
+            <span class="n">v_header</span><span class="o">.</span><span class="n">setDefaultSectionSize</span><span class="p">(</span><span class="mi">45</span><span class="p">)</span>
+            <span class="n">v_header</span><span class="o">.</span><span class="n">setVisible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">cellChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_cell_changed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh_table</span><span class="p">()</span>
+        
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="p">)</span>
+
+        <span class="n">btn_close</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Закрыть&quot;</span><span class="p">)</span>
+        <span class="n">btn_close</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="s2">&quot;CloseBtn&quot;</span><span class="p">)</span>
+        <span class="n">btn_close</span><span class="o">.</span><span class="n">setFixedHeight</span><span class="p">(</span><span class="mi">35</span><span class="p">)</span>
+        <span class="n">btn_close</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accept</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">btn_close</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PlanetsManagerDialog.refresh_table">
+<a class="viewcode-back" href="../../gui.html#gui.planets_manager.PlanetsManagerDialog.refresh_table">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">refresh_table</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Полностью перестраивает таблицу на основе текущего массива планет.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">blockSignals</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setRowCount</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">planet</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">insertRow</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setCellWidget</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">COL_PREVIEW</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_center_widget</span><span class="p">(</span><span class="n">PlanetPreviewWidget</span><span class="p">(</span><span class="n">planet</span><span class="o">.</span><span class="n">color</span><span class="p">,</span> <span class="n">planet</span><span class="o">.</span><span class="n">radius</span><span class="p">)))</span>
+            
+            <span class="n">btn_color</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">()</span>
+            <span class="n">btn_color</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+            <span class="n">btn_color</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;background-color: </span><span class="si">{</span><span class="n">planet</span><span class="o">.</span><span class="n">color</span><span class="si">}</span><span class="s2">; border-radius: 4px; border: 1px solid #555;&quot;</span><span class="p">)</span>
+            <span class="c1"># Используем параметр по умолчанию в lambda, чтобы захватить текущее значение i</span>
+            <span class="n">btn_color</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span> <span class="n">checked</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="n">i</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_change_color</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setCellWidget</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">COL_COLOR</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_center_widget</span><span class="p">(</span><span class="n">btn_color</span><span class="p">))</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">COL_NAME</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="n">planet</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">COL_MASS</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">planet</span><span class="o">.</span><span class="n">mass</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">COL_RADIUS</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">planet</span><span class="o">.</span><span class="n">radius</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">COL_X</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">planet</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">COL_Y</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">planet</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">COL_VX</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">planet</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setItem</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">COL_VY</span><span class="p">,</span> <span class="n">QTableWidgetItem</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">planet</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+
+            <span class="n">btn_del</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;×&quot;</span><span class="p">)</span>
+            <span class="n">btn_del</span><span class="o">.</span><span class="n">setObjectName</span><span class="p">(</span><span class="s2">&quot;DeleteBtn&quot;</span><span class="p">)</span>
+            <span class="n">btn_del</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+            <span class="n">btn_del</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="k">lambda</span> <span class="n">checked</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="n">i</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_delete</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">setCellWidget</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">COL_DELETE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_center_widget</span><span class="p">(</span><span class="n">btn_del</span><span class="p">))</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">blockSignals</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PlanetsManagerDialog._create_center_widget">
+<a class="viewcode-back" href="../../gui.html#gui.planets_manager.PlanetsManagerDialog._create_center_widget">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_center_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">widget</span><span class="p">:</span> <span class="n">QWidget</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QWidget</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Оборачивает переданный виджет в контейнер для центрирования в ячейке таблицы.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            widget (QWidget): Целевой виджет.</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            QWidget: Контейнер с отцентрированным виджетом.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">container</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">()</span>
+        <span class="n">l</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">(</span><span class="n">container</span><span class="p">)</span>
+        <span class="n">l</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">widget</span><span class="p">)</span>
+        <span class="n">l</span><span class="o">.</span><span class="n">setContentsMargins</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">l</span><span class="o">.</span><span class="n">setAlignment</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignmentFlag</span><span class="o">.</span><span class="n">AlignCenter</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">container</span></div>
+
+
+<div class="viewcode-block" id="PlanetsManagerDialog._on_cell_changed">
+<a class="viewcode-back" href="../../gui.html#gui.planets_manager.PlanetsManagerDialog._on_cell_changed">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_cell_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">col</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Слот, вызываемый при ручном редактировании ячейки таблицы.</span>
+<span class="sd">        Валидирует введенные данные через временную копию объекта.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            row (int): Индекс строки.</span>
+<span class="sd">            col (int): Индекс колонки.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">item</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">item</span><span class="p">:</span> 
+            <span class="k">return</span>
+            
+        <span class="n">val_text</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">text</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Создаем временную копию объекта для безопасной проверки (Pydantic v2)</span>
+            <span class="n">temp_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span><span class="p">[</span><span class="n">row</span><span class="p">]</span><span class="o">.</span><span class="n">model_copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">col</span> <span class="o">==</span> <span class="n">COL_NAME</span><span class="p">:</span> <span class="n">temp_body</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">val_text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">col</span> <span class="o">==</span> <span class="n">COL_MASS</span><span class="p">:</span> <span class="n">temp_body</span><span class="o">.</span><span class="n">mass</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">val_text</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">col</span> <span class="o">==</span> <span class="n">COL_RADIUS</span><span class="p">:</span> <span class="n">temp_body</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">val_text</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">col</span> <span class="o">==</span> <span class="n">COL_X</span><span class="p">:</span> <span class="n">temp_body</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">val_text</span><span class="p">),</span> <span class="n">temp_body</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">col</span> <span class="o">==</span> <span class="n">COL_Y</span><span class="p">:</span> <span class="n">temp_body</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">(</span><span class="n">temp_body</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">float</span><span class="p">(</span><span class="n">val_text</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">col</span> <span class="o">==</span> <span class="n">COL_VX</span><span class="p">:</span> <span class="n">temp_body</span><span class="o">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">val_text</span><span class="p">),</span> <span class="n">temp_body</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">elif</span> <span class="n">col</span> <span class="o">==</span> <span class="n">COL_VY</span><span class="p">:</span> <span class="n">temp_body</span><span class="o">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="p">(</span><span class="n">temp_body</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">float</span><span class="p">(</span><span class="n">val_text</span><span class="p">))</span>
+            
+            <span class="c1"># 1. Проверка физических параметров (масса, радиус &gt; 0)</span>
+            <span class="n">phys_error</span> <span class="o">=</span> <span class="n">validate_body_params</span><span class="p">(</span><span class="n">temp_body</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">phys_error</span><span class="p">:</span>
+                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Ошибка параметров&quot;</span><span class="p">,</span> <span class="n">phys_error</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">refresh_table</span><span class="p">()</span>
+                <span class="k">return</span>
+
+            <span class="c1"># 2. Проверка уникальности имени</span>
+            <span class="k">if</span> <span class="n">col</span> <span class="o">==</span> <span class="n">COL_NAME</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">check_name_uniqueness</span><span class="p">(</span><span class="n">temp_body</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span><span class="p">,</span> <span class="n">exclude_idx</span><span class="o">=</span><span class="n">row</span><span class="p">):</span>
+                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Ошибка&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Имя &#39;</span><span class="si">{</span><span class="n">temp_body</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; уже занято.&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">refresh_table</span><span class="p">()</span>
+                <span class="k">return</span>
+
+            <span class="c1"># 3. Проверка коллизий (при изменении позиции или радиуса)</span>
+            <span class="k">if</span> <span class="n">col</span> <span class="ow">in</span> <span class="p">(</span><span class="n">COL_RADIUS</span><span class="p">,</span> <span class="n">COL_X</span><span class="p">,</span> <span class="n">COL_Y</span><span class="p">):</span>
+                <span class="n">conflict</span> <span class="o">=</span> <span class="n">check_collision</span><span class="p">(</span><span class="n">temp_body</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span><span class="p">,</span> <span class="n">exclude_idx</span><span class="o">=</span><span class="n">row</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">conflict</span><span class="p">:</span>
+                    <span class="n">QMessageBox</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Ошибка физики&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Столкновение с телом &#39;</span><span class="si">{</span><span class="n">conflict</span><span class="si">}</span><span class="s2">&#39;!&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">refresh_table</span><span class="p">()</span>
+                    <span class="k">return</span>
+
+            <span class="c1"># Если всё успешно — применяем изменения к оригиналу</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span><span class="p">[</span><span class="n">row</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_body</span>
+            <span class="k">if</span> <span class="n">col</span> <span class="o">==</span> <span class="n">COL_RADIUS</span><span class="p">:</span> 
+                <span class="bp">self</span><span class="o">.</span><span class="n">_update_row_widgets</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+                
+            <span class="bp">self</span><span class="o">.</span><span class="n">planet_modified</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+            
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">ValidationError</span><span class="p">):</span>
+            <span class="c1"># В случае ввода некорректных данных (например, букв вместо чисел) просто откатываем таблицу</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">refresh_table</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PlanetsManagerDialog._update_row_widgets">
+<a class="viewcode-back" href="../../gui.html#gui.planets_manager.PlanetsManagerDialog._update_row_widgets">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_row_widgets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Точечно обновляет визуальные виджеты в строке (превью и кнопку цвета) без перерисовки всей таблицы.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            row (int): Индекс обновляемой строки.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">planet</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span><span class="p">[</span><span class="n">row</span><span class="p">]</span>
+        <span class="n">container_preview</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">cellWidget</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">COL_PREVIEW</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">container_preview</span><span class="p">:</span>
+            <span class="n">preview</span> <span class="o">=</span> <span class="n">container_preview</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span><span class="n">PlanetPreviewWidget</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">preview</span><span class="p">,</span> <span class="n">PlanetPreviewWidget</span><span class="p">):</span> 
+                <span class="n">preview</span><span class="o">.</span><span class="n">update_params</span><span class="p">(</span><span class="n">planet</span><span class="o">.</span><span class="n">color</span><span class="p">,</span> <span class="n">planet</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span>
+        
+        <span class="n">container_color</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">cellWidget</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">COL_COLOR</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">container_color</span><span class="p">:</span>
+            <span class="n">btn</span> <span class="o">=</span> <span class="n">container_color</span><span class="o">.</span><span class="n">findChild</span><span class="p">(</span><span class="n">QPushButton</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">btn</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">):</span> 
+                <span class="n">btn</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;background-color: </span><span class="si">{</span><span class="n">planet</span><span class="o">.</span><span class="n">color</span><span class="si">}</span><span class="s2">; border-radius: 4px; border: 1px solid #555;&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PlanetsManagerDialog._change_color">
+<a class="viewcode-back" href="../../gui.html#gui.planets_manager.PlanetsManagerDialog._change_color">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_change_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Открывает диалог выбора цвета и применяет его к выбранной планете.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            index (int): Индекс целевой планеты.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">planet</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">QColorDialog</span><span class="o">.</span><span class="n">getColor</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="n">planet</span><span class="o">.</span><span class="n">color</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">color</span><span class="o">.</span><span class="n">isValid</span><span class="p">():</span>
+            <span class="n">planet</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_row_widgets</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">planet_modified</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">index</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PlanetsManagerDialog._on_delete">
+<a class="viewcode-back" href="../../gui.html#gui.planets_manager.PlanetsManagerDialog._on_delete">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Обрабатывает нажатие кнопки удаления в строке таблицы.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            index (int): Индекс удаляемой планеты.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">planet_removed</span><span class="o">.</span><span class="n">emit</span><span class="p">(</span><span class="n">index</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">refresh_table</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Авторские права 2026, Miron. </p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

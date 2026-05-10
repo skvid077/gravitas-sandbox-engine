@@ -1,0 +1,578 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>core package &mdash; документация Gravitas Sandbox Engine 1.0</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=9ca2116e"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/translations.js?v=cd1d70c9"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="genindex.html" />
+    <link rel="search" title="Поиск" href="search.html" />
+    <link rel="next" title="gui package" href="gui.html" />
+    <link rel="prev" title="config.constants package" href="config.constants.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Gravitas Sandbox Engine
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Содержание:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="config.html">config package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">core package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-core.engine">core.engine module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#core.engine.PhysicsEngine"><code class="docutils literal notranslate"><span class="pre">PhysicsEngine</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-core.load_json">core.load_json module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#core.load_json.ScenarioLoadError"><code class="docutils literal notranslate"><span class="pre">ScenarioLoadError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core.load_json.ScenarioSaveError"><code class="docutils literal notranslate"><span class="pre">ScenarioSaveError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core.load_json.load_scenario_from_file"><code class="docutils literal notranslate"><span class="pre">load_scenario_from_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core.load_json.save_scenario_to_file"><code class="docutils literal notranslate"><span class="pre">save_scenario_to_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-core.planets_validator">core.planets_validator module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#core.planets_validator.check_collision"><code class="docutils literal notranslate"><span class="pre">check_collision()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core.planets_validator.check_name_uniqueness"><code class="docutils literal notranslate"><span class="pre">check_name_uniqueness()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core.planets_validator.validate_body_params"><code class="docutils literal notranslate"><span class="pre">validate_body_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core.planets_validator.validate_scenario"><code class="docutils literal notranslate"><span class="pre">validate_scenario()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-core.quadtree">core.quadtree module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#core.quadtree.BoundingBox"><code class="docutils literal notranslate"><span class="pre">BoundingBox</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core.quadtree.QuadTreeNode"><code class="docutils literal notranslate"><span class="pre">QuadTreeNode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core.quadtree.calculate_bh_acceleration"><code class="docutils literal notranslate"><span class="pre">calculate_bh_acceleration()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-core.simulation">core.simulation module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#core.simulation.Simulation"><code class="docutils literal notranslate"><span class="pre">Simulation</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-core.time_machine">core.time_machine module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#core.time_machine.TimeMachine"><code class="docutils literal notranslate"><span class="pre">TimeMachine</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-core">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html">gui package</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Gravitas Sandbox Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">src</a></li>
+      <li class="breadcrumb-item active">core package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/core.rst.txt" rel="nofollow"> Просмотреть исходный код страницы</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="core-package">
+<h1>core package<a class="headerlink" href="#core-package" title="Ссылка на этот заголовок"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Ссылка на этот заголовок"></a></h2>
+</section>
+<section id="module-core.engine">
+<span id="core-engine-module"></span><h2>core.engine module<a class="headerlink" href="#module-core.engine" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.engine.PhysicsEngine">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">core.engine.</span></span><span class="sig-name descname"><span class="pre">PhysicsEngine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g_const</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">9.81</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/core/engine.html#PhysicsEngine"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.engine.PhysicsEngine" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Высокопроизводительное физическое ядро симуляции.</p>
+<p>Оптимизации:
+1. Гравитация: Алгоритм Барнса-Хата (O(N log N)).
+2. Коллизии: Пространственное хеширование (O(N)).
+3. Вычисления: Векторизация через NumPy (матричные операции).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.engine.PhysicsEngine.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g_const</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">9.81</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/engine.html#PhysicsEngine.__init__"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.engine.PhysicsEngine.__init__" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.engine.PhysicsEngine._apply_velocity">
+<span class="sig-name descname"><span class="pre">_apply_velocity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bodies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/engine.html#PhysicsEngine._apply_velocity"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.engine.PhysicsEngine._apply_velocity" title="Ссылка на это определение"></a></dt>
+<dd><p>Обновление позиций через матричные операции NumPy.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.engine.PhysicsEngine._handle_collisions">
+<span class="sig-name descname"><span class="pre">_handle_collisions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bodies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/engine.html#PhysicsEngine._handle_collisions"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.engine.PhysicsEngine._handle_collisions" title="Ссылка на это определение"></a></dt>
+<dd><p>Разрешение неупругих столкновений (слияний) за O(N).
+Использует пространственное хеширование (Uniform Grid).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.engine.PhysicsEngine.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bodies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/engine.html#PhysicsEngine.update"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.engine.PhysicsEngine.update" title="Ссылка на это определение"></a></dt>
+<dd><p>Главный цикл обновления физики.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-core.load_json">
+<span id="core-load-json-module"></span><h2>core.load_json module<a class="headerlink" href="#module-core.load_json" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py exception">
+<dt class="sig sig-object py" id="core.load_json.ScenarioLoadError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">core.load_json.</span></span><span class="sig-name descname"><span class="pre">ScenarioLoadError</span></span><a class="reference internal" href="_modules/core/load_json.html#ScenarioLoadError"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.load_json.ScenarioLoadError" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Исключение, возникающее при ошибках загрузки или валидации сценария.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="core.load_json.ScenarioSaveError">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">core.load_json.</span></span><span class="sig-name descname"><span class="pre">ScenarioSaveError</span></span><a class="reference internal" href="_modules/core/load_json.html#ScenarioSaveError"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.load_json.ScenarioSaveError" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Исключение, возникающее при ошибках записи сценария на диск.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.load_json.load_scenario_from_file">
+<span class="sig-prename descclassname"><span class="pre">core.load_json.</span></span><span class="sig-name descname"><span class="pre">load_scenario_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config.html#config.schemas.SimulationScenario" title="config.schemas.SimulationScenario"><span class="pre">SimulationScenario</span></a></span></span><a class="reference internal" href="_modules/core/load_json.html#load_scenario_from_file"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.load_json.load_scenario_from_file" title="Ссылка на это определение"></a></dt>
+<dd><p>Загружает сценарий из JSON-файла, проводит проверку структуры (Pydantic)
+и глубокую валидацию физической логики (коллизии, параметры).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – Путь к файлу сценария.</p>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Валидированный объект сценария.</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="config.html#config.schemas.SimulationScenario" title="config.schemas.SimulationScenario">SimulationScenario</a></p>
+</dd>
+<dt class="field-even">Исключение<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#core.load_json.ScenarioLoadError" title="core.load_json.ScenarioLoadError"><strong>ScenarioLoadError</strong></a> – Если файл не найден, поврежден или нарушает логику симуляции.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.load_json.save_scenario_to_file">
+<span class="sig-prename descclassname"><span class="pre">core.load_json.</span></span><span class="sig-name descname"><span class="pre">save_scenario_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config.html#config.schemas.SimulationScenario" title="config.schemas.SimulationScenario"><span class="pre">SimulationScenario</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/load_json.html#save_scenario_to_file"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.load_json.save_scenario_to_file" title="Ссылка на это определение"></a></dt>
+<dd><p>Сериализует объект сценария в JSON и сохраняет его на диск.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scenario</strong> (<a class="reference internal" href="config.html#config.schemas.SimulationScenario" title="config.schemas.SimulationScenario"><em>SimulationScenario</em></a>) – Объект сценария для сохранения.</p></li>
+<li><p><strong>file_path</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – Путь сохранения.</p></li>
+<li><p><strong>indent</strong> (<em>int</em><em>, </em><em>optional</em>) – Отступ в JSON-файле. По умолчанию 4.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Исключение<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#core.load_json.ScenarioSaveError" title="core.load_json.ScenarioSaveError"><strong>ScenarioSaveError</strong></a> – Если не удалось создать директорию или записать файл.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-core.planets_validator">
+<span id="core-planets-validator-module"></span><h2>core.planets_validator module<a class="headerlink" href="#module-core.planets_validator" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="core.planets_validator.check_collision">
+<span class="sig-prename descclassname"><span class="pre">core.planets_validator.</span></span><span class="sig-name descname"><span class="pre">check_collision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">planets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/planets_validator.html#check_collision"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.planets_validator.check_collision" title="Ссылка на это определение"></a></dt>
+<dd><p>Проверяет, не пересекается ли геометрически новое тело с существующими.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>new_body</strong> (<a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><em>BodyState</em></a>) – Тело, позиция которого проверяется.</p></li>
+<li><p><strong>planets</strong> (<em>List</em><em>[</em><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><em>BodyState</em></a><em>]</em>) – Список тел для проверки наложения.</p></li>
+<li><p><strong>exclude_idx</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – Индекс тела, которое нужно игнорировать.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Имя первого найденного тела, с которым произошло наложение, или None.</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.planets_validator.check_name_uniqueness">
+<span class="sig-prename descclassname"><span class="pre">core.planets_validator.</span></span><span class="sig-name descname"><span class="pre">check_name_uniqueness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">planets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/core/planets_validator.html#check_name_uniqueness"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.planets_validator.check_name_uniqueness" title="Ссылка на это определение"></a></dt>
+<dd><p>Проверяет уникальность имени среди списка планет.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Имя для проверки.</p></li>
+<li><p><strong>planets</strong> (<em>List</em><em>[</em><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><em>BodyState</em></a><em>]</em>) – Список существующих тел.</p></li>
+<li><p><strong>exclude_idx</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – Индекс тела, которое нужно игнорировать (при редактировании).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>True, если имя уникально, иначе False.</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.planets_validator.validate_body_params">
+<span class="sig-prename descclassname"><span class="pre">core.planets_validator.</span></span><span class="sig-name descname"><span class="pre">validate_body_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/planets_validator.html#validate_body_params"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.planets_validator.validate_body_params" title="Ссылка на это определение"></a></dt>
+<dd><p>Проверяет физическую и логическую корректность параметров отдельного тела.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>body</strong> (<a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><em>BodyState</em></a>) – Объект тела для проверки.</p>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Текст ошибки или None, если параметры валидны.</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Optional[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.planets_validator.validate_scenario">
+<span class="sig-prename descclassname"><span class="pre">core.planets_validator.</span></span><span class="sig-name descname"><span class="pre">validate_scenario</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config.html#config.schemas.SimulationScenario" title="config.schemas.SimulationScenario"><span class="pre">SimulationScenario</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/core/planets_validator.html#validate_scenario"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.planets_validator.validate_scenario" title="Ссылка на это определение"></a></dt>
+<dd><p>Выполняет комплексную проверку всего сценария симуляции:
+параметры тел, уникальность имен и отсутствие начальных коллизий.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>scenario</strong> (<a class="reference internal" href="config.html#config.schemas.SimulationScenario" title="config.schemas.SimulationScenario"><em>SimulationScenario</em></a>) – Сценарий для проверки.</p>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Список всех найденных ошибок. Пустой список означает успешную валидацию.</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-core.quadtree">
+<span id="core-quadtree-module"></span><h2>core.quadtree module<a class="headerlink" href="#module-core.quadtree" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.quadtree.BoundingBox">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">core.quadtree.</span></span><span class="sig-name descname"><span class="pre">BoundingBox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/core/quadtree.html#BoundingBox"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.quadtree.BoundingBox" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.quadtree.BoundingBox.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/quadtree.html#BoundingBox.__init__"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.quadtree.BoundingBox.__init__" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.quadtree.BoundingBox.contains">
+<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/core/quadtree.html#BoundingBox.contains"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.quadtree.BoundingBox.contains" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core.quadtree.BoundingBox.height">
+<span class="sig-name descname"><span class="pre">height</span></span><a class="headerlink" href="#core.quadtree.BoundingBox.height" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.quadtree.BoundingBox.subdivide">
+<span class="sig-name descname"><span class="pre">subdivide</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#core.quadtree.BoundingBox" title="core.quadtree.BoundingBox"><span class="pre">BoundingBox</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#core.quadtree.BoundingBox" title="core.quadtree.BoundingBox"><span class="pre">BoundingBox</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#core.quadtree.BoundingBox" title="core.quadtree.BoundingBox"><span class="pre">BoundingBox</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#core.quadtree.BoundingBox" title="core.quadtree.BoundingBox"><span class="pre">BoundingBox</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/core/quadtree.html#BoundingBox.subdivide"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.quadtree.BoundingBox.subdivide" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core.quadtree.BoundingBox.width">
+<span class="sig-name descname"><span class="pre">width</span></span><a class="headerlink" href="#core.quadtree.BoundingBox.width" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core.quadtree.BoundingBox.x">
+<span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#core.quadtree.BoundingBox.x" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core.quadtree.BoundingBox.y">
+<span class="sig-name descname"><span class="pre">y</span></span><a class="headerlink" href="#core.quadtree.BoundingBox.y" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="core.quadtree.QuadTreeNode">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">core.quadtree.</span></span><span class="sig-name descname"><span class="pre">QuadTreeNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.quadtree.BoundingBox" title="core.quadtree.BoundingBox"><span class="pre">BoundingBox</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/core/quadtree.html#QuadTreeNode"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.quadtree.QuadTreeNode" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.quadtree.QuadTreeNode.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.quadtree.BoundingBox" title="core.quadtree.BoundingBox"><span class="pre">BoundingBox</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/quadtree.html#QuadTreeNode.__init__"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.quadtree.QuadTreeNode.__init__" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.quadtree.QuadTreeNode._insert_into_children">
+<span class="sig-name descname"><span class="pre">_insert_into_children</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/core/quadtree.html#QuadTreeNode._insert_into_children"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.quadtree.QuadTreeNode._insert_into_children" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.quadtree.QuadTreeNode._subdivide">
+<span class="sig-name descname"><span class="pre">_subdivide</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/quadtree.html#QuadTreeNode._subdivide"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.quadtree.QuadTreeNode._subdivide" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core.quadtree.QuadTreeNode.body_mass">
+<span class="sig-name descname"><span class="pre">body_mass</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#core.quadtree.QuadTreeNode.body_mass" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core.quadtree.QuadTreeNode.body_pos">
+<span class="sig-name descname"><span class="pre">body_pos</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#core.quadtree.QuadTreeNode.body_pos" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core.quadtree.QuadTreeNode.boundary">
+<span class="sig-name descname"><span class="pre">boundary</span></span><a class="headerlink" href="#core.quadtree.QuadTreeNode.boundary" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core.quadtree.QuadTreeNode.center_of_mass">
+<span class="sig-name descname"><span class="pre">center_of_mass</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#core.quadtree.QuadTreeNode.center_of_mass" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core.quadtree.QuadTreeNode.children">
+<span class="sig-name descname"><span class="pre">children</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#core.quadtree.QuadTreeNode" title="core.quadtree.QuadTreeNode"><span class="pre">QuadTreeNode</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#core.quadtree.QuadTreeNode.children" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.quadtree.QuadTreeNode.insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mass</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/core/quadtree.html#QuadTreeNode.insert"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.quadtree.QuadTreeNode.insert" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core.quadtree.QuadTreeNode.is_leaf">
+<span class="sig-name descname"><span class="pre">is_leaf</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#core.quadtree.QuadTreeNode.is_leaf" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="core.quadtree.QuadTreeNode.total_mass">
+<span class="sig-name descname"><span class="pre">total_mass</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><a class="headerlink" href="#core.quadtree.QuadTreeNode.total_mass" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="core.quadtree.calculate_bh_acceleration">
+<span class="sig-prename descclassname"><span class="pre">core.quadtree.</span></span><span class="sig-name descname"><span class="pre">calculate_bh_acceleration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#core.quadtree.QuadTreeNode" title="core.quadtree.QuadTreeNode"><span class="pre">QuadTreeNode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">G</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">theta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">softening</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0001</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dtype</span><span class="p"><span class="pre">[</span></span><span class="pre">float64</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/core/quadtree.html#calculate_bh_acceleration"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.quadtree.calculate_bh_acceleration" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-core.simulation">
+<span id="core-simulation-module"></span><h2>core.simulation module<a class="headerlink" href="#module-core.simulation" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.simulation.Simulation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">core.simulation.</span></span><span class="sig-name descname"><span class="pre">Simulation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_bodies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/core/simulation.html#Simulation"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.simulation.Simulation" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Класс управления состоянием симуляции.
+Служит контейнером для небесных тел и связующим звеном
+между графическим интерфейсом и физическим движком.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulation.Simulation.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">initial_bodies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/simulation.html#Simulation.__init__"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.simulation.Simulation.__init__" title="Ссылка на это определение"></a></dt>
+<dd><p>Инициализирует симуляцию.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>initial_bodies</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><em>BodyState</em></a><em>]</em><em>]</em>) – Начальный список тел.
+Если не передан, создается пустая симуляция.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulation.Simulation.add_default_body">
+<span class="sig-name descname"><span class="pre">add_default_body</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a></span></span><a class="reference internal" href="_modules/core/simulation.html#Simulation.add_default_body"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.simulation.Simulation.add_default_body" title="Ссылка на это определение"></a></dt>
+<dd><p>Создает новое тело с параметрами по умолчанию и добавляет его в мир.
+Реализует логику генерации уникального имени.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – Координата появления по оси X.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Координата появления по оси Y.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Созданный объект состояния тела.</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState">BodyState</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulation.Simulation.remove_body_by_index">
+<span class="sig-name descname"><span class="pre">remove_body_by_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/simulation.html#Simulation.remove_body_by_index"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.simulation.Simulation.remove_body_by_index" title="Ссылка на это определение"></a></dt>
+<dd><p>Безопасно удаляет тело из симуляции по его индексу.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – Индекс удаляемого тела в списке.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.simulation.Simulation.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/simulation.html#Simulation.step"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.simulation.Simulation.step" title="Ссылка на это определение"></a></dt>
+<dd><p>Продвигает симуляцию на один шаг во времени (dt).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dt</strong> (<em>float</em>) – Шаг времени в секундах.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-core.time_machine">
+<span id="core-time-machine-module"></span><h2>core.time_machine module<a class="headerlink" href="#module-core.time_machine" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">core.time_machine.</span></span><span class="sig-name descname"><span class="pre">TimeMachine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine.__init__"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine.__init__" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine.get_current_frame_index">
+<span class="sig-name descname"><span class="pre">get_current_frame_index</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine.get_current_frame_index"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine.get_current_frame_index" title="Ссылка на это определение"></a></dt>
+<dd><p>Возвращает индекс текущего кадра (от 0 до total_frames).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine.get_current_snapshot">
+<span class="sig-name descname"><span class="pre">get_current_snapshot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine.get_current_snapshot"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine.get_current_snapshot" title="Ссылка на это определение"></a></dt>
+<dd><p>Возвращает слепок для текущего момента без изменения времени.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine.get_total_frames">
+<span class="sig-name descname"><span class="pre">get_total_frames</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine.get_total_frames"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine.get_total_frames" title="Ссылка на это определение"></a></dt>
+<dd><p>Возвращает общее количество доступных кадров в истории.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine.jump_to">
+<span class="sig-name descname"><span class="pre">jump_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine.jump_to"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine.jump_to" title="Ссылка на это определение"></a></dt>
+<dd><p>Перемещается к конкретному кадру по индексу (от ползунка).
+Автоматически решает, мотать вперед или назад.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine.pause">
+<span class="sig-name descname"><span class="pre">pause</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine.pause"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine.pause" title="Ссылка на это определение"></a></dt>
+<dd><p>Ставит машину на паузу, разрешая перемотку.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine.resume">
+<span class="sig-name descname"><span class="pre">resume</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine.resume"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine.resume" title="Ссылка на это определение"></a></dt>
+<dd><p>Возобновляет ход времени. Стирает альтернативное будущее.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine.save_snapshot">
+<span class="sig-name descname"><span class="pre">save_snapshot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bodies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine.save_snapshot"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine.save_snapshot" title="Ссылка на это определение"></a></dt>
+<dd><p>Сохраняет слепок при нормальном ходе времени.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine.scrub_backward">
+<span class="sig-name descname"><span class="pre">scrub_backward</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine.scrub_backward"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine.scrub_backward" title="Ссылка на это определение"></a></dt>
+<dd><p>Отматывает на один кадр назад.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine.scrub_forward">
+<span class="sig-name descname"><span class="pre">scrub_forward</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine.scrub_forward"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine.scrub_forward" title="Ссылка на это определение"></a></dt>
+<dd><p>Перематывает на один кадр вперед.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-core">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-core" title="Ссылка на этот заголовок"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Нижняя область">
+        <a href="config.constants.html" class="btn btn-neutral float-left" title="config.constants package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Предыдущая</a>
+        <a href="gui.html" class="btn btn-neutral float-right" title="gui package" accesskey="n" rel="next">Следующая <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Авторские права 2026, Miron. </p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

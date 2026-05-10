@@ -1,0 +1,388 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gui.add_planet &mdash; документация Gravitas Sandbox Engine 1.0</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=9ca2116e"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/translations.js?v=cd1d70c9"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Gravitas Sandbox Engine
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Содержание:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">src</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Gravitas Sandbox Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Код модуля</a></li>
+      <li class="breadcrumb-item active">gui.add_planet</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Исходный код gui.add_planet</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">ValidationError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">QDialog</span><span class="p">,</span> <span class="n">QVBoxLayout</span><span class="p">,</span> <span class="n">QHBoxLayout</span><span class="p">,</span> <span class="n">QFormLayout</span><span class="p">,</span> 
+    <span class="n">QLineEdit</span><span class="p">,</span> <span class="n">QPushButton</span><span class="p">,</span> <span class="n">QColorDialog</span><span class="p">,</span> <span class="n">QWidget</span><span class="p">,</span> <span class="n">QMessageBox</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QDoubleValidator</span><span class="p">,</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QPainter</span><span class="p">,</span> <span class="n">QBrush</span><span class="p">,</span> <span class="n">QPen</span><span class="p">,</span> <span class="n">QPaintEvent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QPointF</span><span class="p">,</span> <span class="n">QLocale</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">config.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">BodyState</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">core.planets_validator</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_collision</span><span class="p">,</span> <span class="n">check_name_uniqueness</span><span class="p">,</span> <span class="n">validate_body_params</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">config.constants</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">STYLE_BTN_MENU_CONTINUE</span><span class="p">,</span>
+    <span class="n">STYLE_BTN_MENU</span><span class="p">,</span>
+    <span class="n">PREVIEW_SIZE</span><span class="p">,</span>
+    <span class="n">PREVIEW_CENTER</span><span class="p">,</span>
+    <span class="n">PREVIEW_MAX_VISUAL_R</span><span class="p">,</span>
+    <span class="n">PREVIEW_MIN_VISUAL_R</span><span class="p">,</span>
+    <span class="n">PREVIEW_LOG_BASE</span><span class="p">,</span>
+    <span class="n">DIALOG_WIDTH</span><span class="p">,</span>
+    <span class="n">DIALOG_HEIGHT</span><span class="p">,</span>
+    <span class="n">DEFAULT_COLOR</span><span class="p">,</span>
+    <span class="n">DEFAULT_NAME</span><span class="p">,</span>
+    <span class="n">DEFAULT_MASS</span><span class="p">,</span>
+    <span class="n">DEFAULT_RADIUS</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="PlanetPreviewWidget">
+<a class="viewcode-back" href="../../gui.html#gui.add_planet.PlanetPreviewWidget">[документация]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlanetPreviewWidget</span><span class="p">(</span><span class="n">QWidget</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Виджет для отображения логарифмического превью планеты.</span>
+<span class="sd">    Позволяет визуально оценить размер и цвет тела перед добавлением.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="PlanetPreviewWidget.__init__">
+<a class="viewcode-back" href="../../gui.html#gui.add_planet.PlanetPreviewWidget.__init__">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color_hex</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QWidget</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Инициализирует виджет превью.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            color_hex (str): HEX-код цвета.</span>
+<span class="sd">            radius (float): Реальный физический радиус.</span>
+<span class="sd">            parent (Optional[QWidget]): Родительский виджет.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">(</span><span class="n">color_hex</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="n">PREVIEW_SIZE</span><span class="p">,</span> <span class="n">PREVIEW_SIZE</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PlanetPreviewWidget.update_params">
+<a class="viewcode-back" href="../../gui.html#gui.add_planet.PlanetPreviewWidget.update_params">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">color</span><span class="p">:</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">radius</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Обновляет параметры и перерисовывает виджет.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">color</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PlanetPreviewWidget.paintEvent">
+<a class="viewcode-back" href="../../gui.html#gui.add_planet.PlanetPreviewWidget.paintEvent">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">paintEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QPaintEvent</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Отрисовывает планету с использованием логарифмического масштаба.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">event</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">painter</span> <span class="o">=</span> <span class="n">QPainter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">setRenderHint</span><span class="p">(</span><span class="n">QPainter</span><span class="o">.</span><span class="n">RenderHint</span><span class="o">.</span><span class="n">Antialiasing</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Логарифмический масштаб для превью</span>
+        <span class="n">visual_r</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span>
+            <span class="n">PREVIEW_MAX_VISUAL_R</span><span class="p">,</span> 
+            <span class="nb">max</span><span class="p">(</span><span class="n">PREVIEW_MIN_VISUAL_R</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radius</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">PREVIEW_LOG_BASE</span><span class="p">)</span>
+        <span class="p">)</span>
+        
+        <span class="n">painter</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">QBrush</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">color</span><span class="p">))</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">QPen</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">GlobalColor</span><span class="o">.</span><span class="n">white</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">painter</span><span class="o">.</span><span class="n">drawEllipse</span><span class="p">(</span><span class="n">QPointF</span><span class="p">(</span><span class="n">PREVIEW_CENTER</span><span class="p">,</span> <span class="n">PREVIEW_CENTER</span><span class="p">),</span> <span class="n">visual_r</span><span class="p">,</span> <span class="n">visual_r</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="AddPlanetDialog">
+<a class="viewcode-back" href="../../gui.html#gui.add_planet.AddPlanetDialog">[документация]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">AddPlanetDialog</span><span class="p">(</span><span class="n">QDialog</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Диалоговое окно для создания нового небесного тела или редактирования существующего.</span>
+<span class="sd">    Включает в себя форму ввода параметров и интерактивное превью.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="AddPlanetDialog.__init__">
+<a class="viewcode-back" href="../../gui.html#gui.add_planet.AddPlanetDialog.__init__">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">planets_info</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">BodyState</span><span class="p">],</span> <span class="n">parent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">QWidget</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">edit_body</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BodyState</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Инициализирует диалог.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            planets_info (List[BodyState]): Список существующих тел для проверки коллизий.</span>
+<span class="sd">            parent (Optional[QWidget]): Родительское окно.</span>
+<span class="sd">            edit_body (Optional[BodyState]): Объект для редактирования. Если None — создается новая планета.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span> <span class="o">=</span> <span class="n">planets_info</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edit_body</span> <span class="o">=</span> <span class="n">edit_body</span>
+        
+        <span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Редактирование тела&quot;</span> <span class="k">if</span> <span class="n">edit_body</span> <span class="k">else</span> <span class="s2">&quot;Параметры нового тела&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setWindowTitle</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setFixedSize</span><span class="p">(</span><span class="n">DIALOG_WIDTH</span><span class="p">,</span> <span class="n">DIALOG_HEIGHT</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">selected_color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">(</span><span class="n">edit_body</span><span class="o">.</span><span class="n">color</span> <span class="k">if</span> <span class="n">edit_body</span> <span class="k">else</span> <span class="n">DEFAULT_COLOR</span><span class="p">)</span>
+        
+        <span class="c1"># Декларация атрибутов для mypy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_name</span><span class="p">:</span> <span class="n">QLineEdit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_mass</span><span class="p">:</span> <span class="n">QLineEdit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_radius</span><span class="p">:</span> <span class="n">QLineEdit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_x</span><span class="p">:</span> <span class="n">QLineEdit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_y</span><span class="p">:</span> <span class="n">QLineEdit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_vx</span><span class="p">:</span> <span class="n">QLineEdit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_vy</span><span class="p">:</span> <span class="n">QLineEdit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_col</span><span class="p">:</span> <span class="n">QPushButton</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preview</span><span class="p">:</span> <span class="n">PlanetPreviewWidget</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_init_ui</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="AddPlanetDialog._init_ui">
+<a class="viewcode-back" href="../../gui.html#gui.add_planet.AddPlanetDialog._init_ui">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_init_ui</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Создает форму ввода и элементы управления.&quot;&quot;&quot;</span>
+        <span class="n">main_layout</span> <span class="o">=</span> <span class="n">QHBoxLayout</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">form_container</span> <span class="o">=</span> <span class="n">QWidget</span><span class="p">()</span>
+        <span class="n">form_layout</span> <span class="o">=</span> <span class="n">QFormLayout</span><span class="p">(</span><span class="n">form_container</span><span class="p">)</span>
+        
+        <span class="n">val</span> <span class="o">=</span> <span class="n">QDoubleValidator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">val</span><span class="o">.</span><span class="n">setLocale</span><span class="p">(</span><span class="n">QLocale</span><span class="p">(</span><span class="n">QLocale</span><span class="o">.</span><span class="n">Language</span><span class="o">.</span><span class="n">English</span><span class="p">))</span>
+
+        <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edit_body</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_name</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">b</span> <span class="k">else</span> <span class="n">DEFAULT_NAME</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_mass</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_input</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">mass</span><span class="p">)</span> <span class="k">if</span> <span class="n">b</span> <span class="k">else</span> <span class="n">DEFAULT_MASS</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_input</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span> <span class="k">if</span> <span class="n">b</span> <span class="k">else</span> <span class="n">DEFAULT_RADIUS</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_input</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">b</span> <span class="k">else</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_input</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="n">b</span> <span class="k">else</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_vx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_input</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">b</span> <span class="k">else</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_vy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_input</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">velocity</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="n">b</span> <span class="k">else</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_radius</span><span class="o">.</span><span class="n">textChanged</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_sync_preview</span><span class="p">)</span>
+
+        <span class="n">form_layout</span><span class="o">.</span><span class="n">addRow</span><span class="p">(</span><span class="s2">&quot;Имя:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_name</span><span class="p">)</span>
+        <span class="n">form_layout</span><span class="o">.</span><span class="n">addRow</span><span class="p">(</span><span class="s2">&quot;Масса:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_mass</span><span class="p">)</span>
+        <span class="n">form_layout</span><span class="o">.</span><span class="n">addRow</span><span class="p">(</span><span class="s2">&quot;Радиус:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_radius</span><span class="p">)</span>
+        <span class="n">form_layout</span><span class="o">.</span><span class="n">addRow</span><span class="p">(</span><span class="s2">&quot;X:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_x</span><span class="p">)</span>
+        <span class="n">form_layout</span><span class="o">.</span><span class="n">addRow</span><span class="p">(</span><span class="s2">&quot;Y:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_y</span><span class="p">)</span>
+        <span class="n">form_layout</span><span class="o">.</span><span class="n">addRow</span><span class="p">(</span><span class="s2">&quot;Vx:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_vx</span><span class="p">)</span>
+        <span class="n">form_layout</span><span class="o">.</span><span class="n">addRow</span><span class="p">(</span><span class="s2">&quot;Vy:&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_vy</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_col</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Цвет&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_col</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;background-color: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">selected_color</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s2">; border-radius: 6px; height: 25px;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_col</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_pick_color</span><span class="p">)</span>
+        <span class="n">form_layout</span><span class="o">.</span><span class="n">addRow</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">btn_col</span><span class="p">)</span>
+
+        <span class="n">right_panel</span> <span class="o">=</span> <span class="n">QVBoxLayout</span><span class="p">()</span>
+        <span class="n">initial_radius</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">radius</span> <span class="k">if</span> <span class="n">b</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">DEFAULT_RADIUS</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preview</span> <span class="o">=</span> <span class="n">PlanetPreviewWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selected_color</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="n">initial_radius</span><span class="p">)</span>
+        <span class="n">right_panel</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">preview</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="n">Qt</span><span class="o">.</span><span class="n">AlignmentFlag</span><span class="o">.</span><span class="n">AlignCenter</span><span class="p">)</span>
+        <span class="n">right_panel</span><span class="o">.</span><span class="n">addStretch</span><span class="p">()</span>
+        
+        <span class="n">btn_ok_text</span> <span class="o">=</span> <span class="s2">&quot;Сохранить&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">edit_body</span> <span class="k">else</span> <span class="s2">&quot;Добавить&quot;</span>
+        <span class="n">btn_ok</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="n">btn_ok_text</span><span class="p">)</span>
+        <span class="n">btn_ok</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">STYLE_BTN_MENU_CONTINUE</span><span class="p">)</span>
+        <span class="n">btn_ok</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accept</span><span class="p">)</span>
+        
+        <span class="n">btn_cancel</span> <span class="o">=</span> <span class="n">QPushButton</span><span class="p">(</span><span class="s2">&quot;Отмена&quot;</span><span class="p">)</span>
+        <span class="n">btn_cancel</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="n">STYLE_BTN_MENU</span><span class="p">)</span>
+        <span class="n">btn_cancel</span><span class="o">.</span><span class="n">clicked</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reject</span><span class="p">)</span>
+        
+        <span class="n">right_panel</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">btn_ok</span><span class="p">)</span>
+        <span class="n">right_panel</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">btn_cancel</span><span class="p">)</span>
+
+        <span class="n">main_layout</span><span class="o">.</span><span class="n">addWidget</span><span class="p">(</span><span class="n">form_container</span><span class="p">)</span>
+        <span class="n">main_layout</span><span class="o">.</span><span class="n">addLayout</span><span class="p">(</span><span class="n">right_panel</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AddPlanetDialog._create_input">
+<a class="viewcode-back" href="../../gui.html#gui.add_planet.AddPlanetDialog._create_input">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">validator</span><span class="p">:</span> <span class="n">QDoubleValidator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QLineEdit</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Создает поле ввода с валидатором числовых значений.&quot;&quot;&quot;</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">QLineEdit</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">line</span><span class="o">.</span><span class="n">setValidator</span><span class="p">(</span><span class="n">validator</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">line</span></div>
+
+
+<div class="viewcode-block" id="AddPlanetDialog._sync_preview">
+<a class="viewcode-back" href="../../gui.html#gui.add_planet.AddPlanetDialog._sync_preview">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_sync_preview</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Синхронизирует виджет превью с введенным радиусом.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_radius</span><span class="o">.</span><span class="n">text</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="k">if</span> <span class="n">text</span> <span class="k">else</span> <span class="mf">0.0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preview</span><span class="o">.</span><span class="n">update_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selected_color</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span> 
+            <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="AddPlanetDialog._pick_color">
+<a class="viewcode-back" href="../../gui.html#gui.add_planet.AddPlanetDialog._pick_color">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_pick_color</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Открывает диалог выбора цвета.&quot;&quot;&quot;</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">QColorDialog</span><span class="o">.</span><span class="n">getColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selected_color</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">color</span><span class="o">.</span><span class="n">isValid</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selected_color</span> <span class="o">=</span> <span class="n">color</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">btn_col</span><span class="o">.</span><span class="n">setStyleSheet</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;background-color: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">selected_color</span><span class="o">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s2">; border-radius: 6px; height: 25px;&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_sync_preview</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="AddPlanetDialog.accept">
+<a class="viewcode-back" href="../../gui.html#gui.add_planet.AddPlanetDialog.accept">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">accept</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Выполняет валидацию данных и закрывает диалог с сохранением.&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">new_planet_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_planet_data</span><span class="p">()</span>
+            
+            <span class="n">exclude_idx</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">edit_body</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">edit_body</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span><span class="p">:</span>
+                <span class="n">exclude_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edit_body</span><span class="p">)</span>
+
+            <span class="c1"># Валидация физики, имен и коллизий</span>
+            <span class="n">phys_error</span> <span class="o">=</span> <span class="n">validate_body_params</span><span class="p">(</span><span class="n">new_planet_data</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">phys_error</span><span class="p">:</span>
+                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Ошибка параметров&quot;</span><span class="p">,</span> <span class="n">phys_error</span><span class="p">)</span>
+                <span class="k">return</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">check_name_uniqueness</span><span class="p">(</span><span class="n">new_planet_data</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span><span class="p">,</span> <span class="n">exclude_idx</span><span class="o">=</span><span class="n">exclude_idx</span><span class="p">):</span>
+                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Ошибка&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Имя &#39;</span><span class="si">{</span><span class="n">new_planet_data</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; уже занято.&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+
+            <span class="n">conflict</span> <span class="o">=</span> <span class="n">check_collision</span><span class="p">(</span><span class="n">new_planet_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">planets_info</span><span class="p">,</span> <span class="n">exclude_idx</span><span class="o">=</span><span class="n">exclude_idx</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">conflict</span><span class="p">:</span>
+                <span class="n">QMessageBox</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Ошибка&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;Пересечение с телом &#39;</span><span class="si">{</span><span class="n">conflict</span><span class="si">}</span><span class="s2">&#39;!&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+
+            <span class="c1"># Обновление существующего объекта</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">edit_body</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">edit_body</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">new_planet_data</span><span class="o">.</span><span class="n">name</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">edit_body</span><span class="o">.</span><span class="n">mass</span> <span class="o">=</span> <span class="n">new_planet_data</span><span class="o">.</span><span class="n">mass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">edit_body</span><span class="o">.</span><span class="n">radius</span> <span class="o">=</span> <span class="n">new_planet_data</span><span class="o">.</span><span class="n">radius</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">edit_body</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">new_planet_data</span><span class="o">.</span><span class="n">position</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">edit_body</span><span class="o">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="n">new_planet_data</span><span class="o">.</span><span class="n">velocity</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">edit_body</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">new_planet_data</span><span class="o">.</span><span class="n">color</span>
+            
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+
+        <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">error_msg</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;- </span><span class="si">{</span><span class="n">err</span><span class="p">[</span><span class="s1">&#39;msg&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">err</span> <span class="ow">in</span> <span class="n">e</span><span class="o">.</span><span class="n">errors</span><span class="p">()])</span>
+            <span class="n">QMessageBox</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Ошибка валидации&quot;</span><span class="p">,</span> <span class="n">error_msg</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">QMessageBox</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Ошибка&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="AddPlanetDialog.get_planet_data">
+<a class="viewcode-back" href="../../gui.html#gui.add_planet.AddPlanetDialog.get_planet_data">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_planet_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BodyState</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Собирает данные из полей ввода и формирует объект BodyState.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            BodyState: Сформированный объект состояния тела.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="k">if</span> <span class="n">val</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">and</span> <span class="n">val</span> <span class="o">!=</span> <span class="s2">&quot;.&quot;</span> <span class="k">else</span> <span class="mf">0.0</span>
+
+        <span class="k">return</span> <span class="n">BodyState</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">in_name</span><span class="o">.</span><span class="n">text</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+            <span class="n">mass</span><span class="o">=</span><span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_mass</span><span class="o">.</span><span class="n">text</span><span class="p">()),</span>
+            <span class="n">radius</span><span class="o">=</span><span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_radius</span><span class="o">.</span><span class="n">text</span><span class="p">()),</span>
+            <span class="n">position</span><span class="o">=</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_x</span><span class="o">.</span><span class="n">text</span><span class="p">()),</span> <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_y</span><span class="o">.</span><span class="n">text</span><span class="p">())),</span>
+            <span class="n">velocity</span><span class="o">=</span><span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_vx</span><span class="o">.</span><span class="n">text</span><span class="p">()),</span> <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">in_vy</span><span class="o">.</span><span class="n">text</span><span class="p">())),</span>
+            <span class="n">color</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">selected_color</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+        <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Авторские права 2026, Miron. </p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

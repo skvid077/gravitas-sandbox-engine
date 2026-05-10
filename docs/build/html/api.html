@@ -1,0 +1,259 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Reference &mdash; документация Gravitas Sandbox Engine 1.0</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=9ca2116e"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/translations.js?v=cd1d70c9"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="genindex.html" />
+    <link rel="search" title="Поиск" href="search.html" />
+    <link rel="prev" title="Gravitas Sandbox Engine documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Gravitas Sandbox Engine
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#module-core.engine">Физическое ядро</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#core.engine.PhysicsEngine"><code class="docutils literal notranslate"><span class="pre">PhysicsEngine</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#core.engine.PhysicsEngine.update"><code class="docutils literal notranslate"><span class="pre">PhysicsEngine.update()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-core.time_machine">Машина времени</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#core.time_machine.TimeMachine"><code class="docutils literal notranslate"><span class="pre">TimeMachine</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#core.time_machine.TimeMachine.get_current_frame_index"><code class="docutils literal notranslate"><span class="pre">TimeMachine.get_current_frame_index()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core.time_machine.TimeMachine.get_current_snapshot"><code class="docutils literal notranslate"><span class="pre">TimeMachine.get_current_snapshot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core.time_machine.TimeMachine.get_total_frames"><code class="docutils literal notranslate"><span class="pre">TimeMachine.get_total_frames()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core.time_machine.TimeMachine.jump_to"><code class="docutils literal notranslate"><span class="pre">TimeMachine.jump_to()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core.time_machine.TimeMachine.pause"><code class="docutils literal notranslate"><span class="pre">TimeMachine.pause()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core.time_machine.TimeMachine.resume"><code class="docutils literal notranslate"><span class="pre">TimeMachine.resume()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core.time_machine.TimeMachine.save_snapshot"><code class="docutils literal notranslate"><span class="pre">TimeMachine.save_snapshot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core.time_machine.TimeMachine.scrub_backward"><code class="docutils literal notranslate"><span class="pre">TimeMachine.scrub_backward()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#core.time_machine.TimeMachine.scrub_forward"><code class="docutils literal notranslate"><span class="pre">TimeMachine.scrub_forward()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-gui.main_window">Интерфейс (GUI)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#gui.main_window.MainWindow"><code class="docutils literal notranslate"><span class="pre">MainWindow</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gui.main_window.MainWindow.eventFilter"><code class="docutils literal notranslate"><span class="pre">MainWindow.eventFilter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gui.main_window.MainWindow.keyPressEvent"><code class="docutils literal notranslate"><span class="pre">MainWindow.keyPressEvent()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gui.main_window.MainWindow.resizeEvent"><code class="docutils literal notranslate"><span class="pre">MainWindow.resizeEvent()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Gravitas Sandbox Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api.rst.txt" rel="nofollow"> Просмотреть исходный код страницы</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Ссылка на этот заголовок"></a></h1>
+<section id="module-core.engine">
+<span id="id1"></span><h2>Физическое ядро<a class="headerlink" href="#module-core.engine" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.engine.PhysicsEngine">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">core.engine.</span></span><span class="sig-name descname"><span class="pre">PhysicsEngine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g_const</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">9.81</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/core/engine.html#PhysicsEngine"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.engine.PhysicsEngine" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Высокопроизводительное физическое ядро симуляции.</p>
+<p>Оптимизации:
+1. Гравитация: Алгоритм Барнса-Хата (O(N log N)).
+2. Коллизии: Пространственное хеширование (O(N)).
+3. Вычисления: Векторизация через NumPy (матричные операции).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.engine.PhysicsEngine.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bodies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">BodyState</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/engine.html#PhysicsEngine.update"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.engine.PhysicsEngine.update" title="Ссылка на это определение"></a></dt>
+<dd><p>Главный цикл обновления физики.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-core.time_machine">
+<span id="id2"></span><h2>Машина времени<a class="headerlink" href="#module-core.time_machine" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">core.time_machine.</span></span><span class="sig-name descname"><span class="pre">TimeMachine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">30</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">60</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine.get_current_frame_index">
+<span class="sig-name descname"><span class="pre">get_current_frame_index</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine.get_current_frame_index"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine.get_current_frame_index" title="Ссылка на это определение"></a></dt>
+<dd><p>Возвращает индекс текущего кадра (от 0 до total_frames).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine.get_current_snapshot">
+<span class="sig-name descname"><span class="pre">get_current_snapshot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine.get_current_snapshot"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine.get_current_snapshot" title="Ссылка на это определение"></a></dt>
+<dd><p>Возвращает слепок для текущего момента без изменения времени.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine.get_total_frames">
+<span class="sig-name descname"><span class="pre">get_total_frames</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine.get_total_frames"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine.get_total_frames" title="Ссылка на это определение"></a></dt>
+<dd><p>Возвращает общее количество доступных кадров в истории.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine.jump_to">
+<span class="sig-name descname"><span class="pre">jump_to</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine.jump_to"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine.jump_to" title="Ссылка на это определение"></a></dt>
+<dd><p>Перемещается к конкретному кадру по индексу (от ползунка).
+Автоматически решает, мотать вперед или назад.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine.pause">
+<span class="sig-name descname"><span class="pre">pause</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine.pause"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine.pause" title="Ссылка на это определение"></a></dt>
+<dd><p>Ставит машину на паузу, разрешая перемотку.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine.resume">
+<span class="sig-name descname"><span class="pre">resume</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine.resume"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine.resume" title="Ссылка на это определение"></a></dt>
+<dd><p>Возобновляет ход времени. Стирает альтернативное будущее.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine.save_snapshot">
+<span class="sig-name descname"><span class="pre">save_snapshot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bodies</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">BodyState</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine.save_snapshot"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine.save_snapshot" title="Ссылка на это определение"></a></dt>
+<dd><p>Сохраняет слепок при нормальном ходе времени.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine.scrub_backward">
+<span class="sig-name descname"><span class="pre">scrub_backward</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine.scrub_backward"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine.scrub_backward" title="Ссылка на это определение"></a></dt>
+<dd><p>Отматывает на один кадр назад.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="core.time_machine.TimeMachine.scrub_forward">
+<span class="sig-name descname"><span class="pre">scrub_forward</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/core/time_machine.html#TimeMachine.scrub_forward"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#core.time_machine.TimeMachine.scrub_forward" title="Ссылка на это определение"></a></dt>
+<dd><p>Перематывает на один кадр вперед.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gui.main_window">
+<span id="gui"></span><h2>Интерфейс (GUI)<a class="headerlink" href="#module-gui.main_window" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gui.main_window.</span></span><span class="sig-name descname"><span class="pre">MainWindow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SimulationScenario</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">QMainWindow</span></code></p>
+<p>Главное окно приложения.
+Связывает воедино физический движок (Simulation), графическую сцену (SpaceScene)
+и элементы пользовательского интерфейса (Панель управления, Меню паузы).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow.eventFilter">
+<span class="sig-name descname"><span class="pre">eventFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QObject</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QEvent</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow.eventFilter"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow.eventFilter" title="Ссылка на это определение"></a></dt>
+<dd><p>Низкоуровневый перехватчик событий.
+Нужен для подсчета фактических отрисованных кадров (FPS)
+и для отслеживания мыши, чтобы показывать координаты возле курсора.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow.keyPressEvent">
+<span class="sig-name descname"><span class="pre">keyPressEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QKeyEvent</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow.keyPressEvent"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow.keyPressEvent" title="Ссылка на это определение"></a></dt>
+<dd><p>Обработка горячих клавиш.
+Enter — старт/пауза. Escape — меню.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow.resizeEvent">
+<span class="sig-name descname"><span class="pre">resizeEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QResizeEvent</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow.resizeEvent"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow.resizeEvent" title="Ссылка на это определение"></a></dt>
+<dd><p>Дергается при изменении размеров окна.
+Следит за тем, чтобы плавающие элементы (типа оверлея паузы) перерисовывались по размеру окна.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Нижняя область">
+        <a href="index.html" class="btn btn-neutral float-left" title="Gravitas Sandbox Engine documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Предыдущая</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Авторские права 2026, Miron. </p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

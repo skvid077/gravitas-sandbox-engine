@@ -1,0 +1,23 @@
+API Reference
+=============
+
+Физическое ядро
+---------------
+.. automodule:: core.engine
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Машина времени
+--------------
+.. automodule:: core.time_machine
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Интерфейс (GUI)
+---------------
+.. automodule:: gui.main_window
+   :members:
+   :undoc-members:
+   :show-inheritance:

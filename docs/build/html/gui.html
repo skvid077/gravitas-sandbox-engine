@@ -1,0 +1,1287 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gui package &mdash; документация Gravitas Sandbox Engine 1.0</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=9ca2116e"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/translations.js?v=cd1d70c9"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="genindex.html" />
+    <link rel="search" title="Поиск" href="search.html" />
+    <link rel="prev" title="core package" href="core.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Gravitas Sandbox Engine
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Содержание:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">src</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="config.html">config package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="core.html">core package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">gui package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gui.add_planet">gui.add_planet module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gui.add_planet.AddPlanetDialog"><code class="docutils literal notranslate"><span class="pre">AddPlanetDialog</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gui.add_planet.PlanetPreviewWidget"><code class="docutils literal notranslate"><span class="pre">PlanetPreviewWidget</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gui.control_panel">gui.control_panel module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gui.control_panel.ControlPanel"><code class="docutils literal notranslate"><span class="pre">ControlPanel</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gui.main_window">gui.main_window module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gui.main_window.MainWindow"><code class="docutils literal notranslate"><span class="pre">MainWindow</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gui.models">gui.models module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gui.models.PlanetItem"><code class="docutils literal notranslate"><span class="pre">PlanetItem</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gui.pause_menu">gui.pause_menu module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gui.pause_menu.DimmerOverlay"><code class="docutils literal notranslate"><span class="pre">DimmerOverlay</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gui.pause_menu.PauseMenu"><code class="docutils literal notranslate"><span class="pre">PauseMenu</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gui.planets_manager">gui.planets_manager module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gui.planets_manager.PlanetPreviewWidget"><code class="docutils literal notranslate"><span class="pre">PlanetPreviewWidget</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gui.planets_manager.PlanetsManagerDialog"><code class="docutils literal notranslate"><span class="pre">PlanetsManagerDialog</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gui.space">gui.space module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gui.space.SpaceScene"><code class="docutils literal notranslate"><span class="pre">SpaceScene</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gui.space.SpaceView"><code class="docutils literal notranslate"><span class="pre">SpaceView</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gui.start_screen">gui.start_screen module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gui.start_screen.StartScreen"><code class="docutils literal notranslate"><span class="pre">StartScreen</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-gui">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Gravitas Sandbox Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">src</a></li>
+      <li class="breadcrumb-item active">gui package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/gui.rst.txt" rel="nofollow"> Просмотреть исходный код страницы</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gui-package">
+<h1>gui package<a class="headerlink" href="#gui-package" title="Ссылка на этот заголовок"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Ссылка на этот заголовок"></a></h2>
+</section>
+<section id="module-gui.add_planet">
+<span id="gui-add-planet-module"></span><h2>gui.add_planet module<a class="headerlink" href="#module-gui.add_planet" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gui.add_planet.AddPlanetDialog">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gui.add_planet.</span></span><span class="sig-name descname"><span class="pre">AddPlanetDialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">planets_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edit_body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui/add_planet.html#AddPlanetDialog"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.add_planet.AddPlanetDialog" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<p>Диалоговое окно для создания нового небесного тела или редактирования существующего.
+Включает в себя форму ввода параметров и интерактивное превью.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.add_planet.AddPlanetDialog.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">planets_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edit_body</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/add_planet.html#AddPlanetDialog.__init__"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.add_planet.AddPlanetDialog.__init__" title="Ссылка на это определение"></a></dt>
+<dd><p>Инициализирует диалог.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>planets_info</strong> (<em>List</em><em>[</em><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><em>BodyState</em></a><em>]</em>) – Список существующих тел для проверки коллизий.</p></li>
+<li><p><strong>parent</strong> (<em>Optional</em><em>[</em><em>QWidget</em><em>]</em>) – Родительское окно.</p></li>
+<li><p><strong>edit_body</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><em>BodyState</em></a><em>]</em>) – Объект для редактирования. Если None — создается новая планета.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.add_planet.AddPlanetDialog._create_input">
+<span class="sig-name descname"><span class="pre">_create_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QDoubleValidator</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">QLineEdit</span></span></span><a class="reference internal" href="_modules/gui/add_planet.html#AddPlanetDialog._create_input"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.add_planet.AddPlanetDialog._create_input" title="Ссылка на это определение"></a></dt>
+<dd><p>Создает поле ввода с валидатором числовых значений.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.add_planet.AddPlanetDialog._init_ui">
+<span class="sig-name descname"><span class="pre">_init_ui</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/add_planet.html#AddPlanetDialog._init_ui"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.add_planet.AddPlanetDialog._init_ui" title="Ссылка на это определение"></a></dt>
+<dd><p>Создает форму ввода и элементы управления.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.add_planet.AddPlanetDialog._pick_color">
+<span class="sig-name descname"><span class="pre">_pick_color</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/add_planet.html#AddPlanetDialog._pick_color"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.add_planet.AddPlanetDialog._pick_color" title="Ссылка на это определение"></a></dt>
+<dd><p>Открывает диалог выбора цвета.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.add_planet.AddPlanetDialog._sync_preview">
+<span class="sig-name descname"><span class="pre">_sync_preview</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/add_planet.html#AddPlanetDialog._sync_preview"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.add_planet.AddPlanetDialog._sync_preview" title="Ссылка на это определение"></a></dt>
+<dd><p>Синхронизирует виджет превью с введенным радиусом.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.add_planet.AddPlanetDialog.accept">
+<span class="sig-name descname"><span class="pre">accept</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/add_planet.html#AddPlanetDialog.accept"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.add_planet.AddPlanetDialog.accept" title="Ссылка на это определение"></a></dt>
+<dd><p>Выполняет валидацию данных и закрывает диалог с сохранением.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.add_planet.AddPlanetDialog.get_planet_data">
+<span class="sig-name descname"><span class="pre">get_planet_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a></span></span><a class="reference internal" href="_modules/gui/add_planet.html#AddPlanetDialog.get_planet_data"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.add_planet.AddPlanetDialog.get_planet_data" title="Ссылка на это определение"></a></dt>
+<dd><p>Собирает данные из полей ввода и формирует объект BodyState.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Результат<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Сформированный объект состояния тела.</p>
+</dd>
+<dt class="field-even">Тип результата<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState">BodyState</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gui.add_planet.PlanetPreviewWidget">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gui.add_planet.</span></span><span class="sig-name descname"><span class="pre">PlanetPreviewWidget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color_hex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui/add_planet.html#PlanetPreviewWidget"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.add_planet.PlanetPreviewWidget" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Виджет для отображения логарифмического превью планеты.
+Позволяет визуально оценить размер и цвет тела перед добавлением.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.add_planet.PlanetPreviewWidget.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color_hex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/add_planet.html#PlanetPreviewWidget.__init__"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.add_planet.PlanetPreviewWidget.__init__" title="Ссылка на это определение"></a></dt>
+<dd><p>Инициализирует виджет превью.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>color_hex</strong> (<em>str</em>) – HEX-код цвета.</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – Реальный физический радиус.</p></li>
+<li><p><strong>parent</strong> (<em>Optional</em><em>[</em><em>QWidget</em><em>]</em>) – Родительский виджет.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.add_planet.PlanetPreviewWidget.paintEvent">
+<span class="sig-name descname"><span class="pre">paintEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPaintEvent</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/add_planet.html#PlanetPreviewWidget.paintEvent"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.add_planet.PlanetPreviewWidget.paintEvent" title="Ссылка на это определение"></a></dt>
+<dd><p>Отрисовывает планету с использованием логарифмического масштаба.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.add_planet.PlanetPreviewWidget.update_params">
+<span class="sig-name descname"><span class="pre">update_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QColor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/add_planet.html#PlanetPreviewWidget.update_params"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.add_planet.PlanetPreviewWidget.update_params" title="Ссылка на это определение"></a></dt>
+<dd><p>Обновляет параметры и перерисовывает виджет.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gui.control_panel">
+<span id="gui-control-panel-module"></span><h2>gui.control_panel module<a class="headerlink" href="#module-gui.control_panel" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gui.control_panel.ControlPanel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gui.control_panel.</span></span><span class="sig-name descname"><span class="pre">ControlPanel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui/control_panel.html#ControlPanel"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.control_panel.ControlPanel" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDockWidget</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.control_panel.ControlPanel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/control_panel.html#ControlPanel.__init__"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.control_panel.ControlPanel.__init__" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.control_panel.ControlPanel._init_ui">
+<span class="sig-name descname"><span class="pre">_init_ui</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/control_panel.html#ControlPanel._init_ui"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.control_panel.ControlPanel._init_ui" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.control_panel.ControlPanel._on_g_change">
+<span class="sig-name descname"><span class="pre">_on_g_change</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/control_panel.html#ControlPanel._on_g_change"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.control_panel.ControlPanel._on_g_change" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.control_panel.ControlPanel._on_time_change">
+<span class="sig-name descname"><span class="pre">_on_time_change</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/control_panel.html#ControlPanel._on_time_change"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.control_panel.ControlPanel._on_time_change" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.control_panel.ControlPanel._on_timeline_change">
+<span class="sig-name descname"><span class="pre">_on_timeline_change</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/control_panel.html#ControlPanel._on_timeline_change"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.control_panel.ControlPanel._on_timeline_change" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gui.control_panel.ControlPanel.clear_scene_requested">
+<span class="sig-name descname"><span class="pre">clear_scene_requested</span></span><a class="headerlink" href="#gui.control_panel.ControlPanel.clear_scene_requested" title="Ссылка на это определение"></a></dt>
+<dd><p>int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pyqtSignal(<a href="#id1"><span class="problematic" id="id2">*</span></a>types, name</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str = …, revision</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gui.control_panel.ControlPanel.gravity_changed">
+<span class="sig-name descname"><span class="pre">gravity_changed</span></span><a class="headerlink" href="#gui.control_panel.ControlPanel.gravity_changed" title="Ссылка на это определение"></a></dt>
+<dd><p>int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pyqtSignal(<a href="#id3"><span class="problematic" id="id4">*</span></a>types, name</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str = …, revision</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gui.control_panel.ControlPanel.time_scale_changed">
+<span class="sig-name descname"><span class="pre">time_scale_changed</span></span><a class="headerlink" href="#gui.control_panel.ControlPanel.time_scale_changed" title="Ссылка на это определение"></a></dt>
+<dd><p>int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pyqtSignal(<a href="#id5"><span class="problematic" id="id6">*</span></a>types, name</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str = …, revision</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gui.control_panel.ControlPanel.timeline_changed">
+<span class="sig-name descname"><span class="pre">timeline_changed</span></span><a class="headerlink" href="#gui.control_panel.ControlPanel.timeline_changed" title="Ссылка на это определение"></a></dt>
+<dd><p>int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pyqtSignal(<a href="#id7"><span class="problematic" id="id8">*</span></a>types, name</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str = …, revision</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gui.control_panel.ControlPanel.timeline_pressed">
+<span class="sig-name descname"><span class="pre">timeline_pressed</span></span><a class="headerlink" href="#gui.control_panel.ControlPanel.timeline_pressed" title="Ссылка на это определение"></a></dt>
+<dd><p>int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pyqtSignal(<a href="#id9"><span class="problematic" id="id10">*</span></a>types, name</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str = …, revision</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gui.control_panel.ControlPanel.timeline_released">
+<span class="sig-name descname"><span class="pre">timeline_released</span></span><a class="headerlink" href="#gui.control_panel.ControlPanel.timeline_released" title="Ссылка на это определение"></a></dt>
+<dd><p>int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pyqtSignal(<a href="#id11"><span class="problematic" id="id12">*</span></a>types, name</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str = …, revision</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.control_panel.ControlPanel.update_timeline_range">
+<span class="sig-name descname"><span class="pre">update_timeline_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_frames</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_frame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/control_panel.html#ControlPanel.update_timeline_range"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.control_panel.ControlPanel.update_timeline_range" title="Ссылка на это определение"></a></dt>
+<dd><p>Тихо обновляет границы и позицию ползунка, пока симуляция идет сама.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gui.main_window">
+<span id="gui-main-window-module"></span><h2>gui.main_window module<a class="headerlink" href="#module-gui.main_window" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gui.main_window.</span></span><span class="sig-name descname"><span class="pre">MainWindow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config.html#config.schemas.SimulationScenario" title="config.schemas.SimulationScenario"><span class="pre">SimulationScenario</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">QMainWindow</span></code></p>
+<p>Главное окно приложения.
+Связывает воедино физический движок (Simulation), графическую сцену (SpaceScene)
+и элементы пользовательского интерфейса (Панель управления, Меню паузы).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config.html#config.schemas.SimulationScenario" title="config.schemas.SimulationScenario"><span class="pre">SimulationScenario</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow.__init__"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow.__init__" title="Ссылка на это определение"></a></dt>
+<dd><p>Инициализация главного окна.
+Поднимаем движок, настраиваем сцену и подвязываем к ней UI.
+Если передан сценарий, сразу грузим из него планеты.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow._add_planet_on_click">
+<span class="sig-name descname"><span class="pre">_add_planet_on_click</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow._add_planet_on_click"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow._add_planet_on_click" title="Ссылка на это определение"></a></dt>
+<dd><p>Спавнит новую дефолтную планету по клику мыши на пустом месте.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow._clear_scene">
+<span class="sig-name descname"><span class="pre">_clear_scene</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow._clear_scene"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow._clear_scene" title="Ссылка на это определение"></a></dt>
+<dd><p>Полностью зачищает космос. Удаляет и физические модели, и графику.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow._init_ui">
+<span class="sig-name descname"><span class="pre">_init_ui</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow._init_ui"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow._init_ui" title="Ссылка на это определение"></a></dt>
+<dd><p>Собирает весь интерфейс: боковую панель управления,
+меню паузы и плавающие виджеты (FPS, координаты курсора, статус симуляции).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow._on_planet_added">
+<span class="sig-name descname"><span class="pre">_on_planet_added</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_planet</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow._on_planet_added"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow._on_planet_added" title="Ссылка на это определение"></a></dt>
+<dd><p>Слот добавления. Отрисовывает планету и вешает на нее возможность редактирования.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow._on_planet_modified">
+<span class="sig-name descname"><span class="pre">_on_planet_modified</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow._on_planet_modified"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow._on_planet_modified" title="Ссылка на это определение"></a></dt>
+<dd><p>Применяет обновленные параметры (цвет, размер) к визуалы планеты.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow._on_planet_removed">
+<span class="sig-name descname"><span class="pre">_on_planet_removed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow._on_planet_removed"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow._on_planet_removed" title="Ссылка на это определение"></a></dt>
+<dd><p>Сносит конкретную планету со сцены по её индексу.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow._on_timeline_end">
+<span class="sig-name descname"><span class="pre">_on_timeline_end</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow._on_timeline_end"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow._on_timeline_end" title="Ссылка на это определение"></a></dt>
+<dd><p>Пользователь отпустил ползунок перемотки.
+Отпускаем машину времени, но саму физику оставляем на паузе, чтобы дать осмотреться.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow._on_timeline_scrub">
+<span class="sig-name descname"><span class="pre">_on_timeline_scrub</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow._on_timeline_scrub"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow._on_timeline_scrub" title="Ссылка на это определение"></a></dt>
+<dd><p>Перематываем время на конкретный кадр с ползунка.
+Сносим текущие тела и полностью восстанавливаем сцену из слепка.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow._on_timeline_start">
+<span class="sig-name descname"><span class="pre">_on_timeline_start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow._on_timeline_start"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow._on_timeline_start" title="Ссылка на это определение"></a></dt>
+<dd><p>Пользователь схватился за ползунок истории.
+Жестко ставим симуляцию и запись времени на паузу.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow._open_edit_dialog">
+<span class="sig-name descname"><span class="pre">_open_edit_dialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#gui.models.PlanetItem" title="gui.models.PlanetItem"><span class="pre">PlanetItem</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow._open_edit_dialog"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow._open_edit_dialog" title="Ссылка на это определение"></a></dt>
+<dd><p>Открывает окно редактирования параметров планеты.
+На время работы с диалогом ставим мир на паузу.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow._physics_step">
+<span class="sig-name descname"><span class="pre">_physics_step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow._physics_step"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow._physics_step" title="Ссылка на это определение"></a></dt>
+<dd><p>Сердце симуляции. Дергается по таймеру каждый кадр.
+Сохраняет историю, считает новую физику и двигает UI.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow._render_initial_planets">
+<span class="sig-name descname"><span class="pre">_render_initial_planets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow._render_initial_planets"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow._render_initial_planets" title="Ссылка на это определение"></a></dt>
+<dd><p>Отрисовывает все планеты, которые были загружены из стартового JSON.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow._set_gravity">
+<span class="sig-name descname"><span class="pre">_set_gravity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_g</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow._set_gravity"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow._set_gravity" title="Ссылка на это определение"></a></dt>
+<dd><p>Прокидывает новое значение гравитации с ползунка в движок.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow._set_time_scale">
+<span class="sig-name descname"><span class="pre">_set_time_scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow._set_time_scale"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow._set_time_scale" title="Ссылка на это определение"></a></dt>
+<dd><p>Меняет множитель скорости времени для симуляции.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow._update_fps_display">
+<span class="sig-name descname"><span class="pre">_update_fps_display</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow._update_fps_display"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow._update_fps_display" title="Ссылка на это определение"></a></dt>
+<dd><p>Раз в секунду обновляет плашку с FPS и сбрасывает счетчик.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow._update_ui_state">
+<span class="sig-name descname"><span class="pre">_update_ui_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow._update_ui_state"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow._update_ui_state" title="Ссылка на это определение"></a></dt>
+<dd><p>Переключает цвета и текст на плашке статуса (Пауза / Симуляция).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow.eventFilter">
+<span class="sig-name descname"><span class="pre">eventFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QObject</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QEvent</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow.eventFilter"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow.eventFilter" title="Ссылка на это определение"></a></dt>
+<dd><p>Низкоуровневый перехватчик событий.
+Нужен для подсчета фактических отрисованных кадров (FPS)
+и для отслеживания мыши, чтобы показывать координаты возле курсора.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow.keyPressEvent">
+<span class="sig-name descname"><span class="pre">keyPressEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QKeyEvent</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow.keyPressEvent"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow.keyPressEvent" title="Ссылка на это определение"></a></dt>
+<dd><p>Обработка горячих клавиш.
+Enter — старт/пауза. Escape — меню.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.main_window.MainWindow.resizeEvent">
+<span class="sig-name descname"><span class="pre">resizeEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QResizeEvent</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/main_window.html#MainWindow.resizeEvent"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.main_window.MainWindow.resizeEvent" title="Ссылка на это определение"></a></dt>
+<dd><p>Дергается при изменении размеров окна.
+Следит за тем, чтобы плавающие элементы (типа оверлея паузы) перерисовывались по размеру окна.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gui.models">
+<span id="gui-models-module"></span><h2>gui.models module<a class="headerlink" href="#module-gui.models" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gui.models.PlanetItem">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gui.models.</span></span><span class="sig-name descname"><span class="pre">PlanetItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">edit_callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gui.models.PlanetItem" title="gui.models.PlanetItem"><span class="pre">PlanetItem</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">planet_list_ref</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gui.models.PlanetItem" title="gui.models.PlanetItem"><span class="pre">PlanetItem</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui/models.html#PlanetItem"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.models.PlanetItem" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">QGraphicsEllipseItem</span></code></p>
+<p>Визуальное представление планеты на сцене.
+Умеет отрисовывать себя, подбирать контрастный текст и
+предотвращать наложения при перетаскивании мышкой.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.models.PlanetItem.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">edit_callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gui.models.PlanetItem" title="gui.models.PlanetItem"><span class="pre">PlanetItem</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">planet_list_ref</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gui.models.PlanetItem" title="gui.models.PlanetItem"><span class="pre">PlanetItem</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/models.html#PlanetItem.__init__"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.models.PlanetItem.__init__" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.models.PlanetItem._update_text">
+<span class="sig-name descname"><span class="pre">_update_text</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/models.html#PlanetItem._update_text"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.models.PlanetItem._update_text" title="Ссылка на это определение"></a></dt>
+<dd><p>Обновляет название внутри планеты (без массы) и центрирует его.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="gui.models.PlanetItem.body_state">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">body_state</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a></span><a class="headerlink" href="#gui.models.PlanetItem.body_state" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.models.PlanetItem.itemChange">
+<span class="sig-name descname"><span class="pre">itemChange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">change</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GraphicsItemChange</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="reference internal" href="_modules/gui/models.html#PlanetItem.itemChange"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.models.PlanetItem.itemChange" title="Ссылка на это определение"></a></dt>
+<dd><p>Предотвращает наложение планет друг на друга при перетаскивании.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.models.PlanetItem.mouseDoubleClickEvent">
+<span class="sig-name descname"><span class="pre">mouseDoubleClickEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QGraphicsSceneMouseEvent</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/models.html#PlanetItem.mouseDoubleClickEvent"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.models.PlanetItem.mouseDoubleClickEvent" title="Ссылка на это определение"></a></dt>
+<dd><p>Открывает окно редактирования.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.models.PlanetItem.update_visuals">
+<span class="sig-name descname"><span class="pre">update_visuals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/models.html#PlanetItem.update_visuals"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.models.PlanetItem.update_visuals" title="Ссылка на это определение"></a></dt>
+<dd><p>Синхронизирует графику с данными из BodyState.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gui.pause_menu">
+<span id="gui-pause-menu-module"></span><h2>gui.pause_menu module<a class="headerlink" href="#module-gui.pause_menu" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gui.pause_menu.DimmerOverlay">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gui.pause_menu.</span></span><span class="sig-name descname"><span class="pre">DimmerOverlay</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui/pause_menu.html#DimmerOverlay"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.pause_menu.DimmerOverlay" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Полупрозрачный виджет, который затемняет задний фон (всю сцену)
+при открытии меню паузы для создания эффекта фокуса.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.pause_menu.DimmerOverlay.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/pause_menu.html#DimmerOverlay.__init__"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.pause_menu.DimmerOverlay.__init__" title="Ссылка на это определение"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.pause_menu.DimmerOverlay.paintEvent">
+<span class="sig-name descname"><span class="pre">paintEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPaintEvent</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/pause_menu.html#DimmerOverlay.paintEvent"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.pause_menu.DimmerOverlay.paintEvent" title="Ссылка на это определение"></a></dt>
+<dd><p>Отрисовывает полупрозрачный слой.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gui.pause_menu.PauseMenu">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gui.pause_menu.</span></span><span class="sig-name descname"><span class="pre">PauseMenu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">planets_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui/pause_menu.html#PauseMenu"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.pause_menu.PauseMenu" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">QFrame</span></code></p>
+<p>Всплывающее меню паузы.
+Обеспечивает доступ к реестру планет, добавлению новых тел,
+экспорту текущего состояния в JSON и выходу из приложения.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.pause_menu.PauseMenu.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">planets_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scenario_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/pause_menu.html#PauseMenu.__init__"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.pause_menu.PauseMenu.__init__" title="Ссылка на это определение"></a></dt>
+<dd><p>Инициализирует меню паузы.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent</strong> (<em>QWidget</em>) – Родительское окно (MainWindow), необходимо для расчета позиционирования.</p></li>
+<li><p><strong>planets_info</strong> (<em>List</em><em>[</em><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><em>BodyState</em></a><em>]</em>) – Ссылка на массив объектов симуляции.</p></li>
+<li><p><strong>scenario_name</strong> (<em>str</em>) – Имя текущего запущенного сценария.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.pause_menu.PauseMenu._init_ui">
+<span class="sig-name descname"><span class="pre">_init_ui</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/pause_menu.html#PauseMenu._init_ui"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.pause_menu.PauseMenu._init_ui" title="Ссылка на это определение"></a></dt>
+<dd><p>Настраивает компоновку, кнопки и подключает сигналы.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.pause_menu.PauseMenu._on_planet_removed_from_manager">
+<span class="sig-name descname"><span class="pre">_on_planet_removed_from_manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/pause_menu.html#PauseMenu._on_planet_removed_from_manager"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.pause_menu.PauseMenu._on_planet_removed_from_manager" title="Ссылка на это определение"></a></dt>
+<dd><p>Обрабатывает удаление планеты через реестр.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – Индекс удаленной планеты.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.pause_menu.PauseMenu._update_position">
+<span class="sig-name descname"><span class="pre">_update_position</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/pause_menu.html#PauseMenu._update_position"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.pause_menu.PauseMenu._update_position" title="Ссылка на это определение"></a></dt>
+<dd><p>Центрирует меню относительно родительского окна.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.pause_menu.PauseMenu.add_planet_callback">
+<span class="sig-name descname"><span class="pre">add_planet_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checked</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/pause_menu.html#PauseMenu.add_planet_callback"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.pause_menu.PauseMenu.add_planet_callback" title="Ссылка на это определение"></a></dt>
+<dd><p>Скрывает меню и открывает диалог добавления новой планеты.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.pause_menu.PauseMenu.exit_callback">
+<span class="sig-name descname"><span class="pre">exit_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checked</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/pause_menu.html#PauseMenu.exit_callback"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.pause_menu.PauseMenu.exit_callback" title="Ссылка на это определение"></a></dt>
+<dd><p>Завершает работу всего приложения.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.pause_menu.PauseMenu.export_json_callback">
+<span class="sig-name descname"><span class="pre">export_json_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checked</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/pause_menu.html#PauseMenu.export_json_callback"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.pause_menu.PauseMenu.export_json_callback" title="Ссылка на это определение"></a></dt>
+<dd><p>Открывает диалог сохранения файла, сериализует текущее
+состояние планет и сохраняет его в формате JSON.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gui.pause_menu.PauseMenu.planet_added">
+<span class="sig-name descname"><span class="pre">planet_added</span></span><a class="headerlink" href="#gui.pause_menu.PauseMenu.planet_added" title="Ссылка на это определение"></a></dt>
+<dd><p>int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pyqtSignal(<a href="#id13"><span class="problematic" id="id14">*</span></a>types, name</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str = …, revision</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gui.pause_menu.PauseMenu.planet_modified">
+<span class="sig-name descname"><span class="pre">planet_modified</span></span><a class="headerlink" href="#gui.pause_menu.PauseMenu.planet_modified" title="Ссылка на это определение"></a></dt>
+<dd><p>int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pyqtSignal(<a href="#id15"><span class="problematic" id="id16">*</span></a>types, name</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str = …, revision</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gui.pause_menu.PauseMenu.planet_removed">
+<span class="sig-name descname"><span class="pre">planet_removed</span></span><a class="headerlink" href="#gui.pause_menu.PauseMenu.planet_removed" title="Ссылка на это определение"></a></dt>
+<dd><p>int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pyqtSignal(<a href="#id17"><span class="problematic" id="id18">*</span></a>types, name</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str = …, revision</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.pause_menu.PauseMenu.resume_callback">
+<span class="sig-name descname"><span class="pre">resume_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checked</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/pause_menu.html#PauseMenu.resume_callback"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.pause_menu.PauseMenu.resume_callback" title="Ссылка на это определение"></a></dt>
+<dd><p>Слот обработки нажатия „Продолжить“.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gui.pause_menu.PauseMenu.resume_requested">
+<span class="sig-name descname"><span class="pre">resume_requested</span></span><a class="headerlink" href="#gui.pause_menu.PauseMenu.resume_requested" title="Ссылка на это определение"></a></dt>
+<dd><p>int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pyqtSignal(<a href="#id19"><span class="problematic" id="id20">*</span></a>types, name</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str = …, revision</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.pause_menu.PauseMenu.show_all_callback">
+<span class="sig-name descname"><span class="pre">show_all_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checked</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/pause_menu.html#PauseMenu.show_all_callback"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.pause_menu.PauseMenu.show_all_callback" title="Ссылка на это определение"></a></dt>
+<dd><p>Скрывает меню и открывает диалог реестра планет.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.pause_menu.PauseMenu.toggle">
+<span class="sig-name descname"><span class="pre">toggle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/pause_menu.html#PauseMenu.toggle"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.pause_menu.PauseMenu.toggle" title="Ссылка на это определение"></a></dt>
+<dd><p>Переключает видимость меню паузы.
+Если меню открывается, автоматически центрирует его и активирует затемнение фона.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gui.planets_manager">
+<span id="gui-planets-manager-module"></span><h2>gui.planets_manager module<a class="headerlink" href="#module-gui.planets_manager" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gui.planets_manager.PlanetPreviewWidget">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gui.planets_manager.</span></span><span class="sig-name descname"><span class="pre">PlanetPreviewWidget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color_hex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real_radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui/planets_manager.html#PlanetPreviewWidget"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.planets_manager.PlanetPreviewWidget" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">QWidget</span></code></p>
+<p>Виджет для отрисовки графического превью планеты внутри ячейки таблицы.
+Использует логарифмический масштаб для безопасного отображения огромных радиусов.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.planets_manager.PlanetPreviewWidget.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color_hex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">real_radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/planets_manager.html#PlanetPreviewWidget.__init__"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.planets_manager.PlanetPreviewWidget.__init__" title="Ссылка на это определение"></a></dt>
+<dd><p>Инициализирует виджет превью.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>color_hex</strong> (<em>str</em>) – Цвет планеты в HEX формате (например, „#FFFFFF“).</p></li>
+<li><p><strong>real_radius</strong> (<em>float</em>) – Физический радиус планеты.</p></li>
+<li><p><strong>parent</strong> (<em>Optional</em><em>[</em><em>QWidget</em><em>]</em><em>, </em><em>optional</em>) – Родительский виджет. По умолчанию None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.planets_manager.PlanetPreviewWidget.paintEvent">
+<span class="sig-name descname"><span class="pre">paintEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPaintEvent</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/planets_manager.html#PlanetPreviewWidget.paintEvent"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.planets_manager.PlanetPreviewWidget.paintEvent" title="Ссылка на это определение"></a></dt>
+<dd><p>Отрисовывает круг планеты в логарифмическом масштабе.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>Optional</em><em>[</em><em>QPaintEvent</em><em>]</em>) – Событие отрисовки PyQt.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.planets_manager.PlanetPreviewWidget.update_params">
+<span class="sig-name descname"><span class="pre">update_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color_hex</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/planets_manager.html#PlanetPreviewWidget.update_params"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.planets_manager.PlanetPreviewWidget.update_params" title="Ссылка на это определение"></a></dt>
+<dd><p>Обновляет параметры отображения и вызывает перерисовку виджета.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>color_hex</strong> (<em>str</em>) – Новый цвет.</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – Новый физический радиус.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gui.planets_manager.PlanetsManagerDialog">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gui.planets_manager.</span></span><span class="sig-name descname"><span class="pre">PlanetsManagerDialog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">planets_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui/planets_manager.html#PlanetsManagerDialog"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.planets_manager.PlanetsManagerDialog" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">QDialog</span></code></p>
+<p>Диалоговое окно для детального управления всеми объектами симуляции.
+Представляет данные в виде редактируемой таблицы с валидацией изменений «на лету».</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.planets_manager.PlanetsManagerDialog.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">planets_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/planets_manager.html#PlanetsManagerDialog.__init__"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.planets_manager.PlanetsManagerDialog.__init__" title="Ссылка на это определение"></a></dt>
+<dd><p>Инициализирует менеджер планет.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>planets_info</strong> (<em>List</em><em>[</em><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><em>BodyState</em></a><em>]</em>) – Ссылка на массив объектов симуляции.</p></li>
+<li><p><strong>parent</strong> (<em>Optional</em><em>[</em><em>QWidget</em><em>]</em><em>, </em><em>optional</em>) – Родительское окно. По умолчанию None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.planets_manager.PlanetsManagerDialog._change_color">
+<span class="sig-name descname"><span class="pre">_change_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/planets_manager.html#PlanetsManagerDialog._change_color"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.planets_manager.PlanetsManagerDialog._change_color" title="Ссылка на это определение"></a></dt>
+<dd><p>Открывает диалог выбора цвета и применяет его к выбранной планете.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – Индекс целевой планеты.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.planets_manager.PlanetsManagerDialog._create_center_widget">
+<span class="sig-name descname"><span class="pre">_create_center_widget</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">widget</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">QWidget</span></span></span><a class="reference internal" href="_modules/gui/planets_manager.html#PlanetsManagerDialog._create_center_widget"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.planets_manager.PlanetsManagerDialog._create_center_widget" title="Ссылка на это определение"></a></dt>
+<dd><p>Оборачивает переданный виджет в контейнер для центрирования в ячейке таблицы.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>widget</strong> (<em>QWidget</em>) – Целевой виджет.</p>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Контейнер с отцентрированным виджетом.</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p>QWidget</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.planets_manager.PlanetsManagerDialog._init_ui">
+<span class="sig-name descname"><span class="pre">_init_ui</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/planets_manager.html#PlanetsManagerDialog._init_ui"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.planets_manager.PlanetsManagerDialog._init_ui" title="Ссылка на это определение"></a></dt>
+<dd><p>Создает элементы интерфейса: таблицу и кнопку закрытия.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.planets_manager.PlanetsManagerDialog._on_cell_changed">
+<span class="sig-name descname"><span class="pre">_on_cell_changed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/planets_manager.html#PlanetsManagerDialog._on_cell_changed"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.planets_manager.PlanetsManagerDialog._on_cell_changed" title="Ссылка на это определение"></a></dt>
+<dd><p>Слот, вызываемый при ручном редактировании ячейки таблицы.
+Валидирует введенные данные через временную копию объекта.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>row</strong> (<em>int</em>) – Индекс строки.</p></li>
+<li><p><strong>col</strong> (<em>int</em>) – Индекс колонки.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.planets_manager.PlanetsManagerDialog._on_delete">
+<span class="sig-name descname"><span class="pre">_on_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/planets_manager.html#PlanetsManagerDialog._on_delete"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.planets_manager.PlanetsManagerDialog._on_delete" title="Ссылка на это определение"></a></dt>
+<dd><p>Обрабатывает нажатие кнопки удаления в строке таблицы.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – Индекс удаляемой планеты.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.planets_manager.PlanetsManagerDialog._update_row_widgets">
+<span class="sig-name descname"><span class="pre">_update_row_widgets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">row</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/planets_manager.html#PlanetsManagerDialog._update_row_widgets"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.planets_manager.PlanetsManagerDialog._update_row_widgets" title="Ссылка на это определение"></a></dt>
+<dd><p>Точечно обновляет визуальные виджеты в строке (превью и кнопку цвета) без перерисовки всей таблицы.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>row</strong> (<em>int</em>) – Индекс обновляемой строки.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gui.planets_manager.PlanetsManagerDialog.planet_modified">
+<span class="sig-name descname"><span class="pre">planet_modified</span></span><a class="headerlink" href="#gui.planets_manager.PlanetsManagerDialog.planet_modified" title="Ссылка на это определение"></a></dt>
+<dd><p>int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pyqtSignal(<a href="#id21"><span class="problematic" id="id22">*</span></a>types, name</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str = …, revision</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gui.planets_manager.PlanetsManagerDialog.planet_removed">
+<span class="sig-name descname"><span class="pre">planet_removed</span></span><a class="headerlink" href="#gui.planets_manager.PlanetsManagerDialog.planet_removed" title="Ссылка на это определение"></a></dt>
+<dd><p>int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pyqtSignal(<a href="#id23"><span class="problematic" id="id24">*</span></a>types, name</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str = …, revision</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.planets_manager.PlanetsManagerDialog.refresh_table">
+<span class="sig-name descname"><span class="pre">refresh_table</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/planets_manager.html#PlanetsManagerDialog.refresh_table"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.planets_manager.PlanetsManagerDialog.refresh_table" title="Ссылка на это определение"></a></dt>
+<dd><p>Полностью перестраивает таблицу на основе текущего массива планет.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gui.space">
+<span id="gui-space-module"></span><h2>gui.space module<a class="headerlink" href="#module-gui.space" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gui.space.SpaceScene">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gui.space.</span></span><span class="sig-name descname"><span class="pre">SpaceScene</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QObject</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui/space.html#SpaceScene"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.space.SpaceScene" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">QGraphicsScene</span></code></p>
+<p>Графическая сцена, отвечающая за управление и отрисовку всех объектов в космосе.
+Включает в себя бесконечную генерацию звездного фона (чанками) и управление планетами.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.space.SpaceScene.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QObject</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/space.html#SpaceScene.__init__"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.space.SpaceScene.__init__" title="Ссылка на это определение"></a></dt>
+<dd><p>Инициализирует космическую сцену.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parent</strong> (<em>Optional</em><em>[</em><em>QObject</em><em>]</em><em>, </em><em>optional</em>) – Родительский виджет. По умолчанию None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.space.SpaceScene._draw_chunk">
+<span class="sig-name descname"><span class="pre">_draw_chunk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">painter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPainter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/space.html#SpaceScene._draw_chunk"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.space.SpaceScene._draw_chunk" title="Ссылка на это определение"></a></dt>
+<dd><p>Рисует один сектор (чанк) звездного неба. Если чанк отрисовывается впервые,
+его звезды генерируются с помощью фиксированного seed и кэшируются.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>painter</strong> (<em>QPainter</em>) – Инструмент отрисовки.</p></li>
+<li><p><strong>cx</strong> (<em>int</em>) – X-координата чанка.</p></li>
+<li><p><strong>cy</strong> (<em>int</em>) – Y-координата чанка.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.space.SpaceScene.add_body">
+<span class="sig-name descname"><span class="pre">add_body</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">edit_callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#gui.models.PlanetItem" title="gui.models.PlanetItem"><span class="pre">PlanetItem</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#gui.models.PlanetItem" title="gui.models.PlanetItem"><span class="pre">PlanetItem</span></a></span></span><a class="reference internal" href="_modules/gui/space.html#SpaceScene.add_body"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.space.SpaceScene.add_body" title="Ссылка на это определение"></a></dt>
+<dd><p>Создает графический объект (PlanetItem) на основе физического состояния и добавляет его на сцену.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body_state</strong> (<a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><em>BodyState</em></a>) – Физические параметры новой планеты.</p></li>
+<li><p><strong>edit_callback</strong> (<em>Callable</em><em>[</em><em>[</em><a class="reference internal" href="#gui.models.PlanetItem" title="gui.models.PlanetItem"><em>PlanetItem</em></a><em>]</em><em>, </em><em>None</em><em>]</em>) – Функция, вызываемая при двойном клике по планете.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Созданный графический элемент.</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#gui.models.PlanetItem" title="gui.models.PlanetItem">PlanetItem</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.space.SpaceScene.clear_planets">
+<span class="sig-name descname"><span class="pre">clear_planets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/space.html#SpaceScene.clear_planets"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.space.SpaceScene.clear_planets" title="Ссылка на это определение"></a></dt>
+<dd><p>Гарантированно удаляет все планеты со сцены и очищает внутренний массив.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.space.SpaceScene.drawBackground">
+<span class="sig-name descname"><span class="pre">drawBackground</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">painter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QPainter</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rect</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QRectF</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/space.html#SpaceScene.drawBackground"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.space.SpaceScene.drawBackground" title="Ссылка на это определение"></a></dt>
+<dd><p>Отрисовывает звездный фон. Использует систему чанков для оптимизации:
+звезды генерируются только в пределах видимой области (viewport).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>painter</strong> (<em>QPainter</em><em> | </em><em>None</em>) – Инструмент отрисовки PyQt.</p></li>
+<li><p><strong>rect</strong> (<em>QRectF</em>) – Область, требующая перерисовки.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.space.SpaceScene.remove_body_by_index">
+<span class="sig-name descname"><span class="pre">remove_body_by_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/space.html#SpaceScene.remove_body_by_index"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.space.SpaceScene.remove_body_by_index" title="Ссылка на это определение"></a></dt>
+<dd><p>Удаляет графический объект планеты со сцены по её индексу.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – Индекс планеты в массиве симуляции.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.space.SpaceScene.update_body_by_index">
+<span class="sig-name descname"><span class="pre">update_body_by_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_state</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><span class="pre">BodyState</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/space.html#SpaceScene.update_body_by_index"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.space.SpaceScene.update_body_by_index" title="Ссылка на это определение"></a></dt>
+<dd><p>Обновляет ссылку на данные и перерисовывает существующую планету.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<em>int</em>) – Индекс обновляемой планеты.</p></li>
+<li><p><strong>new_state</strong> (<a class="reference internal" href="config.html#config.schemas.BodyState" title="config.schemas.BodyState"><em>BodyState</em></a>) – Новое физическое состояние после шага симуляции.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="gui.space.SpaceView">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gui.space.</span></span><span class="sig-name descname"><span class="pre">SpaceView</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scene</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#gui.space.SpaceScene" title="gui.space.SpaceScene"><span class="pre">SpaceScene</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui/space.html#SpaceView"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.space.SpaceView" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">QGraphicsView</span></code></p>
+<p>Камера (Viewport) для наблюдения за космической сценой.
+Реализует навигацию: перетаскивание мышью, плавный зум и создание планет по клику.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.space.SpaceView.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scene</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#gui.space.SpaceScene" title="gui.space.SpaceScene"><span class="pre">SpaceScene</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWidget</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/space.html#SpaceView.__init__"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.space.SpaceView.__init__" title="Ссылка на это определение"></a></dt>
+<dd><p>Инициализирует окно просмотра (камеру).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>scene</strong> (<a class="reference internal" href="#gui.space.SpaceScene" title="gui.space.SpaceScene"><em>SpaceScene</em></a>) – Сцена космоса, которую нужно отображать.</p></li>
+<li><p><strong>parent</strong> (<em>Optional</em><em>[</em><em>QWidget</em><em>]</em><em>, </em><em>optional</em>) – Родительский виджет. По умолчанию None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.space.SpaceView.mousePressEvent">
+<span class="sig-name descname"><span class="pre">mousePressEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QMouseEvent</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/space.html#SpaceView.mousePressEvent"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.space.SpaceView.mousePressEvent" title="Ссылка на это определение"></a></dt>
+<dd><p>Обрабатывает нажатие кнопок мыши. Включает режим перетаскивания карты
+только если пользователь кликнул по пустому космосу.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.space.SpaceView.mouseReleaseEvent">
+<span class="sig-name descname"><span class="pre">mouseReleaseEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QMouseEvent</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/space.html#SpaceView.mouseReleaseEvent"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.space.SpaceView.mouseReleaseEvent" title="Ссылка на это определение"></a></dt>
+<dd><p>Обрабатывает отпускание кнопки мыши, выключая режим перетаскивания.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="gui.space.SpaceView.right_click_empty">
+<span class="sig-name descname"><span class="pre">right_click_empty</span></span><a class="headerlink" href="#gui.space.SpaceView.right_click_empty" title="Ссылка на это определение"></a></dt>
+<dd><p>int = …, arguments: Sequence = …) -&gt; PYQT_SIGNAL</p>
+<p>types is normally a sequence of individual types.  Each type is either a
+type object or a string that is the name of a C++ type.  Alternatively
+each type could itself be a sequence of types each describing a different
+overloaded signal.
+name is the optional C++ name of the signal.  If it is not specified then
+the name of the class attribute that is bound to the signal is used.
+revision is the optional revision of the signal that is exported to QML.
+If it is not specified then 0 is used.
+arguments is the optional sequence of the names of the signal’s arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pyqtSignal(<a href="#id25"><span class="problematic" id="id26">*</span></a>types, name</p>
+</dd>
+<dt class="field-even">Type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str = …, revision</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.space.SpaceView.wheelEvent">
+<span class="sig-name descname"><span class="pre">wheelEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">QWheelEvent</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/space.html#SpaceView.wheelEvent"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.space.SpaceView.wheelEvent" title="Ссылка на это определение"></a></dt>
+<dd><p>Обрабатывает прокрутку колесика мыши для плавного зума.
+Защищает от отдаления или приближения за пределы лимитов.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gui.start_screen">
+<span id="gui-start-screen-module"></span><h2>gui.start_screen module<a class="headerlink" href="#module-gui.start_screen" title="Ссылка на этот заголовок"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="gui.start_screen.StartScreen">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">gui.start_screen.</span></span><span class="sig-name descname"><span class="pre">StartScreen</span></span><a class="reference internal" href="_modules/gui/start_screen.html#StartScreen"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.start_screen.StartScreen" title="Ссылка на это определение"></a></dt>
+<dd><p>Базовые классы: <code class="xref py py-class docutils literal notranslate"><span class="pre">QMainWindow</span></code></p>
+<p>Стартовое окно приложения (главное меню).</p>
+<p>Обеспечивает интерфейс для начала новой симуляции (пустой песочницы)
+или загрузки существующего сценария из JSON-файла.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.start_screen.StartScreen.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/start_screen.html#StartScreen.__init__"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.start_screen.StartScreen.__init__" title="Ссылка на это определение"></a></dt>
+<dd><p>Инициализирует стартовое окно, задает заголовок, размеры и базовые атрибуты.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.start_screen.StartScreen._create_button">
+<span class="sig-name descname"><span class="pre">_create_button</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">275</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">QPushButton</span></span></span><a class="reference internal" href="_modules/gui/start_screen.html#StartScreen._create_button"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.start_screen.StartScreen._create_button" title="Ссылка на это определение"></a></dt>
+<dd><p>Создает и стилизует кнопку главного меню.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>message</strong> (<em>str</em>) – Текст, который будет отображаться на кнопке.</p></li>
+<li><p><strong>callback</strong> (<em>Callable</em><em>[</em><em>[</em><em>bool</em><em>]</em><em>, </em><em>None</em><em>]</em>) – Метод-обработчик, вызываемый при нажатии.</p></li>
+<li><p><strong>height</strong> (<em>int</em><em>, </em><em>optional</em>) – Высота кнопки в пикселях. По умолчанию START_BTN_HEIGHT.</p></li>
+<li><p><strong>width</strong> (<em>int</em><em>, </em><em>optional</em>) – Ширина кнопки в пикселях. По умолчанию START_BTN_WIDTH.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Результат<span class="colon">:</span></dt>
+<dd class="field-even"><p>Готовый экземпляр кнопки с подключенным сигналом.</p>
+</dd>
+<dt class="field-odd">Тип результата<span class="colon">:</span></dt>
+<dd class="field-odd"><p>QPushButton</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.start_screen.StartScreen._init_ui">
+<span class="sig-name descname"><span class="pre">_init_ui</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/start_screen.html#StartScreen._init_ui"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.start_screen.StartScreen._init_ui" title="Ссылка на это определение"></a></dt>
+<dd><p>Создает и настраивает графические элементы окна (фон, кнопки, компоновку).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.start_screen.StartScreen.load_from_json">
+<span class="sig-name descname"><span class="pre">load_from_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/start_screen.html#StartScreen.load_from_json"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.start_screen.StartScreen.load_from_json" title="Ссылка на это определение"></a></dt>
+<dd><p>Открывает диалог выбора файла, считывает JSON и запускает симуляцию.</p>
+<p>Обрабатывает ошибки чтения файла и валидации Pydantic, выводя
+соответствующие предупреждения в виде всплывающих окон (QMessageBox).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.start_screen.StartScreen.load_from_json_callback">
+<span class="sig-name descname"><span class="pre">load_from_json_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checked</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/start_screen.html#StartScreen.load_from_json_callback"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.start_screen.StartScreen.load_from_json_callback" title="Ссылка на это определение"></a></dt>
+<dd><p>Слот для обработки нажатия кнопки „Загрузить симуляцию“.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>checked</strong> (<em>bool</em><em>, </em><em>optional</em>) – Состояние кнопки (передается сигналом). По умолчанию False.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.start_screen.StartScreen.start_sandbox">
+<span class="sig-name descname"><span class="pre">start_sandbox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scenario</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="config.html#config.schemas.SimulationScenario" title="config.schemas.SimulationScenario"><span class="pre">SimulationScenario</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/start_screen.html#StartScreen.start_sandbox"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.start_screen.StartScreen.start_sandbox" title="Ссылка на это определение"></a></dt>
+<dd><p>Инициализирует и открывает главное окно симуляции, после чего закрывает стартовое.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>scenario</strong> (<em>Optional</em><em>[</em><a class="reference internal" href="config.html#config.schemas.SimulationScenario" title="config.schemas.SimulationScenario"><em>SimulationScenario</em></a><em>]</em><em>, </em><em>optional</em>) – Загруженный сценарий симуляции.
+Если не передан (None), открывается пустая песочница. По умолчанию None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="gui.start_screen.StartScreen.start_sandbox_callback">
+<span class="sig-name descname"><span class="pre">start_sandbox_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checked</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/gui/start_screen.html#StartScreen.start_sandbox_callback"><span class="viewcode-link"><span class="pre">[исходный</span> <span class="pre">код]</span></span></a><a class="headerlink" href="#gui.start_screen.StartScreen.start_sandbox_callback" title="Ссылка на это определение"></a></dt>
+<dd><p>Слот для обработки нажатия кнопки „Новый конструктор“.</p>
+<p>Служит оберткой, чтобы предотвратить передачу булевого значения (checked)
+в качестве аргумента scenario в метод start_sandbox.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Параметры<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>checked</strong> (<em>bool</em><em>, </em><em>optional</em>) – Состояние кнопки (передается сигналом). По умолчанию False.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-gui">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-gui" title="Ссылка на этот заголовок"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Нижняя область">
+        <a href="core.html" class="btn btn-neutral float-left" title="core package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Предыдущая</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Авторские права 2026, Miron. </p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

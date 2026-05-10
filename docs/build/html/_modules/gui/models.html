@@ -1,0 +1,237 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="ru" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gui.models &mdash; документация Gravitas Sandbox Engine 1.0</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=9ca2116e"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/translations.js?v=cd1d70c9"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Алфавитный указатель" href="../../genindex.html" />
+    <link rel="search" title="Поиск" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Gravitas Sandbox Engine
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Поиск в документации" aria-label="Поиск в документации" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Меню навигации">
+              <p class="caption" role="heading"><span class="caption-text">Содержание:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">src</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Меню навигации для мобильных устройств" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Gravitas Sandbox Engine</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Навигация по страницам">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Код модуля</a></li>
+      <li class="breadcrumb-item active">gui.models</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Исходный код gui.models</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">QGraphicsEllipseItem</span><span class="p">,</span> <span class="n">QGraphicsSceneMouseEvent</span><span class="p">,</span> <span class="n">QGraphicsTextItem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtGui</span><span class="w"> </span><span class="kn">import</span> <span class="n">QBrush</span><span class="p">,</span> <span class="n">QColor</span><span class="p">,</span> <span class="n">QPen</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PyQt6.QtCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">Qt</span><span class="p">,</span> <span class="n">QPointF</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">config.schemas</span><span class="w"> </span><span class="kn">import</span> <span class="n">BodyState</span>
+
+<div class="viewcode-block" id="PlanetItem">
+<a class="viewcode-back" href="../../gui.html#gui.models.PlanetItem">[документация]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PlanetItem</span><span class="p">(</span><span class="n">QGraphicsEllipseItem</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Визуальное представление планеты на сцене.</span>
+<span class="sd">    Умеет отрисовывать себя, подбирать контрастный текст и </span>
+<span class="sd">    предотвращать наложения при перетаскивании мышкой.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="PlanetItem.__init__">
+<a class="viewcode-back" href="../../gui.html#gui.models.PlanetItem.__init__">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> 
+        <span class="n">body_state</span><span class="p">:</span> <span class="n">BodyState</span><span class="p">,</span> 
+        <span class="n">edit_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="s1">&#39;PlanetItem&#39;</span><span class="p">],</span> <span class="kc">None</span><span class="p">],</span> 
+        <span class="n">planet_list_ref</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;PlanetItem&#39;</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_body_state</span><span class="p">:</span> <span class="n">BodyState</span> <span class="o">=</span> <span class="n">body_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_edit_callback</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="s1">&#39;PlanetItem&#39;</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">edit_callback</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_planet_list</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s1">&#39;PlanetItem&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">planet_list_ref</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_text_item</span><span class="p">:</span> <span class="n">QGraphicsTextItem</span> <span class="o">=</span> <span class="n">QGraphicsTextItem</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_text_item</span><span class="o">.</span><span class="n">setAcceptedMouseButtons</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">MouseButton</span><span class="o">.</span><span class="n">NoButton</span><span class="p">)</span>
+        
+        <span class="c1"># Настройки взаимодействия: перетаскивание, выбор и отслеживание изменений геометрии</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setFlags</span><span class="p">(</span>
+            <span class="n">QGraphicsEllipseItem</span><span class="o">.</span><span class="n">GraphicsItemFlag</span><span class="o">.</span><span class="n">ItemIsMovable</span> <span class="o">|</span> 
+            <span class="n">QGraphicsEllipseItem</span><span class="o">.</span><span class="n">GraphicsItemFlag</span><span class="o">.</span><span class="n">ItemIsSelectable</span> <span class="o">|</span> 
+            <span class="n">QGraphicsEllipseItem</span><span class="o">.</span><span class="n">GraphicsItemFlag</span><span class="o">.</span><span class="n">ItemSendsGeometryChanges</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setCursor</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">CursorShape</span><span class="o">.</span><span class="n">PointingHandCursor</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_visuals</span><span class="p">()</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">body_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BodyState</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_body_state</span>
+
+    <span class="nd">@body_state</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">body_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_state</span><span class="p">:</span> <span class="n">BodyState</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_body_state</span> <span class="o">=</span> <span class="n">new_state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_visuals</span><span class="p">()</span>
+
+<div class="viewcode-block" id="PlanetItem.update_visuals">
+<a class="viewcode-back" href="../../gui.html#gui.models.PlanetItem.update_visuals">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_visuals</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Синхронизирует графику с данными из BodyState.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_body_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+            
+        <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_body_state</span><span class="o">.</span><span class="n">radius</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setRect</span><span class="p">(</span><span class="o">-</span><span class="n">r</span><span class="p">,</span> <span class="o">-</span><span class="n">r</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">r</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setPos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_body_state</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_body_state</span><span class="o">.</span><span class="n">position</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">setBrush</span><span class="p">(</span><span class="n">QBrush</span><span class="p">(</span><span class="n">QColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_body_state</span><span class="o">.</span><span class="n">color</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setPen</span><span class="p">(</span><span class="n">QPen</span><span class="p">(</span><span class="n">Qt</span><span class="o">.</span><span class="n">PenStyle</span><span class="o">.</span><span class="n">NoPen</span><span class="p">))</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_text</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="PlanetItem._update_text">
+<a class="viewcode-back" href="../../gui.html#gui.models.PlanetItem._update_text">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_update_text</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Обновляет название внутри планеты (без массы) и центрирует его.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_text_item</span><span class="o">.</span><span class="n">setPlainText</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_body_state</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        
+        <span class="c1"># Подбор контрастного цвета текста</span>
+        <span class="n">color</span> <span class="o">=</span> <span class="n">QColor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_body_state</span><span class="o">.</span><span class="n">color</span><span class="p">)</span>
+        <span class="n">brightness</span> <span class="o">=</span> <span class="p">(</span><span class="n">color</span><span class="o">.</span><span class="n">red</span><span class="p">()</span> <span class="o">*</span> <span class="mi">299</span> <span class="o">+</span> <span class="n">color</span><span class="o">.</span><span class="n">green</span><span class="p">()</span> <span class="o">*</span> <span class="mi">587</span> <span class="o">+</span> <span class="n">color</span><span class="o">.</span><span class="n">blue</span><span class="p">()</span> <span class="o">*</span> <span class="mi">114</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
+        <span class="n">text_color</span> <span class="o">=</span> <span class="n">Qt</span><span class="o">.</span><span class="n">GlobalColor</span><span class="o">.</span><span class="n">black</span> <span class="k">if</span> <span class="n">brightness</span> <span class="o">&gt;</span> <span class="mi">140</span> <span class="k">else</span> <span class="n">Qt</span><span class="o">.</span><span class="n">GlobalColor</span><span class="o">.</span><span class="n">white</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_text_item</span><span class="o">.</span><span class="n">setDefaultTextColor</span><span class="p">(</span><span class="n">text_color</span><span class="p">)</span>
+        
+        <span class="c1"># Масштабирование текста под радиус планеты</span>
+        <span class="n">t_rect</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text_item</span><span class="o">.</span><span class="n">boundingRect</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">t_rect</span><span class="o">.</span><span class="n">width</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">target_width</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_body_state</span><span class="o">.</span><span class="n">radius</span> <span class="o">*</span> <span class="mf">1.5</span>
+            <span class="n">scale</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">target_width</span> <span class="o">/</span> <span class="n">t_rect</span><span class="o">.</span><span class="n">width</span><span class="p">(),</span> <span class="mf">1.5</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_text_item</span><span class="o">.</span><span class="n">setScale</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span>
+            
+            <span class="c1"># Центрируем текст внутри круга</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_text_item</span><span class="o">.</span><span class="n">setPos</span><span class="p">(</span>
+                <span class="o">-</span><span class="n">t_rect</span><span class="o">.</span><span class="n">width</span><span class="p">()</span> <span class="o">*</span> <span class="n">scale</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> 
+                <span class="o">-</span><span class="n">t_rect</span><span class="o">.</span><span class="n">height</span><span class="p">()</span> <span class="o">*</span> <span class="n">scale</span> <span class="o">/</span> <span class="mf">2.0</span>
+            <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PlanetItem.mouseDoubleClickEvent">
+<a class="viewcode-back" href="../../gui.html#gui.models.PlanetItem.mouseDoubleClickEvent">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mouseDoubleClickEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">QGraphicsSceneMouseEvent</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Открывает окно редактирования.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">event</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_edit_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">mouseDoubleClickEvent</span><span class="p">(</span><span class="n">event</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="PlanetItem.itemChange">
+<a class="viewcode-back" href="../../gui.html#gui.models.PlanetItem.itemChange">[документация]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">itemChange</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">change</span><span class="p">:</span> <span class="n">QGraphicsEllipseItem</span><span class="o">.</span><span class="n">GraphicsItemChange</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Предотвращает наложение планет друг на друга при перетаскивании.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">change</span> <span class="o">==</span> <span class="n">QGraphicsEllipseItem</span><span class="o">.</span><span class="n">GraphicsItemChange</span><span class="o">.</span><span class="n">ItemPositionChange</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">QPointF</span><span class="p">):</span>
+            <span class="n">target_pos</span><span class="p">:</span> <span class="n">QPointF</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span> <span class="o">=</span> <span class="n">target_pos</span><span class="o">.</span><span class="n">x</span><span class="p">(),</span> <span class="n">target_pos</span><span class="o">.</span><span class="n">y</span><span class="p">()</span>
+            <span class="n">r_self</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_body_state</span><span class="o">.</span><span class="n">radius</span>
+            
+            <span class="c1"># Проверяем расстояние до всех остальных планет</span>
+            <span class="k">for</span> <span class="n">other</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_planet_list</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">other</span> <span class="ow">is</span> <span class="bp">self</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                
+                <span class="n">dx</span> <span class="o">=</span> <span class="n">tx</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span><span class="o">.</span><span class="n">x</span><span class="p">()</span>
+                <span class="n">dy</span> <span class="o">=</span> <span class="n">ty</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span><span class="o">.</span><span class="n">y</span><span class="p">()</span>
+                <span class="n">min_dist</span> <span class="o">=</span> <span class="n">r_self</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">body_state</span><span class="o">.</span><span class="n">radius</span>
+                
+                <span class="c1"># Если расстояние меньше суммы радиусов — блокируем перемещение</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">dx</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">+</span> <span class="n">dy</span> <span class="o">*</span> <span class="n">dy</span><span class="p">)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">min_dist</span> <span class="o">*</span> <span class="n">min_dist</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span> <span class="c1"># Возвращаем текущую (старую) позицию</span>
+            
+            <span class="c1"># Если столкновений нет, обновляем координаты в модели данных</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_body_state</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">(</span><span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">)</span>
+            
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">itemChange</span><span class="p">(</span><span class="n">change</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Авторские права 2026, Miron. </p>
+  </div>
+
+  Собрано при помощи <a href="https://www.sphinx-doc.org/">Sphinx</a> с использованием
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">темы,</a>
+    предоставленной <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
