@@ -4,6 +4,7 @@ import time
 import random
 import sys
 import logging
+import io
 from pathlib import Path
 
 # 1. Настройка путей
@@ -12,7 +13,7 @@ PROJECT_ROOT = BENCHMARK_DIR.parent
 SRC_DIR = PROJECT_ROOT / "src"
 sys.path.append(str(SRC_DIR))
 
-# Импорты твоего движка
+# Импорты движка и схем
 from core.engine import PhysicsEngine
 from config.schemas import BodyState
 
@@ -20,7 +21,7 @@ from config.schemas import BodyState
 log_file = BENCHMARK_DIR / "benchmark.log"
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
+    format='%(asctime)s [%(levelname)s]: %(message)s',
     handlers=[
         logging.FileHandler(log_file, encoding='utf-8'),
         logging.StreamHandler(sys.stdout)
@@ -29,7 +30,6 @@ logging.basicConfig(
 logger = logging.getLogger("Benchmark")
 
 def generate_bodies(n: int) -> list[BodyState]:
-    """Генерация случайных тел для теста."""
     bodies = []
     for i in range(n):
         bodies.append(BodyState(
@@ -43,44 +43,46 @@ def generate_bodies(n: int) -> list[BodyState]:
     return bodies
 
 def run_benchmark(num_bodies: int = 100, steps: int = 50) -> None:
-    """Запуск замера производительности."""
     dt = 0.016
     engine = PhysicsEngine(g_const=100.0)
     bodies = generate_bodies(num_bodies)
 
-    logger.info("="*40)
-    logger.info(f"ЗАПУСК БЕНЧМАРКА: {num_bodies} тел, {steps} шагов")
-    logger.info(f"Конфигурация: G={engine.G}, dt={dt}")
+    logger.info("="*50)
+    logger.info(f"START: {num_bodies} bodies | {steps} steps")
     
     start_time = time.perf_counter()
     last_checkpoint = start_time
     
-    # Рекурсивное логгирование каждые 20% прогресса
-    log_interval = max(1, steps // 5)
+    # Интервал в 1% (но не реже чем 1 шаг)
+    log_interval = max(1, steps // 100) 
 
     for step in range(1, steps + 1):
         engine.update(bodies, dt)
         
+        # Логируем каждые 1% прогресса
         if step % log_interval == 0 or step == steps:
             now = time.perf_counter()
-            step_time = (now - last_checkpoint) / log_interval if step > 1 else (now - start_time)
+            # Время конкретно за этот интервал шагов
+            interval_time = now - last_checkpoint
+            total_elapsed = now - start_time
+            
             progress = (step / steps) * 100
             
+            # Расчет ETA (сколько осталось)
+            eta = (total_elapsed / (step / steps)) - total_elapsed if step < steps else 0
+            
             logger.info(
-                f"Progress: {progress:>3.0f}% | "
-                f"Step: {step}/{steps} | "
-                f"Avg step time: {step_time:.4f}s"
+                f"[{progress:>3.0f}%] Step {step}/{steps} | "
+                f"Int: {interval_time:.4f}s | "
+                f"Total: {total_elapsed:.2f}s | "
+                f"ETA: {eta:.2f}s"
             )
             last_checkpoint = now
 
     total_time = time.perf_counter() - start_time
-    fps = steps / total_time
-    
-    logger.info("-" * 40)
-    logger.info(f"БЕНЧМАРК ЗАВЕРШЕН")
-    logger.info(f"Общее время: {total_time:.3f} сек")
-    logger.info(f"Производительность: {fps:.2f} FPS")
-    logger.info("=" * 40)
+    logger.info("-" * 50)
+    logger.info(f"FINISH | Total Time: {total_time:.3f}s | Result: {steps / total_time:.2f} FPS")
+    logger.info("=" * 50)
 
 if __name__ == "__main__":
     # Параметры теста
@@ -94,16 +96,14 @@ if __name__ == "__main__":
         run_benchmark(num_bodies=B_COUNT, steps=S_COUNT)
         profiler.disable()
     except Exception as e:
-        logger.error(f"Произошла ошибка во время теста: {e}", exc_info=True)
+        logger.error(f"Error: {e}", exc_info=True)
     finally:
-        # Сохранение результатов профилирования
+        # Сохранение профиля для snakeviz
         prof_file = BENCHMARK_DIR / "physics.prof"
         profiler.dump_stats(str(prof_file))
-        logger.info(f"Данные cProfile сохранены в {prof_file}")
-
-        # Вывод краткой статистики в консоль через логгер
-        import io
+        
+        # Запись ТОП-10 функций прямо в лог
         s = io.StringIO()
         ps = pstats.Stats(profiler, stream=s).sort_stats('cumtime')
         ps.print_stats(10)
-        logger.info("\nTOP-10 FUNCTIONS:\n" + s.getvalue())
+        logger.info("\nTOP-10 PERFORMANCE KILLERS:\n" + s.getvalue())

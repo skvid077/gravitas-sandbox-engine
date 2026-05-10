@@ -80,3 +80,86 @@ TOP-10 FUNCTIONS:
 2026-05-10 12:51:02,643 [INFO] Benchmark: ========================================
 2026-05-10 12:51:02,643 [INFO] Benchmark: ЗАПУСК БЕНЧМАРКА: 1000 тел, 500 шагов
 2026-05-10 12:51:02,643 [INFO] Benchmark: Конфигурация: G=100.0, dt=0.016
+2026-05-10 12:51:47,170 [INFO] Benchmark: ========================================
+2026-05-10 12:51:47,170 [INFO] Benchmark: ЗАПУСК БЕНЧМАРКА: 1000 тел, 500 шагов
+2026-05-10 12:51:47,170 [INFO] Benchmark: Конфигурация: G=100.0, dt=0.016
+2026-05-10 12:53:31,905 [INFO]: ==================================================
+2026-05-10 12:53:31,905 [INFO]: START: 100 bodies | 50 steps
+2026-05-10 12:53:31,954 [INFO]: [  2%] Step 1/50 | Int: 0.0490s | Total: 0.05s | ETA: 2.40s
+2026-05-10 12:53:32,002 [INFO]: [  4%] Step 2/50 | Int: 0.0486s | Total: 0.10s | ETA: 2.34s
+2026-05-10 12:53:32,051 [INFO]: [  6%] Step 3/50 | Int: 0.0485s | Total: 0.15s | ETA: 2.29s
+2026-05-10 12:53:32,098 [INFO]: [  8%] Step 4/50 | Int: 0.0472s | Total: 0.19s | ETA: 2.22s
+2026-05-10 12:53:32,146 [INFO]: [ 10%] Step 5/50 | Int: 0.0475s | Total: 0.24s | ETA: 2.17s
+2026-05-10 12:53:32,194 [INFO]: [ 12%] Step 6/50 | Int: 0.0484s | Total: 0.29s | ETA: 2.12s
+2026-05-10 12:53:32,242 [INFO]: [ 14%] Step 7/50 | Int: 0.0480s | Total: 0.34s | ETA: 2.07s
+2026-05-10 12:53:32,291 [INFO]: [ 16%] Step 8/50 | Int: 0.0486s | Total: 0.39s | ETA: 2.02s
+2026-05-10 12:53:32,360 [INFO]: [ 18%] Step 9/50 | Int: 0.0694s | Total: 0.46s | ETA: 2.07s
+2026-05-10 12:53:32,416 [INFO]: [ 20%] Step 10/50 | Int: 0.0563s | Total: 0.51s | ETA: 2.05s
+2026-05-10 12:53:32,465 [INFO]: [ 22%] Step 11/50 | Int: 0.0489s | Total: 0.56s | ETA: 1.99s
+2026-05-10 12:53:32,514 [INFO]: [ 24%] Step 12/50 | Int: 0.0492s | Total: 0.61s | ETA: 1.93s
+2026-05-10 12:53:32,564 [INFO]: [ 26%] Step 13/50 | Int: 0.0496s | Total: 0.66s | ETA: 1.88s
+2026-05-10 12:53:32,612 [INFO]: [ 28%] Step 14/50 | Int: 0.0477s | Total: 0.71s | ETA: 1.82s
+2026-05-10 12:53:32,660 [INFO]: [ 30%] Step 15/50 | Int: 0.0480s | Total: 0.75s | ETA: 1.76s
+2026-05-10 12:53:32,708 [INFO]: [ 32%] Step 16/50 | Int: 0.0487s | Total: 0.80s | ETA: 1.71s
+2026-05-10 12:53:32,756 [INFO]: [ 34%] Step 17/50 | Int: 0.0480s | Total: 0.85s | ETA: 1.65s
+2026-05-10 12:53:32,804 [INFO]: [ 36%] Step 18/50 | Int: 0.0476s | Total: 0.90s | ETA: 1.60s
+2026-05-10 12:53:32,855 [INFO]: [ 38%] Step 19/50 | Int: 0.0505s | Total: 0.95s | ETA: 1.55s
+2026-05-10 12:53:32,900 [INFO]: [ 40%] Step 20/50 | Int: 0.0451s | Total: 0.99s | ETA: 1.49s
+2026-05-10 12:53:32,951 [INFO]: [ 42%] Step 21/50 | Int: 0.0515s | Total: 1.05s | ETA: 1.44s
+2026-05-10 12:53:33,003 [INFO]: [ 44%] Step 22/50 | Int: 0.0515s | Total: 1.10s | ETA: 1.40s
+2026-05-10 12:53:33,056 [INFO]: [ 46%] Step 23/50 | Int: 0.0534s | Total: 1.15s | ETA: 1.35s
+2026-05-10 12:53:33,107 [INFO]: [ 48%] Step 24/50 | Int: 0.0509s | Total: 1.20s | ETA: 1.30s
+2026-05-10 12:53:33,159 [INFO]: [ 50%] Step 25/50 | Int: 0.0516s | Total: 1.25s | ETA: 1.25s
+2026-05-10 12:53:33,206 [INFO]: [ 52%] Step 26/50 | Int: 0.0474s | Total: 1.30s | ETA: 1.20s
+2026-05-10 12:53:33,253 [INFO]: [ 54%] Step 27/50 | Int: 0.0473s | Total: 1.35s | ETA: 1.15s
+2026-05-10 12:53:33,301 [INFO]: [ 56%] Step 28/50 | Int: 0.0481s | Total: 1.40s | ETA: 1.10s
+2026-05-10 12:53:33,351 [INFO]: [ 58%] Step 29/50 | Int: 0.0496s | Total: 1.45s | ETA: 1.05s
+2026-05-10 12:53:33,400 [INFO]: [ 60%] Step 30/50 | Int: 0.0488s | Total: 1.49s | ETA: 1.00s
+2026-05-10 12:53:33,448 [INFO]: [ 62%] Step 31/50 | Int: 0.0478s | Total: 1.54s | ETA: 0.95s
+2026-05-10 12:53:33,497 [INFO]: [ 64%] Step 32/50 | Int: 0.0494s | Total: 1.59s | ETA: 0.90s
+2026-05-10 12:53:33,546 [INFO]: [ 66%] Step 33/50 | Int: 0.0496s | Total: 1.64s | ETA: 0.85s
+2026-05-10 12:53:33,600 [INFO]: [ 68%] Step 34/50 | Int: 0.0532s | Total: 1.69s | ETA: 0.80s
+2026-05-10 12:53:33,649 [INFO]: [ 70%] Step 35/50 | Int: 0.0495s | Total: 1.74s | ETA: 0.75s
+2026-05-10 12:53:33,698 [INFO]: [ 72%] Step 36/50 | Int: 0.0484s | Total: 1.79s | ETA: 0.70s
+2026-05-10 12:53:33,746 [INFO]: [ 74%] Step 37/50 | Int: 0.0480s | Total: 1.84s | ETA: 0.65s
+2026-05-10 12:53:33,794 [INFO]: [ 76%] Step 38/50 | Int: 0.0481s | Total: 1.89s | ETA: 0.60s
+2026-05-10 12:53:33,842 [INFO]: [ 78%] Step 39/50 | Int: 0.0483s | Total: 1.94s | ETA: 0.55s
+2026-05-10 12:53:33,890 [INFO]: [ 80%] Step 40/50 | Int: 0.0482s | Total: 1.99s | ETA: 0.50s
+2026-05-10 12:53:33,939 [INFO]: [ 82%] Step 41/50 | Int: 0.0486s | Total: 2.03s | ETA: 0.45s
+2026-05-10 12:53:33,987 [INFO]: [ 84%] Step 42/50 | Int: 0.0484s | Total: 2.08s | ETA: 0.40s
+2026-05-10 12:53:34,036 [INFO]: [ 86%] Step 43/50 | Int: 0.0487s | Total: 2.13s | ETA: 0.35s
+2026-05-10 12:53:34,084 [INFO]: [ 88%] Step 44/50 | Int: 0.0483s | Total: 2.18s | ETA: 0.30s
+2026-05-10 12:53:34,133 [INFO]: [ 90%] Step 45/50 | Int: 0.0491s | Total: 2.23s | ETA: 0.25s
+2026-05-10 12:53:34,182 [INFO]: [ 92%] Step 46/50 | Int: 0.0488s | Total: 2.28s | ETA: 0.20s
+2026-05-10 12:53:34,231 [INFO]: [ 94%] Step 47/50 | Int: 0.0486s | Total: 2.33s | ETA: 0.15s
+2026-05-10 12:53:34,279 [INFO]: [ 96%] Step 48/50 | Int: 0.0482s | Total: 2.37s | ETA: 0.10s
+2026-05-10 12:53:34,327 [INFO]: [ 98%] Step 49/50 | Int: 0.0484s | Total: 2.42s | ETA: 0.05s
+2026-05-10 12:53:34,376 [INFO]: [100%] Step 50/50 | Int: 0.0484s | Total: 2.47s | ETA: 0.00s
+2026-05-10 12:53:34,376 [INFO]: --------------------------------------------------
+2026-05-10 12:53:34,376 [INFO]: FINISH | Total Time: 2.471s | Result: 20.24 FPS
+2026-05-10 12:53:34,376 [INFO]: ==================================================
+2026-05-10 12:53:34,377 [INFO]: 
+TOP-10 PERFORMANCE KILLERS:
+         2788401 function calls (2351348 primitive calls) in 2.472 seconds
+
+   Ordered by: cumulative time
+   List reduced from 101 to 10 due to restriction <10>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.003    0.003    2.472    2.472 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/benchmark/benchmark.py:45(run_benchmark)
+       50    0.020    0.000    2.460    0.049 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/src/core/engine.py:26(update)
+372949/4893    1.302    0.000    2.193    0.000 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/src/core/quadtree.py:81(calculate_bh_acceleration)
+   275510    0.181    0.000    0.775    0.000 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:2177(sum)
+   275660    0.223    0.000    0.557    0.000 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:71(_wrapreduction)
+   275660    0.298    0.000    0.298    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+57330/4893    0.095    0.000    0.147    0.000 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/src/core/quadtree.py:41(insert)
+21453/4893    0.010    0.000    0.128    0.000 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/src/core/quadtree.py:73(_insert_into_children)
+   388295    0.098    0.000    0.098    0.000 {built-in method numpy.zeros}
+     9798    0.022    0.000    0.064    0.000 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/venv/lib/python3.12/site-packages/pydantic/main.py:813(__setattr__)
+
+
+
+2026-05-10 12:53:43,020 [INFO]: ==================================================
+2026-05-10 12:53:43,020 [INFO]: START: 1000 bodies | 500 steps
+2026-05-10 12:53:47,862 [INFO]: [  1%] Step 5/500 | Int: 4.8415s | Total: 4.84s | ETA: 479.31s
+2026-05-10 12:53:55,710 [INFO]: [  2%] Step 10/500 | Int: 7.8478s | Total: 12.69s | ETA: 621.78s
