@@ -1,0 +1,82 @@
+2026-05-10 12:48:55,774 [INFO] Benchmark: ========================================
+2026-05-10 12:48:55,774 [INFO] Benchmark: ЗАПУСК БЕНЧМАРКА: 100 тел, 50 шагов
+2026-05-10 12:48:55,774 [INFO] Benchmark: Конфигурация: G=100.0, dt=0.016
+2026-05-10 12:48:57,016 [INFO] Benchmark: Progress:  20% | Step: 10/50 | Avg step time: 0.1241s
+2026-05-10 12:48:57,914 [INFO] Benchmark: Progress:  40% | Step: 20/50 | Avg step time: 0.0898s
+2026-05-10 12:48:58,730 [INFO] Benchmark: Progress:  60% | Step: 30/50 | Avg step time: 0.0816s
+2026-05-10 12:48:59,527 [INFO] Benchmark: Progress:  80% | Step: 40/50 | Avg step time: 0.0796s
+2026-05-10 12:49:00,318 [INFO] Benchmark: Progress: 100% | Step: 50/50 | Avg step time: 0.0791s
+2026-05-10 12:49:00,318 [INFO] Benchmark: ----------------------------------------
+2026-05-10 12:49:00,318 [INFO] Benchmark: БЕНЧМАРК ЗАВЕРШЕН
+2026-05-10 12:49:00,318 [INFO] Benchmark: Общее время: 4.544 сек
+2026-05-10 12:49:00,318 [INFO] Benchmark: Производительность: 11.00 FPS
+2026-05-10 12:49:00,318 [INFO] Benchmark: ========================================
+2026-05-10 12:49:00,319 [INFO] Benchmark: Данные cProfile сохранены в /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/benchmark/physics.prof
+2026-05-10 12:49:00,320 [INFO] Benchmark: 
+TOP-10 FUNCTIONS:
+         2869859 function calls (2419806 primitive calls) in 4.547 seconds
+
+   Ordered by: cumulative time
+   List reduced from 101 to 10 due to restriction <10>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.004    0.004    4.547    4.547 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/benchmark/benchmark.py:45(run_benchmark)
+       50    0.038    0.001    4.538    0.091 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/src/core/engine.py:26(update)
+386309/4977    2.420    0.000    4.082    0.001 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/src/core/quadtree.py:81(calculate_bh_acceleration)
+   285770    0.332    0.000    1.446    0.000 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:2177(sum)
+   285920    0.407    0.000    1.050    0.000 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:71(_wrapreduction)
+   285920    0.576    0.000    0.576    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+57592/4977    0.158    0.000    0.242    0.000 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/src/core/quadtree.py:41(insert)
+21083/4977    0.017    0.000    0.209    0.000 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/src/core/quadtree.py:73(_insert_into_children)
+   400335    0.180    0.000    0.180    0.000 {built-in method numpy.zeros}
+     9958    0.040    0.000    0.119    0.000 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/venv/lib/python3.12/site-packages/pydantic/main.py:813(__setattr__)
+
+
+
+2026-05-10 12:49:16,410 [INFO] Benchmark: ========================================
+2026-05-10 12:49:16,411 [INFO] Benchmark: ЗАПУСК БЕНЧМАРКА: 1000 тел, 500 шагов
+2026-05-10 12:49:16,411 [INFO] Benchmark: Конфигурация: G=100.0, dt=0.016
+2026-05-10 12:49:40,296 [INFO] Benchmark: ========================================
+2026-05-10 12:49:40,296 [INFO] Benchmark: ЗАПУСК БЕНЧМАРКА: 1000 тел, 500 шагов
+2026-05-10 12:49:40,296 [INFO] Benchmark: Конфигурация: G=100.0, dt=0.016
+2026-05-10 12:49:58,366 [INFO] Benchmark: ========================================
+2026-05-10 12:49:58,367 [INFO] Benchmark: ЗАПУСК БЕНЧМАРКА: 1000 тел, 50 шагов
+2026-05-10 12:49:58,367 [INFO] Benchmark: Конфигурация: G=100.0, dt=0.016
+2026-05-10 12:50:15,935 [INFO] Benchmark: ========================================
+2026-05-10 12:50:15,935 [INFO] Benchmark: ЗАПУСК БЕНЧМАРКА: 100 тел, 500 шагов
+2026-05-10 12:50:15,935 [INFO] Benchmark: Конфигурация: G=100.0, dt=0.016
+2026-05-10 12:50:21,234 [INFO] Benchmark: Progress:  20% | Step: 100/500 | Avg step time: 0.0530s
+2026-05-10 12:50:28,263 [INFO] Benchmark: Progress:  40% | Step: 200/500 | Avg step time: 0.0703s
+2026-05-10 12:50:34,779 [INFO] Benchmark: Progress:  60% | Step: 300/500 | Avg step time: 0.0652s
+2026-05-10 12:50:41,233 [INFO] Benchmark: Progress:  80% | Step: 400/500 | Avg step time: 0.0645s
+2026-05-10 12:50:47,843 [INFO] Benchmark: Progress: 100% | Step: 500/500 | Avg step time: 0.0661s
+2026-05-10 12:50:47,843 [INFO] Benchmark: ----------------------------------------
+2026-05-10 12:50:47,843 [INFO] Benchmark: БЕНЧМАРК ЗАВЕРШЕН
+2026-05-10 12:50:47,843 [INFO] Benchmark: Общее время: 31.908 сек
+2026-05-10 12:50:47,843 [INFO] Benchmark: Производительность: 15.67 FPS
+2026-05-10 12:50:47,843 [INFO] Benchmark: ========================================
+2026-05-10 12:50:47,844 [INFO] Benchmark: Данные cProfile сохранены в /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/benchmark/physics.prof
+2026-05-10 12:50:47,845 [INFO] Benchmark: 
+TOP-10 FUNCTIONS:
+         28852826 function calls (24431763 primitive calls) in 31.909 seconds
+
+   Ordered by: cumulative time
+   List reduced from 101 to 10 due to restriction <10>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.028    0.028   31.909   31.909 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/benchmark/benchmark.py:45(run_benchmark)
+      500    0.228    0.000   31.879    0.064 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/src/core/engine.py:26(update)
+3812684/48260   17.070    0.000   28.847    0.001 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/src/core/quadtree.py:81(calculate_bh_acceleration)
+  2928957    2.406    0.000   10.254    0.000 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:2177(sum)
+  2930457    2.918    0.000    7.362    0.000 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/venv/lib/python3.12/site-packages/numpy/core/fromnumeric.py:71(_wrapreduction)
+  2930457    3.912    0.000    3.912    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+552623/48260    1.083    0.000    1.658    0.000 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/src/core/quadtree.py:41(insert)
+200536/48260    0.119    0.000    1.430    0.000 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/src/core/quadtree.py:73(_insert_into_children)
+  3944768    1.257    0.000    1.257    0.000 {built-in method numpy.zeros}
+    96544    0.266    0.000    0.764    0.000 /home/skvid-notebook-ubuntu/study/gravitas-sandbox-engine/venv/lib/python3.12/site-packages/pydantic/main.py:813(__setattr__)
+
+
+
+2026-05-10 12:51:02,643 [INFO] Benchmark: ========================================
+2026-05-10 12:51:02,643 [INFO] Benchmark: ЗАПУСК БЕНЧМАРКА: 1000 тел, 500 шагов
+2026-05-10 12:51:02,643 [INFO] Benchmark: Конфигурация: G=100.0, dt=0.016
