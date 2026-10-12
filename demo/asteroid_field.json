@@ -1,0 +1,14 @@
+{
+  "name": "Поле астероидов",
+  "bodies": [
+    {"name": "Малая звезда", "color": "#FFE08A", "mass": 400000.0, "radius": 28.0, "position": [0.0, 0.0], "velocity": [0.0, 0.0]},
+    {"name": "Астероид 01", "color": "#A6A6A6", "mass": 8.0, "radius": 3.0, "position": [250.0, 0.0], "velocity": [0.0, 125.2]},
+    {"name": "Астероид 02", "color": "#B9A58D", "mass": 10.0, "radius": 3.5, "position": [0.0, 310.0], "velocity": [-112.6, 0.0]},
+    {"name": "Астероид 03", "color": "#8D99AE", "mass": 7.0, "radius": 2.8, "position": [-370.0, 0.0], "velocity": [0.0, -103.0]},
+    {"name": "Астероид 04", "color": "#9C8C7A", "mass": 9.0, "radius": 3.2, "position": [0.0, -440.0], "velocity": [95.3, 0.0]},
+    {"name": "Астероид 05", "color": "#A6A6A6", "mass": 8.0, "radius": 3.0, "position": [520.0, 0.0], "velocity": [0.0, 87.4]},
+    {"name": "Астероид 06", "color": "#B9A58D", "mass": 10.0, "radius": 3.5, "position": [0.0, 610.0], "velocity": [-80.3, 0.0]},
+    {"name": "Астероид 07", "color": "#8D99AE", "mass": 7.0, "radius": 2.8, "position": [-700.0, 0.0], "velocity": [0.0, -74.9]},
+    {"name": "Астероид 08", "color": "#9C8C7A", "mass": 9.0, "radius": 3.2, "position": [0.0, -790.0], "velocity": [70.9, 0.0]}
+  ]
+}

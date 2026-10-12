@@ -1,0 +1,28 @@
+GRAVITY_CONSTANT: float = 9.81
+PHYSICS_TICK_INTERVAL_MS: int = 16
+SOFTENING_CONSTANT: float = 2.0
+DEFAULT_SUB_STEPS: int = 128
+DEFAULT_RESTITUTION: float = 0.8  # 1.0 - упругий, 0.0 - слипание
+MIN_MASS: float = 0.0001
+MAX_MASS: float = 1e9
+MIN_RADIUS: float = 0.1
+MAX_RADIUS: float = 10000.0
+MIN_COORD: float = -1e9
+MAX_COORD: float = 1e9
+MIN_VEL: float = -10000.0
+MAX_VEL: float = 10000.0
+
+BH_THETA: float = 0.5  # Порог точности (0.0 - точный O(N^2), 1.0 - быстро, но грубо)
+
+DEFAULT_MAX_SECONDS_FOR_TIME_MACHINE: int = 30
+DEFAULT_FPS_FOR_TIME_MACHINE: int = 60
+
+MIN_BODIES_FOR_PHYSICS: int = 2
+BOUNDING_BOX_PADDING: float = 0.5
+BOUNDING_BOX_SIZE_OFFSET: float = 1.0
+CELL_SIZE_MULTIPLIER: float = 2.1
+MIN_CELL_SIZE: float = 1.0
+
+SPACE_DIMENSIONS: int = 2
+SUBDIVISION_FACTOR: float = 2.0
+MIN_DIST_EPSILON: float = 1e-10

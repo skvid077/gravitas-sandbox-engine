@@ -1,0 +1,10 @@
+{
+  "name": "Компактная планетная система",
+  "bodies": [
+    {"name": "Звезда", "color": "#FFD166", "mass": 1000000.0, "radius": 32.0, "position": [0.0, 0.0], "velocity": [0.0, 0.0]},
+    {"name": "Меркурий", "color": "#A9A9A9", "mass": 120.0, "radius": 7.0, "position": [180.0, 0.0], "velocity": [0.0, 233.3]},
+    {"name": "Земля", "color": "#4EA5D9", "mass": 500.0, "radius": 10.0, "position": [0.0, 310.0], "velocity": [-178.8, 0.0]},
+    {"name": "Марс", "color": "#E76F51", "mass": 300.0, "radius": 9.0, "position": [-430.0, 0.0], "velocity": [0.0, -151.0]},
+    {"name": "Юпитер", "color": "#D4A373", "mass": 2500.0, "radius": 18.0, "position": [0.0, -620.0], "velocity": [126.9, 0.0]}
+  ]
+}

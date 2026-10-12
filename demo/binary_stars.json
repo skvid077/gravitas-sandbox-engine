@@ -1,0 +1,8 @@
+{
+  "name": "Двойная звезда",
+  "bodies": [
+    {"name": "Синяя звезда", "color": "#78BFFF", "mass": 120000.0, "radius": 24.0, "position": [-120.0, 0.0], "velocity": [0.0, -45.0]},
+    {"name": "Золотая звезда", "color": "#FFCC66", "mass": 90000.0, "radius": 20.0, "position": [160.0, 0.0], "velocity": [0.0, 60.0]},
+    {"name": "Комета", "color": "#9FE7FF", "mass": 50.0, "radius": 5.0, "position": [0.0, 420.0], "velocity": [-35.0, 0.0]}
+  ]
+}
